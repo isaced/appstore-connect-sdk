@@ -1,8 +1,17 @@
 {
-  "name": "appstoreconnect-api",
+  "name": "appstore-connect-sdk",
   "version": "0.0.1",
   "description": "An App Store Connect API client for Node.js",
+  "keywords": [
+    "appstore connect",
+    "api",
+    "sdk",
+    "apple"
+  ],
   "main": "dist/main.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "jest",
     "build": "tsc"
@@ -19,5 +28,16 @@
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.0"
-  }
+  },
+  "author": "isaced",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/isaced/appstore-connect-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/isaced/appstore-connect-sdk/issues",
+    "email": "isaced@163.com"
+  },
+  "homepage": "https://github.com/isaced/appstore-connect-sdk"
 }
