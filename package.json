@@ -1,6 +1,6 @@
 {
   "name": "appstoreconnect-api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "An App Store Connect API client for Node.js",
   "main": "dist/main.js",
   "scripts": {
