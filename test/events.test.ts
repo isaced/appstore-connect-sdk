@@ -2,8 +2,8 @@ import fs from "fs";
 import fetch from "node-fetch";
 import * as dotenv from "dotenv";
 
-import { FetchAPI } from "./../src/generated-openapi/runtime";
-import { AppsApi } from "../src/generated-openapi";
+import { FetchAPI } from "./../src/openapi/runtime";
+import { AppsApi } from "../src/openapi";
 import AppStoreConnectAPI from "../src/main";
 
 dotenv.config();
