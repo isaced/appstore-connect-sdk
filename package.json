@@ -2,9 +2,10 @@
   "name": "appstoreconnect-api",
   "version": "1.0.0",
   "description": "An App Store Connect API client for Node.js",
-  "main": "main.ts",
+  "main": "dist/main.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",
