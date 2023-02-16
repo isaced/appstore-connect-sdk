@@ -1,5 +1,5 @@
 import fs from "fs";
-import fetch from "node-fetch";
+// import fetch from "node-fetch";
 import * as dotenv from "dotenv";
 
 import { FetchAPI } from "./../src/openapi/runtime";
@@ -10,10 +10,10 @@ dotenv.config();
 
 test("Get In-App Events List", async () => {
   const client = new AppStoreConnectAPI({
-    apiKey: process.env.API_KEY!,
     issuerId: process.env.ISSUER_ID!,
+    privateKeyId: process.env.PRIVATE_KEY_ID!,
     privateKey: loadP8File(),
-    fetchApi: fetch as FetchAPI,
+    // fetchApi: fetch as FetchAPI,
   });
   const api = new AppsApi(client.configuration);
   const res = await api.appsAppEventsGetToManyRelated({ id: process.env.APP_ID! });

@@ -3,8 +3,8 @@ import { Configuration } from "./openapi";
 import { generateAuthToken } from "./auth";
 
 interface AppStoreConnectAPIOptions {
-  apiKey: string;
   issuerId: string;
+  privateKeyId: string;
   privateKey: string;
   fetchApi?: FetchAPI;
 }
@@ -15,7 +15,7 @@ export default class AppStoreConnectAPI {
 
   constructor(options: AppStoreConnectAPIOptions) {
     this.bearerToken = generateAuthToken({
-      apiKeyId: options.apiKey,
+      apiKeyId: options.privateKeyId,
       issuerId: options.issuerId,
       privateKey: options.privateKey,
     });
