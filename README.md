@@ -1,6 +1,6 @@
-# appstoreconnect-api [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
+# appstoreconnect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
 
-App Store Connect SDK for Nodejs, written in Typescript, supports all APIs based on OpenAPI Generator.
+The App Store Connect SDK for Node.js is written in TypeScript and supports all APIs based on OpenAPI Generator.
 
 ## Kickstart information on the API
 
@@ -12,8 +12,8 @@ App Store Connect SDK for Nodejs, written in Typescript, supports all APIs based
 
 - [x] Configuration with API Key
 - [x] JWT Logic to sign requests
-- [x] Support custom network libraries for making requests, such as fetch/node-fetch/axios...
-- [x] Supports _all_ requests due to OpenAPI generated requests and entities
+- [x] Support for custom network libraries for making requests, such as fetch/node-fetch/axios...
+- [x] Support for _all_ requests due to OpenAPI generated requests and entities
 
 ## Installation
 
@@ -26,14 +26,14 @@ npm install appstore-connect-sdk
 #### 1. Import `appstore-connect-sdk`
 
 ```typescript
-import AppStoreConnectAPI from 'appstore-connect-sdk';
+import AppStoreConnectAPI from "appstore-connect-sdk";
 ```
 
 #### 2. Create your API Configuration
 
 Go to [App Sotre Connect -> Users and Access -> Keys](https://appstoreconnect.apple.com/access/api) and create your own key. This is also the page to find your `private key ID` and the `issuer ID`.
 
-After downloading your private key, you can open the `.p8` file containing the private key in a text editor which will show like the following content:
+After downloading your private key, open the `.p8` file containing the private key in a text editor. It should look like this:
 
 ```
 -----BEGIN PRIVATE KEY-----
@@ -56,18 +56,21 @@ const appStoreConnect = new AppStoreConnectAPI({
 
 #### 3. Create an API and perform a request
 
-You can find all available APIs in [src/openapi/apis](https://github.com/isaced/appstore-connect-sdk/tree/main/src/openapi/apis), these classes are generated according to [App Store Connect API - OpenAPI specification](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip), if you encounter missing or any problem, please open an [issue](https://github.com/isaced/appstore-connect-sdk/issues).
+You can find all available APIs in [src/openapi/apis](https://github.com/isaced/appstore-connect-sdk/tree/main/src/openapi/apis), these classes are generated according to [App Store Connect API - OpenAPI specification](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip), If you encounter any problems, please open an [issue](https://github.com/isaced/appstore-connect-sdk/issues).
 
 ```typescript
 const res = await client.call(AppsApi).appsGetCollection();
 console.log(res);
 ```
 
-#### The complete code example above
+Here's the complete code example:
 
 ```typescript
-import AppStoreConnectAPI from 'appstore-connect-sdk';
-import { AppsApi, AppEventLocalizationsApi } from 'appstore-connect-sdk/dist/openapi/apis';
+import AppStoreConnectAPI from "appstore-connect-sdk";
+import {
+  AppsApi,
+  AppEventLocalizationsApi,
+} from "appstore-connect-sdk/dist/openapi/apis";
 
 const appStoreConnect = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
@@ -81,22 +84,22 @@ console.log(res);
 
 ### Custom network libraries
 
-In order to adapt to different projects, it is supported to configure any network library to take over HTTP requests, just follow the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch) standard specification and set `fetchApi` in the `AppStoreConnectAPI` option.
+To adapt to different projects, it is possible to configure any network library to take over HTTP requests. just follow the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch) standard specification and set `fetchApi` in the `AppStoreConnectAPI` option.
 
 ```typescript
-import AppStoreConnectAPI from 'appstore-connect-sdk';
+import AppStoreConnectAPI from "appstore-connect-sdk";
 import { FetchAPI } from "./../src/openapi/runtime";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 new AppStoreConnectAPI({
-    // ...
-    fetchApi: fetch as FetchAPI,  // All network requests are made via node-fetch
+  // ...
+  fetchApi: fetch as FetchAPI, // All network requests are made via node-fetch
 });
 ```
 
-## Update OpenAPI generated code
+## Updating OpenAPI generated code
 
-Run the following:
+To update the OpenAPI-generated code, run the following command:
 
 ```bash
 $ sh gen-openapi.sh
@@ -106,8 +109,8 @@ This will generate Typescript code through [OpenAPI Generator](https://openapi-g
 
 ## License
 
-**appstore-connect-sdk** is available under the MIT license, and uses source code from open source projects. See the [LICENSE](https://github.com/isaced/appstore-connect-sdk/blob/main/LICENSE) file for more info.
+**appstore-connect-sdk** is available under the MIT license, and uses source code from open source projects. See the [LICENSE](https://github.com/isaced/appstore-connect-sdk/blob/main/LICENSE) file for more information.
 
 ## Author
 
-This project is originally created by [isaced](https://github.com/isaced) but has a lot of [great contributors](https://github.com/isaced/appstore-connect-sdk/graphs/contributors). We're open for contributions of any kind to make this project even better.
+This project was originally created by [isaced](https://github.com/isaced) but has had many [great contributors](https://github.com/isaced/appstore-connect-sdk/graphs/contributors). We're open to contributions of any kind to make this project even better.
