@@ -1,4 +1,4 @@
-import { FetchAPI } from "./openapi/runtime";
+import { FetchAPI, BaseAPI } from "./openapi/runtime";
 import { Configuration } from "./openapi";
 import { generateAuthToken } from "./auth";
 
@@ -26,5 +26,9 @@ export default class AppStoreConnectAPI {
       },
       fetchApi: options.fetchApi,
     });
+  }
+
+  call<T extends BaseAPI>(apiClass: new (configuration?: Configuration) => T): T {
+    return new apiClass(this.configuration);
   }
 }

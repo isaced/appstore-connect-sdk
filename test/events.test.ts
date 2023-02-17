@@ -15,8 +15,8 @@ test("Get In-App Events List", async () => {
     privateKey: loadP8File(),
     fetchApi: fetch as FetchAPI,
   });
-  const api = new AppsApi(client.configuration);
-  const res = await api.appsGetCollection();
+
+  const res = await client.call(AppsApi).appsGetCollection();
   console.log(res);
   expect(res).toBeDefined;
 });

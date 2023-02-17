@@ -59,8 +59,7 @@ const appStoreConnect = new AppStoreConnectAPI({
 You can find all available APIs in [src/openapi/apis](https://github.com/isaced/appstore-connect-sdk/tree/main/src/openapi/apis), these classes are generated according to [App Store Connect API - OpenAPI specification](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip), if you encounter missing or any problem, please open an [issue](https://github.com/isaced/appstore-connect-sdk/issues).
 
 ```typescript
-const api = new AppsApi(appStoreConnect.configuration);
-const res = await api.appsAppEventsGetToManyRelated({ id: APP_ID });
+const res = await client.call(AppsApi).appsGetCollection();
 console.log(res);
 ```
 
@@ -76,8 +75,7 @@ const appStoreConnect = new AppStoreConnectAPI({
   privateKey: "<YOUR PRIVATE KEY>",
 });
 
-const api = new AppsApi(appStoreConnect.configuration);
-const res = await api.appsAppEventsGetToManyRelated({ id: APP_ID });
+const res = await client.call(AppsApi).appsGetCollection();
 console.log(res);
 ```
 
