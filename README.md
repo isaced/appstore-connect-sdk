@@ -18,7 +18,7 @@ App Store Connect SDK for Nodejs, written in Typescript, supports all APIs based
 ## Installation
 
 ```bash
-npm install appstoreconnect-api
+npm install appstore-connect-sdk
 ```
 
 ## Usage
