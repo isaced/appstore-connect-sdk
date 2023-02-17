@@ -54,6 +54,12 @@ const appStoreConnect = new AppStoreConnectAPI({
 });
 ```
 
+For more information on how JWT works with the App Store Connect API, check out Apple's authentication guides:
+
+- [Creating API Keys for App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api)
+- [Generating Tokens for API Requests](https://developer.apple.com/documentation/appstoreconnectapi/generating_tokens_for_api_requests)
+- [Revoking API Keys](https://developer.apple.com/documentation/appstoreconnectapi/revoking_api_keys)
+
 #### 3. Create an API and perform a request
 
 You can find all available APIs in [src/openapi/apis](https://github.com/isaced/appstore-connect-sdk/tree/main/src/openapi/apis), these classes are generated according to [App Store Connect API - OpenAPI specification](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip), If you encounter any problems, please open an [issue](https://github.com/isaced/appstore-connect-sdk/issues).
@@ -88,7 +94,6 @@ To adapt to different projects, it is possible to configure any network library 
 
 ```typescript
 import AppStoreConnectAPI from "appstore-connect-sdk";
-import { FetchAPI } from "./../src/openapi/runtime";
 import fetch from "node-fetch";
 
 new AppStoreConnectAPI({
