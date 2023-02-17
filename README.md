@@ -90,7 +90,9 @@ console.log(res);
 
 ### Custom network libraries
 
-To adapt to different projects, it is possible to configure any network library to take over HTTP requests. just follow the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch) standard specification and set `fetchApi` in the `AppStoreConnectAPI` option.
+By default, AppStoreConnectAPI uses its built-in `fetch` function for HTTP requests. Note that this function requires Node.js version **18.0.0** or higher.
+
+However, you can also configure any network library that adheres to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch) standard specification by setting the `fetchApi` option in the AppStoreConnectAPI constructor.
 
 ```typescript
 import AppStoreConnectAPI from "appstore-connect-sdk";
@@ -98,7 +100,7 @@ import fetch from "node-fetch";
 
 new AppStoreConnectAPI({
   // ...
-  fetchApi: fetch as FetchAPI, // All network requests are made via node-fetch
+  fetchApi: fetch as unknown as FetchAPI, // All network requests are made via node-fetch
 });
 ```
 
