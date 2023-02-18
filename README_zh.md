@@ -1,4 +1,4 @@
-# appstoreconnect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
+# Appstore Connect SDK [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
 
 一个用 TypeScript 编写的 Node.js 的 App Store Connect SDK，通过 OpenAPI 支持所有 API。
 

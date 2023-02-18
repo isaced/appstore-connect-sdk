@@ -1,8 +1,8 @@
-# appstoreconnect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
-
-English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/main/README_zh.md)
+# Appstore Connect SDK [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
 
 The App Store Connect SDK for Node.js is written in TypeScript and supports all APIs based on OpenAPI Generator.
+
+English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/main/README_zh.md)
 
 ## Kickstart information on the API
 
