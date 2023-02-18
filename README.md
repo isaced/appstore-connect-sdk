@@ -1,5 +1,7 @@
 # appstoreconnect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
 
+English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/main/README_zh.md)
+
 The App Store Connect SDK for Node.js is written in TypeScript and supports all APIs based on OpenAPI Generator.
 
 ## Kickstart information on the API
@@ -10,8 +12,7 @@ The App Store Connect SDK for Node.js is written in TypeScript and supports all 
 
 ## Included in this SDK
 
-- [x] Configuration with API Key
-- [x] JWT Logic to sign requests
+- [x] Configuration with API Key and JWT Logic to sign requests
 - [x] Support for custom network libraries for making requests, such as fetch/node-fetch/axios...
 - [x] Support for _all_ requests due to OpenAPI generated requests and entities
 

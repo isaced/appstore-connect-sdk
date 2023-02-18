@@ -2,6 +2,8 @@
 
 一个用 TypeScript 编写的 Node.js 的 App Store Connect SDK，通过 OpenAPI 支持所有 API。
 
+简体中文 | [English](https://github.com/isaced/appstore-connect-sdk/blob/main/README.md) 
+
 ## 先了解一下 App Store Connect API
 
 - [Automate your workflow with the App Store Connect API](https://developer.apple.com/app-store-connect/api/)
