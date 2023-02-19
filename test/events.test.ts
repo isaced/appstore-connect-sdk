@@ -12,7 +12,7 @@ dotenv.config();
 const client = new AppStoreConnectAPI({
   issuerId: process.env.ISSUER_ID!,
   privateKeyId: process.env.PRIVATE_KEY_ID!,
-  privateKey: loadP8File(),
+  privateKey: process.env.PRIVATE_KEY!,
   fetchApi: fetch as unknown as FetchAPI,
 });
 
@@ -22,8 +22,3 @@ test("Get app list", async () => {
   console.log(res);
   expect(res).toBeDefined;
 });
-
-// Function to load the private key from the file system.
-export function loadP8File() {
-  return fs.readFileSync(process.env.P8_FILE!).toString();
-}
