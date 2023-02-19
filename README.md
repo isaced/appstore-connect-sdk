@@ -1,6 +1,6 @@
 # Appstore Connect SDK [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
 
-The App Store Connect SDK for Node.js is written in TypeScript and supports all APIs based on OpenAPI Generator.
+The `appstore-connect-sdk` is a Node.js module written in TypeScript that provides a convenient way for developers to interact with the [App Store Connect API](https://developer.apple.com/app-store-connect/api/). The module is built on top of the [OpenAPI Generator](https://openapi-generator.tech/) tool and provides support for all APIs based on OpenAPI specification.
 
 English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/main/README_zh.md)
 
@@ -12,9 +12,12 @@ English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/mai
 
 ## Included in this SDK
 
+The `appstore-connect-sdk` module includes the following features:
+
 - [x] Configuration with API Key and JWT Logic to sign requests
 - [x] Support for custom network libraries for making requests, such as fetch/node-fetch/axios...
 - [x] Support for _all_ requests due to OpenAPI generated requests and entities
+- [x] Compatibility with both Node.js and **Deno** environments (_please note that certain features of the appstore-connect-sdk module that rely on the Node crypto module may not work as expected in Deno, as described in the "Deno Compatibility" section above_)
 
 ## Installation
 
@@ -114,6 +117,18 @@ $ sh gen-openapi.sh
 ```
 
 This will generate Typescript code through [OpenAPI Generator](https://openapi-generator.tech/) based on the [OpenAPI specification](https://github.com/isaced/appstore-connect-sdk/blob/fdabb5bb414e9e3c02341ac1fa3238a5bfa15c30/app_store_connect_api_2.2_openapi.json) file officially released by Apple.
+
+## Deno Compatibility
+
+The appstore-connect-sdk module is mostly compatible with Deno, but there are some limitations to its usage in a Deno environment. Currently, Deno does not provide full support for the [Node crypto module](https://github.com/denoland/deno_std/issues/3149), which means that certain features of the appstore-connect-sdk module that rely on this module may not work as expected in Deno.
+
+One specific limitation is that the `jsonwebtoken` package, which is used by the appstore-connect-sdk module to generate JSON Web Tokens (JWTs), is not fully compatible with Deno. As a result, it is not possible to use `jsonwebtoken` in a Deno environment to generate JWTs for use with the App Store Connect API.
+
+To work around this limitation, you can manually generate JWTs using a library that is fully compatible with Deno, such as `djwt`. You can then pass the manually generated JWT to the `appstore-connect-sdk` module to authenticate with the App Store Connect API.
+
+An example of using the `appstore-connect-sdk` module in a Deno environment can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/deno_example).
+
+We are committed to ensuring that the `appstore-connect-sdk` module remains fully compatible with both Node.js and Deno, and we will continue to work on improving its compatibility with Deno as the Deno runtime evolves.
 
 ## License
 

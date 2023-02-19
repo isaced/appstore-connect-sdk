@@ -1,8 +1,8 @@
 # Appstore Connect SDK [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
 
-一个用 TypeScript 编写的 Node.js 的 App Store Connect SDK，通过 OpenAPI 支持所有 API。
+`appstore-connect-sdk` 是一个 Node.js 模块，使用 TypeScript 编写，为开发人员提供了一个方便的与 [App Store Connect API](https://developer.apple.com/app-store-connect/api/) 进行交互。该模块基于 [OpenAPI Generator](https://openapi-generator.tech/) 工具构建，并支持所有基于 OpenAPI 规范的 API。
 
-简体中文 | [English](https://github.com/isaced/appstore-connect-sdk/blob/main/README.md) 
+简体中文 | [English](https://github.com/isaced/appstore-connect-sdk/blob/main/README.md)
 
 ## 先了解一下 App Store Connect API
 
@@ -15,6 +15,7 @@
 - [x] API 密钥配置以支持 JWT 签名
 - [x] 支持自定义网络库发送请求，如 fetch/node-fetch/axios 等…
 - [x] 借助 OpenAPI 的自动化生成能力，支持苹果所有 API
+- [x] 支持 Deno 运行时
 
 ## 安装
 
@@ -54,6 +55,7 @@ const appStoreConnect = new AppStoreConnectAPI({
   privateKey: "<YOUR PRIVATE KEY>",
 });
 ```
+
 有关如何在 App Store Connect API 中通过 JWT 认证的更多信息，请查看 Apple 的身份验证指南:
 
 - [Creating API Keys for App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api)
@@ -113,6 +115,18 @@ $ sh gen-openapi.sh
 ```
 
 这将基于由 Apple 官方发布的 [OpenAPI specification](https://github.com/isaced/appstore-connect-sdk/blob/fdabb5bb414e9e3c02341ac1fa3238a5bfa15c30/app_store_connect_api_2.2_openapi.json) 规范文件，通过 [OpenAPI Generator](https://openapi-generator.tech/) 生成 Typescript 代码。
+
+## Deno 兼容性
+
+`appstore-connect-sdk` 模块在大多数情况下都与 Deno 兼容，但在 Deno 环境下使用时有一些限制。目前，Deno 对于 Node crypto 模块的兼容性支持尚未完成，这意味着 `appstore-connect-sdk` 模块的某些依赖此模块的特性在 Deno 中可能无法正常工作。
+
+具体而言，`appstore-connect-sdk` 模块使用的 `jsonwebtoken` 包不完全兼容 Deno。因此，在 Deno 环境中，无法使用 jsonwebtoken 生成 JWT（JSON Web Token），以便与 App Store Connect API 进行身份验证。
+
+为了解决这个问题，您可以手动使用与 Deno 完全兼容的库（如 `djwt`）生成 JWT。然后将手动生成的 JWT 传递给 `appstore-connect-sdk` 模块，以便与 App Store Connect API 进行身份验证。
+
+您可以在 [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/deno_example) 中查看在 Deno 环境中使用 `appstore-connect-sdk` 模块的示例。
+
+我们致力于确保 `appstore-connect-sdk` 模块能够完全兼容 Node.js 和 Deno，我们将继续努力提高其与 Deno 的兼容性，随着 Deno 运行时的发展而不断改进。
 
 ## 许可证
 
