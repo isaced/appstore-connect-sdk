@@ -9,22 +9,27 @@ interface AppStoreConnectAPIOptions {
   /**
    * The issuer ID associated with the private key.
    */
-  issuerId: string;
+  issuerId?: string;
 
   /**
    * The ID of the private key.
    */
-  privateKeyId: string;
+  privateKeyId?: string;
 
   /**
    * The private key in PEM format.
    */
-  privateKey: string;
+  privateKey?: string;
 
   /**
    * An optional FetchAPI instance to use for making HTTP requests.
    */
   fetchApi?: FetchAPI;
+
+  /**
+   * A bearer token can be provided directly, which will be used instead of generating a new token
+   */
+  bearerToken?: string;
 }
 
 /**
@@ -44,14 +49,22 @@ export default class AppStoreConnectAPI {
    * @param options.privateKeyId - The ID of the private key used for generating JWT token.
    * @param options.privateKey - The content of the private key used for generating JWT token.
    * @param options.fetchApi - (Optional) The FetchAPI implementation to use for API requests.
+   * @param options.bearerToken - (Optional) A pre-generated bearer token to use for authentication.
+   * @throws {string} Will throw an error if no bearerToken or private key is provided
    */
   constructor(options: AppStoreConnectAPIOptions) {
     // Generate an authentication token using the provided options.
-    this.bearerToken = generateAuthToken({
-      apiKeyId: options.privateKeyId,
-      issuerId: options.issuerId,
-      privateKey: options.privateKey,
-    });
+    if (options.bearerToken) {
+      this.bearerToken = options.bearerToken;
+    } else if (options.privateKeyId && options.issuerId && options.privateKey) {
+      this.bearerToken = generateAuthToken({
+        apiKeyId: options.privateKeyId,
+        issuerId: options.issuerId,
+        privateKey: options.privateKey,
+      });
+    } else {
+      throw 'No bearerToken!!!'
+    }
 
     // Create a Configuration object with the authentication token and any provided FetchAPI implementation.
     this.configuration = new Configuration({
