@@ -61,7 +61,6 @@ export interface CiProductsAppGetToOneRelatedRequest {
     fieldsPreReleaseVersions?: Array<CiProductsAppGetToOneRelatedFieldsPreReleaseVersionsEnum>;
     fieldsInAppPurchases?: Array<CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum>;
     fieldsCiProducts?: Array<CiProductsAppGetToOneRelatedFieldsCiProductsEnum>;
-    fieldsInAppPurchases2?: Array<CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum>;
     fieldsSubscriptionGroups?: Array<CiProductsAppGetToOneRelatedFieldsSubscriptionGroupsEnum>;
     fieldsReviewSubmissions?: Array<CiProductsAppGetToOneRelatedFieldsReviewSubmissionsEnum>;
     fieldsBetaGroups?: Array<CiProductsAppGetToOneRelatedFieldsBetaGroupsEnum>;
@@ -264,10 +263,6 @@ export class CiProductsApi extends runtime.BaseAPI {
 
         if (requestParameters.fieldsCiProducts) {
             queryParameters['fields[ciProducts]'] = requestParameters.fieldsCiProducts.join(runtime.COLLECTION_FORMATS["csv"]);
-        }
-
-        if (requestParameters.fieldsInAppPurchases2) {
-            queryParameters['fields[inAppPurchases]'] = requestParameters.fieldsInAppPurchases2.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
         if (requestParameters.fieldsSubscriptionGroups) {
@@ -924,17 +919,6 @@ export type CiProductsAppGetToOneRelatedFieldsPreReleaseVersionsEnum = typeof Ci
 /**
  * @export
  */
-export const CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum = {
-    Apps: 'apps',
-    InAppPurchaseType: 'inAppPurchaseType',
-    ProductId: 'productId',
-    ReferenceName: 'referenceName',
-    State: 'state'
-} as const;
-export type CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum = typeof CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum[keyof typeof CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum];
-/**
- * @export
- */
 export const CiProductsAppGetToOneRelatedFieldsCiProductsEnum = {
     AdditionalRepositories: 'additionalRepositories',
     App: 'app',
@@ -950,7 +934,7 @@ export type CiProductsAppGetToOneRelatedFieldsCiProductsEnum = typeof CiProducts
 /**
  * @export
  */
-export const CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum = {
+export const CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnumMap = {
     App: 'app',
     AppStoreReviewScreenshot: 'appStoreReviewScreenshot',
     AvailableInAllTerritories: 'availableInAllTerritories',
@@ -967,7 +951,7 @@ export const CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum = {
     ReviewNote: 'reviewNote',
     State: 'state'
 } as const;
-export type CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum = typeof CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum[keyof typeof CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum];
+export type CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnum = typeof CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnumMap[keyof typeof CiProductsAppGetToOneRelatedFieldsInAppPurchasesEnumMap];
 /**
  * @export
  */
