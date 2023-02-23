@@ -294,7 +294,6 @@ export interface AppsGetCollectionRequest {
     fieldsAppPricePoints?: Array<AppsGetCollectionFieldsAppPricePointsEnum>;
     fieldsInAppPurchases?: Array<AppsGetCollectionFieldsInAppPurchasesEnum>;
     fieldsPreReleaseVersions?: Array<AppsGetCollectionFieldsPreReleaseVersionsEnum>;
-    fieldsInAppPurchases2?: Array<AppsGetCollectionFieldsInAppPurchasesEnum>;
     fieldsSubscriptionGroups?: Array<AppsGetCollectionFieldsSubscriptionGroupsEnum>;
     fieldsAppPrices?: Array<AppsGetCollectionFieldsAppPricesEnum>;
     fieldsAppPreOrders?: Array<AppsGetCollectionFieldsAppPreOrdersEnum>;
@@ -343,7 +342,6 @@ export interface AppsGetInstanceRequest {
     fieldsAppPricePoints?: Array<AppsGetInstanceFieldsAppPricePointsEnum>;
     fieldsInAppPurchases?: Array<AppsGetInstanceFieldsInAppPurchasesEnum>;
     fieldsPreReleaseVersions?: Array<AppsGetInstanceFieldsPreReleaseVersionsEnum>;
-    fieldsInAppPurchases2?: Array<AppsGetInstanceFieldsInAppPurchasesEnum>;
     fieldsSubscriptionGroups?: Array<AppsGetInstanceFieldsSubscriptionGroupsEnum>;
     fieldsAppPrices?: Array<AppsGetInstanceFieldsAppPricesEnum>;
     fieldsAppPreOrders?: Array<AppsGetInstanceFieldsAppPreOrdersEnum>;
@@ -1530,10 +1528,6 @@ export class AppsApi extends runtime.BaseAPI {
             queryParameters['fields[preReleaseVersions]'] = requestParameters.fieldsPreReleaseVersions.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
-        if (requestParameters.fieldsInAppPurchases2) {
-            queryParameters['fields[inAppPurchases]'] = requestParameters.fieldsInAppPurchases2.join(runtime.COLLECTION_FORMATS["csv"]);
-        }
-
         if (requestParameters.fieldsSubscriptionGroups) {
             queryParameters['fields[subscriptionGroups]'] = requestParameters.fieldsSubscriptionGroups.join(runtime.COLLECTION_FORMATS["csv"]);
         }
@@ -1744,10 +1738,6 @@ export class AppsApi extends runtime.BaseAPI {
 
         if (requestParameters.fieldsPreReleaseVersions) {
             queryParameters['fields[preReleaseVersions]'] = requestParameters.fieldsPreReleaseVersions.join(runtime.COLLECTION_FORMATS["csv"]);
-        }
-
-        if (requestParameters.fieldsInAppPurchases2) {
-            queryParameters['fields[inAppPurchases]'] = requestParameters.fieldsInAppPurchases2.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
         if (requestParameters.fieldsSubscriptionGroups) {
@@ -3709,9 +3699,9 @@ export type AppsCustomerReviewsGetToManyRelatedFilterTerritoryEnum = typeof Apps
  */
 export const AppsCustomerReviewsGetToManyRelatedSortEnum = {
     CreatedDate: 'createdDate',
-    CreatedDate: '-createdDate',
+    CreatedDateDesc: '-createdDate',
     Rating: 'rating',
-    Rating: '-rating'
+    RatingDesc: '-rating'
 } as const;
 export type AppsCustomerReviewsGetToManyRelatedSortEnum = typeof AppsCustomerReviewsGetToManyRelatedSortEnum[keyof typeof AppsCustomerReviewsGetToManyRelatedSortEnum];
 /**
@@ -3767,7 +3757,7 @@ export type AppsGameCenterEnabledVersionsGetToManyRelatedFilterPlatformEnum = ty
  */
 export const AppsGameCenterEnabledVersionsGetToManyRelatedSortEnum = {
     VersionString: 'versionString',
-    VersionString: '-versionString'
+    VersionStringDesc: '-versionString'
 } as const;
 export type AppsGameCenterEnabledVersionsGetToManyRelatedSortEnum = typeof AppsGameCenterEnabledVersionsGetToManyRelatedSortEnum[keyof typeof AppsGameCenterEnabledVersionsGetToManyRelatedSortEnum];
 /**
@@ -3872,11 +3862,11 @@ export type AppsGetCollectionFilterAppStoreVersionsPlatformEnum = typeof AppsGet
  */
 export const AppsGetCollectionSortEnum = {
     BundleId: 'bundleId',
-    BundleId: '-bundleId',
+    BundleIdDesc: '-bundleId',
     Name: 'name',
-    Name: '-name',
+    NameDesc: '-name',
     Sku: 'sku',
-    Sku: '-sku'
+    SkuDesc: '-sku'
 } as const;
 export type AppsGetCollectionSortEnum = typeof AppsGetCollectionSortEnum[keyof typeof AppsGetCollectionSortEnum];
 /**
@@ -4152,17 +4142,6 @@ export const AppsGetCollectionFieldsAppPricePointsEnum = {
     Territory: 'territory'
 } as const;
 export type AppsGetCollectionFieldsAppPricePointsEnum = typeof AppsGetCollectionFieldsAppPricePointsEnum[keyof typeof AppsGetCollectionFieldsAppPricePointsEnum];
-/**
- * @export
- */
-export const AppsGetCollectionFieldsInAppPurchasesEnum = {
-    Apps: 'apps',
-    InAppPurchaseType: 'inAppPurchaseType',
-    ProductId: 'productId',
-    ReferenceName: 'referenceName',
-    State: 'state'
-} as const;
-export type AppsGetCollectionFieldsInAppPurchasesEnum = typeof AppsGetCollectionFieldsInAppPurchasesEnum[keyof typeof AppsGetCollectionFieldsInAppPurchasesEnum];
 /**
  * @export
  */
@@ -4581,17 +4560,6 @@ export type AppsGetInstanceFieldsAppPricePointsEnum = typeof AppsGetInstanceFiel
 /**
  * @export
  */
-export const AppsGetInstanceFieldsInAppPurchasesEnum = {
-    Apps: 'apps',
-    InAppPurchaseType: 'inAppPurchaseType',
-    ProductId: 'productId',
-    ReferenceName: 'referenceName',
-    State: 'state'
-} as const;
-export type AppsGetInstanceFieldsInAppPurchasesEnum = typeof AppsGetInstanceFieldsInAppPurchasesEnum[keyof typeof AppsGetInstanceFieldsInAppPurchasesEnum];
-/**
- * @export
- */
 export const AppsGetInstanceFieldsPreReleaseVersionsEnum = {
     App: 'app',
     Builds: 'builds',
@@ -4602,7 +4570,7 @@ export type AppsGetInstanceFieldsPreReleaseVersionsEnum = typeof AppsGetInstance
 /**
  * @export
  */
-export const AppsGetInstanceFieldsInAppPurchasesEnum = {
+export const AppsGetInstanceFieldsInAppPurchasesEnumMap = {
     App: 'app',
     AppStoreReviewScreenshot: 'appStoreReviewScreenshot',
     AvailableInAllTerritories: 'availableInAllTerritories',
@@ -4619,7 +4587,7 @@ export const AppsGetInstanceFieldsInAppPurchasesEnum = {
     ReviewNote: 'reviewNote',
     State: 'state'
 } as const;
-export type AppsGetInstanceFieldsInAppPurchasesEnum = typeof AppsGetInstanceFieldsInAppPurchasesEnum[keyof typeof AppsGetInstanceFieldsInAppPurchasesEnum];
+export type AppsGetInstanceFieldsInAppPurchasesEnum = typeof AppsGetInstanceFieldsInAppPurchasesEnumMap[keyof typeof AppsGetInstanceFieldsInAppPurchasesEnumMap];
 /**
  * @export
  */
@@ -4747,11 +4715,11 @@ export type AppsInAppPurchasesGetToManyRelatedFilterInAppPurchaseTypeEnum = type
  */
 export const AppsInAppPurchasesGetToManyRelatedSortEnum = {
     InAppPurchaseType: 'inAppPurchaseType',
-    InAppPurchaseType: '-inAppPurchaseType',
+    InAppPurchaseTypeDesc: '-inAppPurchaseType',
     ProductId: 'productId',
-    ProductId: '-productId',
+    ProductIdDesc: '-productId',
     ReferenceName: 'referenceName',
-    ReferenceName: '-referenceName'
+    ReferenceNameDesc: '-referenceName'
 } as const;
 export type AppsInAppPurchasesGetToManyRelatedSortEnum = typeof AppsInAppPurchasesGetToManyRelatedSortEnum[keyof typeof AppsInAppPurchasesGetToManyRelatedSortEnum];
 /**
@@ -4848,9 +4816,9 @@ export type AppsInAppPurchasesV2GetToManyRelatedFilterStateEnum = typeof AppsInA
  */
 export const AppsInAppPurchasesV2GetToManyRelatedSortEnum = {
     InAppPurchaseType: 'inAppPurchaseType',
-    InAppPurchaseType: '-inAppPurchaseType',
+    InAppPurchaseTypeDesc: '-inAppPurchaseType',
     Name: 'name',
-    Name: '-name'
+    NameDesc: '-name'
 } as const;
 export type AppsInAppPurchasesV2GetToManyRelatedSortEnum = typeof AppsInAppPurchasesV2GetToManyRelatedSortEnum[keyof typeof AppsInAppPurchasesV2GetToManyRelatedSortEnum];
 /**
@@ -5381,7 +5349,7 @@ export type AppsSubscriptionGroupsGetToManyRelatedFilterSubscriptionsStateEnum =
  */
 export const AppsSubscriptionGroupsGetToManyRelatedSortEnum = {
     ReferenceName: 'referenceName',
-    ReferenceName: '-referenceName'
+    ReferenceNameDesc: '-referenceName'
 } as const;
 export type AppsSubscriptionGroupsGetToManyRelatedSortEnum = typeof AppsSubscriptionGroupsGetToManyRelatedSortEnum[keyof typeof AppsSubscriptionGroupsGetToManyRelatedSortEnum];
 /**
