@@ -30,6 +30,11 @@ interface AppStoreConnectAPIOptions {
    * A bearer token can be provided directly, which will be used instead of generating a new token
    */
   bearerToken?: string;
+
+  /**
+   * The time (in seconds) until the token expires (default 10 minutes)
+   */
+  expirationTime?: number;
 }
 
 /**
@@ -39,8 +44,9 @@ interface AppStoreConnectAPIOptions {
  * https://github.com/isaced/appstore-connect-sdk
  */
 export default class AppStoreConnectAPI {
-  private bearerToken?: string;
-  public configuration?: Configuration;
+  private bearerTokenGeneratedAt = 0;
+  private options: AppStoreConnectAPIOptions;
+  private configuration?: Configuration;
 
   /**
    * Creates an instance of the AppStoreConnectAPI.
@@ -50,29 +56,54 @@ export default class AppStoreConnectAPI {
    * @param options.privateKey - The content of the private key used for generating JWT token.
    * @param options.fetchApi - (Optional) The FetchAPI implementation to use for API requests.
    * @param options.bearerToken - (Optional) A pre-generated bearer token to use for authentication.
+   * @param options.expirationTime - (Optional) The time (in seconds) until the token expires (default 10 minutes)
    * @throws {string} Will throw an error if no bearerToken or private key is provided
    */
   constructor(options: AppStoreConnectAPIOptions) {
-    // Generate an authentication token using the provided options.
-    if (options.bearerToken) {
-      this.bearerToken = options.bearerToken;
-    } else if (options.privateKeyId && options.issuerId && options.privateKey) {
-      this.bearerToken = generateAuthToken({
-        apiKeyId: options.privateKeyId,
-        issuerId: options.issuerId,
-        privateKey: options.privateKey,
+    options.expirationTime = options.expirationTime || 60 * 10;
+    this.options = options;
+  }
+
+  /**
+   * Generates a new bearer token.
+   */
+  genToken() {
+    if (this.options.bearerToken) {
+      return this.options.bearerToken;
+    } else if (this.options.privateKeyId && this.options.issuerId && this.options.privateKey) {
+      return generateAuthToken({
+        apiKeyId: this.options.privateKeyId,
+        issuerId: this.options.issuerId,
+        privateKey: this.options.privateKey,
+        expirationTime: this.options.expirationTime,
       });
     } else {
       throw 'No bearerToken!!!'
     }
+  }
 
-    // Create a Configuration object with the authentication token and any provided FetchAPI implementation.
+  /**
+   * Create a Configuration object with the authentication token and any provided FetchAPI implementation.
+   */
+  genConfiguration() {
     this.configuration = new Configuration({
       headers: {
-        Authorization: `Bearer ${this.bearerToken}`,
+        Authorization: `Bearer ${this.genToken()}`,
       },
-      fetchApi: options.fetchApi,
+      fetchApi: this.options.fetchApi,
     });
+    this.bearerTokenGeneratedAt = Date.now();
+  }
+
+  /**
+   * Returns the current bearer token, generating a new one if necessary.
+   */
+  getConfiguration() {
+    const hasExpired = this.bearerTokenGeneratedAt && (Date.now() - this.bearerTokenGeneratedAt) > (1000 * this.options.expirationTime!);
+    if (!this.configuration || hasExpired) {
+      this.genConfiguration();
+    }
+    return this.configuration;
   }
 
   /**
@@ -81,6 +112,6 @@ export default class AppStoreConnectAPI {
   * @returns An instance of the specified API class.
   */
   call<T extends BaseAPI>(apiClass: new (configuration?: Configuration) => T): T {
-    return new apiClass(this.configuration);
+    return new apiClass(this.getConfiguration());
   }
 }
