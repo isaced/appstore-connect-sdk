@@ -1,4 +1,3 @@
-import fs from "fs";
 import fetch from "node-fetch";
 import * as dotenv from "dotenv";
 
@@ -6,6 +5,10 @@ import { FetchAPI } from "./../src/openapi/runtime";
 import { AppsApi } from "../src/openapi";
 import AppStoreConnectAPI from "../src/main";
 
+// Increase the timeout for the test case.
+jest.setTimeout(30000)
+
+// Load the environment variables from the .env file.
 dotenv.config();
 
 // Create a new instance of the AppStoreConnectAPI client with the required parameters.
