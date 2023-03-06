@@ -9,12 +9,37 @@
     "apple"
   ],
   "main": "dist/main.js",
+  "module": "./dist/main.mjs",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/main.js",
+      "import": "./dist/main.mjs",
+      "types": "./dist/main.d.ts"
+    },
+    "./dist/openapi/apis/*": {
+      "require": "./dist/openapi/apis/*.js",
+      "import": "./dist/openapi/apis/*.mjs"
+    },
+    "./dist/openapi/apis": {
+      "require": "./dist/openapi/apis/index.js",
+      "import": "./dist/openapi/apis/index.mjs"
+    },
+    "./dist/openapi/models/*": {
+      "require": "./dist/openapi/models/*.js",
+      "import": "./dist/openapi/models/*.mjs"
+    },
+    "./dist/openapi/models": {
+      "require": "./dist/openapi/models/index.js",
+      "import": "./dist/openapi/models/index.mjs"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsup src/ --format cjs,esm --dts --minify --clean"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",
@@ -25,6 +50,7 @@
     "jest": "^29.4.2",
     "node-fetch": "^2.0.0",
     "ts-jest": "^29.0.5",
+    "tsup": "^6.6.3",
     "typescript": "^4.9.5"
   },
   "dependencies": {
