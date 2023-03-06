@@ -16,6 +16,12 @@
 - [x] 支持自定义网络库发送请求，如 fetch/node-fetch/axios 等…
 - [x] 借助 OpenAPI 的自动化生成能力，支持苹果所有 API
 - [x] 支持 Deno 运行时
+- [ ] 支持 ESM
+
+## 示例
+
+- [Deno 示例](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example)
+- [Node 示例](https://github.com/isaced/appstore-connect-sdk/tree/main/node_example)
 
 ## 安装
 
