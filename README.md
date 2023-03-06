@@ -18,6 +18,12 @@ The `appstore-connect-sdk` module includes the following features:
 - [x] Support for custom network libraries for making requests, such as fetch/node-fetch/axios...
 - [x] Support for _all_ requests due to OpenAPI generated requests and entities
 - [x] Compatibility with both Node.js and **Deno** environments (_please note that certain features of the appstore-connect-sdk module that rely on the Node crypto module may not work as expected in Deno, as described in the "Deno Compatibility" section above_)
+- [] ESM Support
+
+## Examples
+
+- [Deno Example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example)
+- [Node Example](https://github.com/isaced/appstore-connect-sdk/tree/main/node_example)
 
 ## Installation
 
