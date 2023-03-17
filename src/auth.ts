@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import * as jose from "jose";
 
 // Options for generating the JWT token
 interface GenerateAuthTokenOptions {
@@ -13,22 +14,23 @@ interface GenerateAuthTokenOptions {
 }
 
 // Generates a JWT token for use with the App Store Connect API
-export function generateAuthToken({ apiKeyId, issuerId, privateKey, expirationTime }: GenerateAuthTokenOptions) {
-  // Generate the token using the provided options
-  const token = jwt.sign({}, privateKey, {
-    algorithm: "ES256",
-    expiresIn: expirationTime,
-    issuer: issuerId,
-    audience: "appstoreconnect-v1",
-    header: {
+export async function generateAuthToken({ apiKeyId, issuerId, privateKey, expirationTime }: GenerateAuthTokenOptions) {
+  const alg = "ES256";
+  const privateKey1 = await jose.importPKCS8(privateKey, alg);
+  var nowSeconds = new Date().getTime() / 1000;
+  const token = await new jose.SignJWT({})
+    .setProtectedHeader({
       // The algorithm used to sign the token (ECDSA with SHA-256)
-      alg: "ES256",
+      alg,
       // The ID of the private key used to sign the token
       kid: apiKeyId,
       // The type of the token (JWT)
       typ: "JWT",
-    },
-  });
+    })
+    .setIssuer(issuerId)
+    .setAudience("appstoreconnect-v1")
+    .setExpirationTime(nowSeconds)
+    .sign(privateKey1);
 
   // Return the generated token
   return token;

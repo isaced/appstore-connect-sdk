@@ -40,7 +40,7 @@ interface AppStoreConnectAPIOptions {
 /**
  * The App Store Connect SDK for Node.js is written in TypeScript and supports all APIs
  * based on OpenAPI Generator.
- * 
+ *
  * https://github.com/isaced/appstore-connect-sdk
  */
 export default class AppStoreConnectAPI {
@@ -67,28 +67,28 @@ export default class AppStoreConnectAPI {
   /**
    * Generates a new bearer token.
    */
-  genToken() {
+  async genToken() {
     if (this.options.bearerToken) {
       return this.options.bearerToken;
     } else if (this.options.privateKeyId && this.options.issuerId && this.options.privateKey) {
-      return generateAuthToken({
+      return await generateAuthToken({
         apiKeyId: this.options.privateKeyId,
         issuerId: this.options.issuerId,
         privateKey: this.options.privateKey,
         expirationTime: this.options.expirationTime,
       });
     } else {
-      throw 'No bearerToken!!!'
+      throw "No bearerToken!!!";
     }
   }
 
   /**
    * Create a Configuration object with the authentication token and any provided FetchAPI implementation.
    */
-  genConfiguration() {
+  async genConfiguration() {
     this.configuration = new Configuration({
       headers: {
-        Authorization: `Bearer ${this.genToken()}`,
+        Authorization: `Bearer ${await this.genToken()}`,
       },
       fetchApi: this.options.fetchApi,
     });
@@ -98,20 +98,21 @@ export default class AppStoreConnectAPI {
   /**
    * Returns the current bearer token, generating a new one if necessary.
    */
-  getConfiguration() {
-    const hasExpired = this.bearerTokenGeneratedAt && (Date.now() - this.bearerTokenGeneratedAt) > (1000 * this.options.expirationTime!);
+  async getConfiguration() {
+    const hasExpired =
+      this.bearerTokenGeneratedAt && Date.now() - this.bearerTokenGeneratedAt > 1000 * this.options.expirationTime!;
     if (!this.configuration || hasExpired) {
-      this.genConfiguration();
+      await this.genConfiguration();
     }
     return this.configuration;
   }
 
   /**
-  * Calls the specified API class using the current Configuration object.
-  * @param apiClass - The API class to instantiate.
-  * @returns An instance of the specified API class.
-  */
-  call<T extends BaseAPI>(apiClass: new (configuration?: Configuration) => T): T {
-    return new apiClass(this.getConfiguration());
+   * Calls the specified API class using the current Configuration object.
+   * @param apiClass - The API class to instantiate.
+   * @returns An instance of the specified API class.
+   */
+  async call<T extends BaseAPI>(apiClass: new (configuration?: Configuration) => T): Promise<T> {
+    return new apiClass(await this.getConfiguration());
   }
 }
