@@ -82,9 +82,9 @@ export function AppEventAttributesTerritorySchedulesInnerToJSON(value?: AppEvent
     return {
         
         'territories': value.territories,
-        'publishStart': value.publishStart === undefined ? undefined : (value.publishStart.toISOString()),
-        'eventStart': value.eventStart === undefined ? undefined : (value.eventStart.toISOString()),
-        'eventEnd': value.eventEnd === undefined ? undefined : (value.eventEnd.toISOString()),
+        'publishStart': typeof value.publishStart === 'string' ? value.publishStart : (value.publishStart === undefined ? undefined : (value.publishStart.toISOString())),
+        'eventStart': typeof value.eventStart === 'string' ? value.eventStart : (value.eventStart === undefined ? undefined : (value.eventStart.toISOString())),
+        'eventEnd': typeof value.eventEnd === 'string' ? value.eventEnd : (value.eventEnd === undefined ? undefined : (value.eventEnd.toISOString())),
     };
 }
 
