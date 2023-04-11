@@ -54,10 +54,7 @@ export function ReviewSubmissionItemsResponseIncludedInnerFromJSON(json: any): R
 }
 
 export function ReviewSubmissionItemsResponseIncludedInnerFromJSONTyped(json: any, ignoreDiscriminator: boolean): ReviewSubmissionItemsResponseIncludedInner {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return { ...AppCustomProductPageVersionFromJSONTyped(json, true), ...AppEventFromJSONTyped(json, true), ...AppStoreVersionFromJSONTyped(json, true), ...AppStoreVersionExperimentFromJSONTyped(json, true) };
+    return json;
 }
 
 export function ReviewSubmissionItemsResponseIncludedInnerToJSON(value?: ReviewSubmissionItemsResponseIncludedInner | null): any {
