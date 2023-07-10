@@ -19,7 +19,6 @@
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",
     "@types/jest": "^29.4.0",
-    "@types/jsonwebtoken": "^9.0.1",
     "@types/node-fetch": "^2.0.0",
     "dotenv": "^16.0.3",
     "jest": "^29.4.2",
@@ -39,7 +38,6 @@
   },
   "homepage": "https://github.com/isaced/appstore-connect-sdk",
   "dependencies": {
-    "jose": "^4.13.1",
-    "jsonwebtoken": "^9.0.0"
+    "jose": "^4.14.4"
   }
 }

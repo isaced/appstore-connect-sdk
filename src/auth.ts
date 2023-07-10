@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import * as jose from "jose";
 
 // Options for generating the JWT token
