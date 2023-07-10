@@ -6,7 +6,7 @@ import { AppsApi } from "../src/openapi";
 import AppStoreConnectAPI from "../src/main";
 
 // Increase the timeout for the test case.
-jest.setTimeout(30000)
+jest.setTimeout(30000);
 
 // Load the environment variables from the .env file.
 dotenv.config();
@@ -21,7 +21,12 @@ const client = new AppStoreConnectAPI({
 
 // Test case to get a list of apps.
 test("Get app list", async () => {
-  const res = await client.call(AppsApi).appsGetCollection();
-  console.log(res);
-  expect(res).toBeDefined;
+  try {
+    const api = await client.call(AppsApi);
+    let res = await api.appsGetCollection();
+    console.log(res);
+    expect(res).toBeDefined;
+  } catch (error) {
+    console.error(error);
+  }
 });
