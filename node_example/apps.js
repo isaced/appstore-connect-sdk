@@ -13,8 +13,8 @@ async function main() {
         privateKey: process.env.PRIVATE_KEY,
     });
 
-    const appsApi = await client.call(AppsApi);
-    const res = await appsApi.appsGetCollection();
+    let api = await client.create(AppsApi);
+    const res = await api.appsGetCollection();
     console.log(res);
 }
 

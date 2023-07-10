@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "appstore-connect-sdk": "1.0.0-beta.0",
+    "appstore-connect-sdk": "1.0.0-beta.1",
     "dotenv": "^16.0.3"
   }
 }
