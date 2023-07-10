@@ -56,7 +56,7 @@ nNdXXbA4
 Now use this `Private Key` together with the `isuer ID` and the `private key ID` to create your configuration:
 
 ```typescript
-const appStoreConnect = new AppStoreConnectAPI({
+const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
@@ -74,7 +74,8 @@ For more information on how JWT works with the App Store Connect API, check out 
 You can find all available APIs in [src/openapi/apis](https://github.com/isaced/appstore-connect-sdk/tree/main/src/openapi/apis), these classes are generated according to [App Store Connect API - OpenAPI specification](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip), If you encounter any problems, please open an [issue](https://github.com/isaced/appstore-connect-sdk/issues).
 
 ```typescript
-const res = await client.call(AppsApi).appsGetCollection();
+const api = await client.create(AppsApi);
+const res = await api.appsGetCollection();
 console.log(res);
 ```
 
@@ -87,13 +88,14 @@ import {
   AppEventLocalizationsApi,
 } from "appstore-connect-sdk/dist/openapi/apis";
 
-const appStoreConnect = new AppStoreConnectAPI({
+const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });
 
-const res = await client.call(AppsApi).appsGetCollection();
+const api = await client.create(AppsApi);
+const res = await api.appsGetCollection();
 console.log(res);
 ```
 

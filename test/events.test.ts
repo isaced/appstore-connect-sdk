@@ -22,8 +22,8 @@ const client = new AppStoreConnectAPI({
 // Test case to get a list of apps.
 test("Get app list", async () => {
   try {
-    const api = await client.call(AppsApi);
-    let res = await api.appsGetCollection();
+    const api = await client.create(AppsApi);
+    const res = await api.appsGetCollection();
     console.log(res);
     expect(res).toBeDefined;
   } catch (error) {

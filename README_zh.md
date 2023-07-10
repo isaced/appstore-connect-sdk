@@ -54,7 +54,7 @@ nNdXXbA4
 现在使用这个 `Private Key` + `isuer ID` + `private key ID` 创建请求配置：
 
 ```typescript
-const appStoreConnect = new AppStoreConnectAPI({
+const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
@@ -72,7 +72,8 @@ const appStoreConnect = new AppStoreConnectAPI({
 你可以在 [src/openapi/apis](https://github.com/isaced/appstore-connect-sdk/tree/main/src/openapi/apis) 找到所有 API 实体定义, 这些类通过 [App Store Connect API - OpenAPI specification](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip) 进行自动化生成, 如果你遇到任何问题请提交一个 [issue](https://github.com/isaced/appstore-connect-sdk/issues)。
 
 ```typescript
-const res = await client.call(AppsApi).appsGetCollection();
+const api = await client.create(AppsApi);
+const res = await api.appsGetCollection();
 console.log(res);
 ```
 
@@ -85,13 +86,14 @@ import {
   AppEventLocalizationsApi,
 } from "appstore-connect-sdk/dist/openapi/apis";
 
-const appStoreConnect = new AppStoreConnectAPI({
+const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });
 
-const res = await client.call(AppsApi).appsGetCollection();
+const api = await client.create(AppsApi);
+const res = await api.appsGetCollection();
 console.log(res);
 ```
 

@@ -60,7 +60,7 @@ export default class AppStoreConnectAPI {
    * @throws {string} Will throw an error if no bearerToken or private key is provided
    */
   constructor(options: AppStoreConnectAPIOptions) {
-    options.expirationTime = options.expirationTime || 60 * 10;
+    if (options.expirationTime) options.expirationTime = options.expirationTime;
     this.options = options;
   }
 
@@ -108,11 +108,11 @@ export default class AppStoreConnectAPI {
   }
 
   /**
-   * Calls the specified API class using the current Configuration object.
+   * Creates an instance of the specified API class.
    * @param apiClass - The API class to instantiate.
    * @returns An instance of the specified API class.
    */
-  async call<T extends BaseAPI>(apiClass: new (configuration?: Configuration) => T): Promise<T> {
+  async create<T extends BaseAPI>(apiClass: new (configuration?: Configuration) => T): Promise<T> {
     return new apiClass(await this.getConfiguration());
   }
 }
