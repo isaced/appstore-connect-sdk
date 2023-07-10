@@ -17,8 +17,7 @@ The `appstore-connect-sdk` module includes the following features:
 - [x] Configuration with API Key and JWT Logic to sign requests
 - [x] Support for custom network libraries for making requests, such as fetch/node-fetch/axios...
 - [x] Support for _all_ requests due to OpenAPI generated requests and entities
-- [x] Compatibility with both Node.js and **Deno** environments (_please note that certain features of the appstore-connect-sdk module that rely on the Node crypto module may not work as expected in Deno, as described in the "Deno Compatibility" section above_)
-- [] ESM Support
+- [x] Compatibility with both Node.js and **Deno** environments
 
 ## Examples
 
@@ -126,13 +125,7 @@ This will generate Typescript code through [OpenAPI Generator](https://openapi-g
 
 ## Deno Compatibility
 
-The appstore-connect-sdk module is mostly compatible with Deno, but there are some limitations to its usage in a Deno environment. Currently, Deno does not provide full support for the [Node crypto module](https://github.com/denoland/deno_std/issues/3149), which means that certain features of the appstore-connect-sdk module that rely on this module may not work as expected in Deno.
-
-One specific limitation is that the `jsonwebtoken` package, which is used by the appstore-connect-sdk module to generate JSON Web Tokens (JWTs), is not fully compatible with Deno. As a result, it is not possible to use `jsonwebtoken` in a Deno environment to generate JWTs for use with the App Store Connect API.
-
-To work around this limitation, you can manually generate JWTs using a library that is fully compatible with Deno, such as `djwt`. You can then pass the manually generated JWT to the `appstore-connect-sdk` module to authenticate with the App Store Connect API.
-
-An example of using the `appstore-connect-sdk` module in a Deno environment can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/deno_example).
+The `appstore-connect-sdk` module is fully compatible with Deno, An example of using the `appstore-connect-sdk` module in a Deno environment can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/deno_example).
 
 We are committed to ensuring that the `appstore-connect-sdk` module remains fully compatible with both Node.js and Deno, and we will continue to work on improving its compatibility with Deno as the Deno runtime evolves.
 

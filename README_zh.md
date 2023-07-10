@@ -16,7 +16,6 @@
 - [x] 支持自定义网络库发送请求，如 fetch/node-fetch/axios 等…
 - [x] 借助 OpenAPI 的自动化生成能力，支持苹果所有 API
 - [x] 支持 Deno 运行时
-- [ ] 支持 ESM
 
 ## 示例
 
@@ -39,7 +38,7 @@ import AppStoreConnectAPI from "appstore-connect-sdk";
 
 #### 2. 创建 API 配置
 
-进入 [App Sotre Connect -> Users and Access -> Keys](https://appstoreconnect.apple.com/access/api) 并创建您自己的密钥，这里也可以找到你的 `private key ID` 和 `issuer ID`.
+进入 [App Store Connect -> Users and Access -> Keys](https://appstoreconnect.apple.com/access/api) 并创建您自己的密钥，这里也可以找到你的 `private key ID` 和 `issuer ID`.
 
 下载私钥后，通过文本编辑器打开包含私钥的 `.p8` 文件，它看起来像这样：
 
@@ -124,13 +123,7 @@ $ sh gen-openapi.sh
 
 ## Deno 兼容性
 
-`appstore-connect-sdk` 模块在大多数情况下都与 Deno 兼容，但在 Deno 环境下使用时有一些限制。目前，Deno 对于 Node crypto 模块的兼容性支持尚未完成，这意味着 `appstore-connect-sdk` 模块的某些依赖此模块的特性在 Deno 中可能无法正常工作。
-
-具体而言，`appstore-connect-sdk` 模块使用的 `jsonwebtoken` 包不完全兼容 Deno。因此，在 Deno 环境中，无法使用 jsonwebtoken 生成 JWT（JSON Web Token），以便与 App Store Connect API 进行身份验证。
-
-为了解决这个问题，您可以手动使用与 Deno 完全兼容的库（如 `djwt`）生成 JWT。然后将手动生成的 JWT 传递给 `appstore-connect-sdk` 模块，以便与 App Store Connect API 进行身份验证。
-
-您可以在 [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/deno_example) 中查看在 Deno 环境中使用 `appstore-connect-sdk` 模块的示例。
+`appstore-connect-sdk` 目前已经支持 Deno 环境，您可以在 [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/deno_example) 中查看在 Deno 环境中使用 `appstore-connect-sdk` 模块的示例。
 
 我们致力于确保 `appstore-connect-sdk` 模块能够完全兼容 Node.js 和 Deno，我们将继续努力提高其与 Deno 的兼容性，随着 Deno 运行时的发展而不断改进。
 
