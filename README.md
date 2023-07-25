@@ -53,7 +53,7 @@ nNdXXbA4
 -----END PRIVATE KEY-----
 ```
 
-Now use this `Private Key` together with the `isuer ID` and the `private key ID` to create your configuration:
+Now use this `Private Key` together with the `issuer ID` and the `private key ID` to create your configuration:
 
 ```typescript
 const client = new AppStoreConnectAPI({
@@ -127,7 +127,7 @@ This will generate Typescript code through [OpenAPI Generator](https://openapi-g
 
 ## Deno Compatibility
 
-The `appstore-connect-sdk` module is fully compatible with Deno, An example of using the `appstore-connect-sdk` module in a Deno environment can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/deno_example).
+The `appstore-connect-sdk` module is fully compatible with Deno, An example of using the `appstore-connect-sdk` module in a Deno environment can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example).
 
 We are committed to ensuring that the `appstore-connect-sdk` module remains fully compatible with both Node.js and Deno, and we will continue to work on improving its compatibility with Deno as the Deno runtime evolves.
 
