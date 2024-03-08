@@ -7,7 +7,7 @@ settings:
 dependencies:
   jose:
     specifier: ^4.15.4
-    version: 4.15.4
+    version: 4.15.5
 
 devDependencies:
   '@openapitools/openapi-generator-cli':
@@ -2163,8 +2163,8 @@ packages:
       - ts-node
     dev: true
 
-  /jose@4.15.4:
-    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+  /jose@4.15.5:
+    resolution: {integrity: sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==}
     dev: false
 
   /js-tokens@4.0.0:
