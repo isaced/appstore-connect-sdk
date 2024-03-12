@@ -115,6 +115,19 @@ new AppStoreConnectAPI({
 });
 ```
 
+### Overriding the base URL
+
+For integration testing purposes, you can override the base path of the App Store Connect API by setting the `basePath` option in the AppStoreConnectAPI constructor. For example, you can use this to point to a local mock server. This allows you to test the behavior of your application in a more controlled environment without making requests to the real API.
+
+```typescript
+import AppStoreConnectAPI from "appstore-connect-sdk";
+
+new AppStoreConnectAPI({
+  // ...
+  basePath: "http://localhost:3000", // All network requests are made to http://localhost:3000
+});
+```
+
 ## Updating OpenAPI generated code
 
 To update the OpenAPI-generated code, run the following command:
