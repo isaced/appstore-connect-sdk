@@ -1,7 +1,4 @@
-import fetch from "node-fetch";
 import * as dotenv from "dotenv";
-
-import { FetchAPI } from "./../src/openapi/runtime";
 import { AppsApi } from "../src/openapi";
 import AppStoreConnectAPI from "../src/main";
 
@@ -19,7 +16,6 @@ describe("AppStoreConnectAPI", () => {
       issuerId: process.env.ISSUER_ID!,
       privateKeyId: process.env.PRIVATE_KEY_ID!,
       privateKey: process.env.PRIVATE_KEY!,
-      fetchApi: fetch as unknown as FetchAPI,
     });
   });
 
@@ -42,7 +38,6 @@ describe("AppStoreConnectAPI", () => {
         issuerId: process.env.ISSUER_ID!,
         privateKeyId: process.env.PRIVATE_KEY_ID!,
         privateKey: process.env.PRIVATE_KEY!,
-        fetchApi: fetch as unknown as FetchAPI,
         basePath: "https://jsonplaceholder.typicode.com",
       });
     });
