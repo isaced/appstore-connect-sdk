@@ -37,6 +37,6 @@
   },
   "homepage": "https://github.com/isaced/appstore-connect-sdk",
   "dependencies": {
-    "jose": "^4.15.4"
+    "jose": "^4.15.7"
   }
 }
