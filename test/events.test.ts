@@ -1,12 +1,6 @@
-import * as dotenv from "dotenv";
 import { AppsApi } from "../src/openapi";
 import AppStoreConnectAPI from "../src/main";
-
-// Increase the timeout for the test case.
-jest.setTimeout(30000);
-
-// Load the environment variables from the .env file.
-dotenv.config();
+import { describe, beforeAll, test, expect } from "bun:test";
 
 describe("AppStoreConnectAPI", () => {
   let client: AppStoreConnectAPI;
@@ -29,35 +23,35 @@ describe("AppStoreConnectAPI", () => {
       console.error(error);
     }
   });
+});
 
-  describe("with base path override", () => {
-    let client: AppStoreConnectAPI;
+describe("with base path override", () => {
+  let client: AppStoreConnectAPI;
 
-    beforeAll(() => {
-      client = new AppStoreConnectAPI({
-        issuerId: process.env.ISSUER_ID!,
-        privateKeyId: process.env.PRIVATE_KEY_ID!,
-        privateKey: process.env.PRIVATE_KEY!,
-        basePath: "https://jsonplaceholder.typicode.com",
-      });
+  beforeAll(() => {
+    client = new AppStoreConnectAPI({
+      issuerId: process.env.ISSUER_ID!,
+      privateKeyId: process.env.PRIVATE_KEY_ID!,
+      privateKey: process.env.PRIVATE_KEY!,
+      basePath: "https://jsonplaceholder.typicode.com",
     });
+  });
 
-    test("should use the overridden base path", async () => {
-      const configuration = await client.getConfiguration();
-      expect(configuration?.basePath).toBe(
-        "https://jsonplaceholder.typicode.com"
+  test("should use the overridden base path", async () => {
+    const configuration = await client.getConfiguration();
+    expect(configuration?.basePath).toBe(
+      "https://jsonplaceholder.typicode.com"
+    );
+  });
+
+  test("should correctly concatenate overridden base path with endpoint", async () => {
+    try {
+      const api = await client.create(AppsApi);
+      await api.appsGetCollection();
+    } catch (error: any) {
+      expect(error.response.url).toBe(
+        "https://jsonplaceholder.typicode.com/v1/apps"
       );
-    });
-
-    test("should correctly concatenate overridden base path with endpoint", async () => {
-      try {
-        const api = await client.create(AppsApi);
-        await api.appsGetCollection();
-      } catch (error: any) {
-        expect(error.response.url).toBe(
-          "https://jsonplaceholder.typicode.com/v1/apps"
-        );
-      }
-    });
+    }
   });
 });
