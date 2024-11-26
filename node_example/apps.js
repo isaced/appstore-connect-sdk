@@ -1,4 +1,4 @@
-const { default: AppStoreConnectAPI } = require("appstore-connect-sdk");
+const AppStoreConnectAPI = require("appstore-connect-sdk");
 const { AppsApi } = require("appstore-connect-sdk/dist/openapi/apis/AppsApi");
 const dotenv = require('dotenv');
 
