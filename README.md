@@ -35,7 +35,7 @@ npm install appstore-connect-sdk
 #### 1. Import `appstore-connect-sdk`
 
 ```typescript
-import AppStoreConnectAPI from "appstore-connect-sdk";
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
 ```
 
 #### 2. Create your API Configuration
@@ -82,7 +82,7 @@ console.log(res);
 Here's the complete code example:
 
 ```typescript
-import AppStoreConnectAPI from "appstore-connect-sdk";
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
 import {
   AppsApi,
   AppEventLocalizationsApi,
@@ -106,7 +106,7 @@ By default, AppStoreConnectAPI uses its built-in `fetch` function for HTTP reque
 However, you can also configure any network library that adheres to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch) standard specification by setting the `fetchApi` option in the AppStoreConnectAPI constructor.
 
 ```typescript
-import AppStoreConnectAPI from "appstore-connect-sdk";
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
 import fetch from "node-fetch";
 
 new AppStoreConnectAPI({
@@ -120,7 +120,7 @@ new AppStoreConnectAPI({
 For integration testing purposes, you can override the base path of the App Store Connect API by setting the `basePath` option in the AppStoreConnectAPI constructor. For example, you can use this to point to a local mock server. This allows you to test the behavior of your application in a more controlled environment without making requests to the real API.
 
 ```typescript
-import AppStoreConnectAPI from "appstore-connect-sdk";
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
 
 new AppStoreConnectAPI({
   // ...

@@ -5,7 +5,7 @@ import { generateAuthToken } from "./auth";
 /**
  * Options for configuring the AppStoreConnectAPI instance.
  */
-interface AppStoreConnectAPIOptions {
+export interface AppStoreConnectAPIOptions {
   /**
    * The issuer ID associated with the private key.
    */
@@ -48,7 +48,7 @@ interface AppStoreConnectAPIOptions {
  *
  * https://github.com/isaced/appstore-connect-sdk
  */
-export default class AppStoreConnectAPI {
+class AppStoreConnectAPI {
   private bearerTokenGeneratedAt = 0;
   private options: AppStoreConnectAPIOptions;
   private configuration?: Configuration;
@@ -123,3 +123,5 @@ export default class AppStoreConnectAPI {
     return new apiClass(await this.getConfiguration());
   }
 }
+
+export { AppStoreConnectAPI };

@@ -33,7 +33,7 @@ npm install appstore-connect-sdk
 #### 1. Import `appstore-connect-sdk`
 
 ```typescript
-import AppStoreConnectAPI from "appstore-connect-sdk";
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
 ```
 
 #### 2. 创建 API 配置
@@ -80,7 +80,7 @@ console.log(res);
 这是完整的示例代码：
 
 ```typescript
-import AppStoreConnectAPI from "appstore-connect-sdk";
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
 import {
   AppsApi,
   AppEventLocalizationsApi,
@@ -104,7 +104,7 @@ console.log(res);
 或者，你也可以通过在 AppStoreConnectAPI 构造函数中设置 `fetchApi` 选项来配置符合 [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch) 标准规范的任何网络库，将其他网络库桥接过来。
 
 ```typescript
-import AppStoreConnectAPI from "appstore-connect-sdk";
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
 import fetch from "node-fetch";
 
 new AppStoreConnectAPI({

@@ -1,6 +1,6 @@
-const { default: AppStoreConnectAPI } = require("appstore-connect-sdk");
-const { AppsApi } = require("appstore-connect-sdk/dist/openapi/apis/AppsApi");
-const dotenv = require('dotenv');
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
+import { AppsApi } from "appstore-connect-sdk/openapi";
+import dotenv from "dotenv";
 
 async function main() {
     // Load the environment variables from the .env file.

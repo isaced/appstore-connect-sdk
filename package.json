@@ -8,13 +8,30 @@
     "sdk",
     "apple"
   ],
-  "main": "dist/main.js",
+  "type": "module",
+  "main": "dist/cjs/main.js",
+  "module": "dist/main.js",
+  "types": "dist/types/main.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/main.js",
+      "require": "./dist/cjs/main.js",
+      "types": "./dist/types/main.d.ts"
+    },
+    "./openapi": {
+      "import": "./dist/openapi/index.js",
+      "require": "./dist/cjs/openapi/index.js",
+      "types": "./dist/types/openapi/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "bun test",
-    "build": "tsc"
+    "build": "rm -rf ./dist && node build.js && npm run build:types && npm run copy:package.cjs.json",
+    "build:types": "npx tsc --emitDeclarationOnly --declaration",
+    "copy:package.cjs.json": "cp ./package.cjs.json ./dist/cjs/package.json && cp ./package.cjs.json ./dist/types/package.json"
   },
   "dependencies": {
     "jose": "^4.15.9"
@@ -22,6 +39,7 @@
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",
     "@types/bun": "^1.1.12",
+    "esbuild": "0.24.0",
     "typescript": "^5.0.0"
   },
   "author": "isaced",
