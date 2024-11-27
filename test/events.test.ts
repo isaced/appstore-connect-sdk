@@ -1,5 +1,5 @@
 import { AppsApi } from "../src/openapi";
-import AppStoreConnectAPI from "../src/main";
+import { AppStoreConnectAPI } from "../src/main";
 import { describe, beforeAll, test, expect } from "bun:test";
 
 describe("AppStoreConnectAPI", () => {
@@ -7,9 +7,9 @@ describe("AppStoreConnectAPI", () => {
 
   beforeAll(() => {
     client = new AppStoreConnectAPI({
-      issuerId: process.env.ISSUER_ID!,
-      privateKeyId: process.env.PRIVATE_KEY_ID!,
-      privateKey: process.env.PRIVATE_KEY!,
+      issuerId: process.env.ISSUER_ID,
+      privateKeyId: process.env.PRIVATE_KEY_ID,
+      privateKey: process.env.PRIVATE_KEY,
     });
   });
 
@@ -48,7 +48,7 @@ describe("with base path override", () => {
     try {
       const api = await client.create(AppsApi);
       await api.appsGetCollection();
-    } catch (error: any) {
+    } catch (error) {
       expect(error.response.url).toBe(
         "https://jsonplaceholder.typicode.com/v1/apps"
       );

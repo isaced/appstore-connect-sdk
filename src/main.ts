@@ -1,4 +1,4 @@
-import { FetchAPI, BaseAPI } from "./openapi/runtime";
+import type { FetchAPI, BaseAPI } from "./openapi/runtime";
 import { Configuration } from "./openapi";
 import { generateAuthToken } from "./auth";
 

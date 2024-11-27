@@ -13,9 +13,9 @@ async function main() {
         privateKey: process.env.PRIVATE_KEY,
     });
 
-    let api = await client.create(AppsApi);
+    const api = await client.create(AppsApi);
     const res = await api.appsGetCollection();
     console.log(res);
 }
 
-main();
+await main();
