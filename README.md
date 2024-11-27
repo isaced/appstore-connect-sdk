@@ -86,7 +86,7 @@ import { AppStoreConnectAPI } from "appstore-connect-sdk";
 import {
   AppsApi,
   AppEventLocalizationsApi,
-} from "appstore-connect-sdk/dist/openapi/apis";
+} from "appstore-connect-sdk/openapi";
 
 const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
