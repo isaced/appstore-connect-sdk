@@ -1,0 +1,17 @@
+{
+    "name": "@isaced/appstore-connect-sdk",
+    "version": "1.2.0",
+    "license": "MIT",
+    "exports": {
+        ".": "./src/main.ts",
+        "./openapi": "./src/openapi/index.ts"
+    },
+    "publish": {
+        "include": [
+            "jsr.json",
+            "LICENSE",
+            "README.md",
+            "src/**/*.ts"
+        ]
+    }
+}
