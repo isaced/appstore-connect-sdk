@@ -11,17 +11,17 @@
   "type": "module",
   "main": "dist/cjs/main.js",
   "module": "dist/main.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/types/main.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./dist/types/index.d.ts"
+      "import": "./dist/main.js",
+      "require": "./dist/cjs/main.js",
+      "types": "./dist/types/main.d.ts"
     },
     "./openapi": {
-      "import": "./dist/openapi.js",
-      "require": "./dist/cjs/openapi.js",
-      "types": "./dist/types/openapi.d.ts"
+      "import": "./dist/openapi/index.js",
+      "require": "./dist/cjs/openapi/index.js",
+      "types": "./dist/types/openapi/index.d.ts"
     }
   },
   "files": [
@@ -29,8 +29,9 @@
   ],
   "scripts": {
     "test": "bun test",
-    "build": "node build.js && npm run build:types",
-    "build:types": "npx tsc --emitDeclarationOnly --declaration"
+    "build": "rm -rf ./dist && node build.js && npm run build:types && npm run copy:package.cjs.json",
+    "build:types": "npx tsc --emitDeclarationOnly --declaration",
+    "copy:package.cjs.json": "cp ./package.cjs.json ./dist/cjs/package.json && cp ./package.cjs.json ./dist/types/package.json"
   },
   "dependencies": {
     "jose": "^4.15.9"

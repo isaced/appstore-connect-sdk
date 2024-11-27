@@ -8,7 +8,7 @@ async function buildAll() {
             outdir: './dist/',
             bundle: true,
             sourcemap: true,
-            minify: true,
+            platform: 'node'
         }),
         build('cjs', {
             entryPoints: ['src/main.ts', "src/openapi/index.ts"],
@@ -16,7 +16,7 @@ async function buildAll() {
             outdir: './dist/cjs',
             bundle: true,
             sourcemap: true,
-            minify: true,
+            platform: 'node'
         }),
     ]);
 }
