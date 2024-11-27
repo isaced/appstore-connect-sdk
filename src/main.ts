@@ -66,7 +66,6 @@ class AppStoreConnectAPI {
    * @throws {string} Will throw an error if no bearerToken or private key is provided
    */
   constructor(options: AppStoreConnectAPIOptions) {
-    if (options.expirationTime) options.expirationTime = options.expirationTime;
     this.options = options;
   }
 
