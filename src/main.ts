@@ -32,9 +32,11 @@ export interface AppStoreConnectAPIOptions {
   bearerToken?: string;
 
   /**
-   * The time (in seconds) until the token expires (default 10 minutes)
+   * The token's expiration duration in seconds. (default 20 minutes)
+   * Tokens that expire more than 20 minutes in the future are not valid, so set it to a max of 20 minutes.
+   * Reference: https://developer.apple.com/documentation/appstoreconnectapi/generating-tokens-for-api-requests
    */
-  expirationTime?: number;
+  expirationDuration?: number;
 
   /**
    * The base path for the API (without trailing slash, default https://api.appstoreconnect.apple.com).
@@ -43,14 +45,31 @@ export interface AppStoreConnectAPIOptions {
 }
 
 /**
+ * Default expiration time for the bearer token in seconds. (20 minutes)
+ */
+const DEFAULT_EXPIRATION_DURATION_SECONDS = 60 * 20;
+
+/**
  * The App Store Connect SDK for Node.js is written in TypeScript and supports all APIs
  * based on OpenAPI Generator.
  *
  * https://github.com/isaced/appstore-connect-sdk
  */
 class AppStoreConnectAPI {
+
+  /**
+   * The time (in milliseconds) when the current bearer token was generated.
+   */
   private bearerTokenGeneratedAt = 0;
+
+  /**
+   * The options for the client instance.
+   */
   private options: AppStoreConnectAPIOptions;
+
+  /**
+   * The configuration object for the API.
+   */
   private configuration?: Configuration;
 
   /**
@@ -61,7 +80,7 @@ class AppStoreConnectAPI {
    * @param options.privateKey - The content of the private key used for generating JWT token.
    * @param options.fetchApi - (Optional) The FetchAPI implementation to use for API requests.
    * @param options.bearerToken - (Optional) A pre-generated bearer token to use for authentication.
-   * @param options.expirationTime - (Optional) The time (in seconds) until the token expires (default 10 minutes)
+   * @param options.expirationDuration - (Optional) The expiration duration for the bearer token in seconds (default 20 minutes).
    * @param options.basePath - (Optional) The base path for the API (without trailing slash, default https://api.appstoreconnect.apple.com).
    * @throws {string} Will throw an error if no bearerToken or private key is provided
    */
@@ -75,16 +94,18 @@ class AppStoreConnectAPI {
   async genToken() {
     if (this.options.bearerToken) {
       return this.options.bearerToken;
-    } else if (this.options.privateKeyId && this.options.issuerId && this.options.privateKey) {
+    }
+
+    if (this.options.privateKeyId && this.options.issuerId && this.options.privateKey) {
       return await generateAuthToken({
         apiKeyId: this.options.privateKeyId,
         issuerId: this.options.issuerId,
         privateKey: this.options.privateKey,
-        expirationTime: this.options.expirationTime,
+        expirationTime: Math.floor(Date.now() / 1000) + (this.options.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS),
       });
-    } else {
-      throw "No bearerToken!!!";
     }
+
+    throw "No bearerToken or private key provided";
   }
 
   /**
@@ -105,8 +126,9 @@ class AppStoreConnectAPI {
    * Returns the current bearer token, generating a new one if necessary.
    */
   async getConfiguration() {
-    const hasExpired =
-      this.bearerTokenGeneratedAt && Date.now() - this.bearerTokenGeneratedAt > 1000 * this.options.expirationTime!;
+    const latestBearerTokenDuration = this.bearerTokenGeneratedAt ? Date.now() - this.bearerTokenGeneratedAt : 0;
+    const expirationDurationMs = 1000 * (this.options.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS);
+    const hasExpired = latestBearerTokenDuration > expirationDurationMs;
     if (!this.configuration || hasExpired) {
       await this.genConfiguration();
     }

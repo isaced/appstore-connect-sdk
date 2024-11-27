@@ -8,8 +8,8 @@ interface GenerateAuthTokenOptions {
   issuerId: string;
   // The private key used to sign the token
   privateKey: string;
-  // The time (in seconds) until the token expires (default 10 minutes)
-  expirationTime?: number;
+  // The expiration time of the token (in seconds since the Unix epoch)
+  expirationTime: number;
 }
 
 // Generates a JWT token for use with the App Store Connect API
@@ -27,7 +27,7 @@ export async function generateAuthToken({ apiKeyId, issuerId, privateKey, expira
     })
     .setIssuer(issuerId)
     .setAudience("appstoreconnect-v1")
-    .setExpirationTime(expirationTime ?? new Date().getTime() / 1000)
+    .setExpirationTime(expirationTime)
     .sign(key);
 
   // Return the generated token

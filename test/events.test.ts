@@ -17,8 +17,9 @@ describe("AppStoreConnectAPI", () => {
     try {
       const api = await client.create(AppsApi);
       const res = await api.appsGetCollection();
-      console.log(res);
+      console.log('Fetch apps count:', res.data.length);
       expect(res).toBeDefined;
+      expect(res.data).toBeArray();
     } catch (error) {
       console.error(error);
     }
@@ -30,9 +31,9 @@ describe("with base path override", () => {
 
   beforeAll(() => {
     client = new AppStoreConnectAPI({
-      issuerId: process.env.ISSUER_ID!,
-      privateKeyId: process.env.PRIVATE_KEY_ID!,
-      privateKey: process.env.PRIVATE_KEY!,
+      issuerId: process.env.ISSUER_ID,
+      privateKeyId: process.env.PRIVATE_KEY_ID,
+      privateKey: process.env.PRIVATE_KEY,
       basePath: "https://jsonplaceholder.typicode.com",
     });
   });
