@@ -1,4 +1,5 @@
-import type { FetchAPI, BaseAPI } from "./openapi/runtime";
+import type { FetchAPI, InitOverrideFunction, RequestOpts, HTTPMethod, HTTPHeaders } from "./openapi/runtime";
+import { BASE_PATH, BaseAPI } from "./openapi/runtime";
 import { Configuration } from "./openapi";
 import { generateAuthToken } from "./auth";
 
@@ -43,6 +44,21 @@ export interface AppStoreConnectAPIOptions {
    */
   basePath?: string;
 }
+
+/**
+ * The request context for the API request.
+ * @param url - The URL of the API endpoint, must start with https://api.appstoreconnect.apple.com .
+ * @param path - The path of the API endpoint, if provided, the url parameter will be ignored.
+ * @param method - The HTTP method to use for the request (default GET).
+ * @param headers - The headers to use for the request.
+ */
+export type AppStoreConnectAPIRequest = (
+  | { url: string; path?: never }
+  | { url?: never; path: string }
+) & {
+  method?: HTTPMethod;
+  headers?: HTTPHeaders;
+};
 
 /**
  * Default expiration time for the bearer token in seconds. (20 minutes)
@@ -142,6 +158,47 @@ class AppStoreConnectAPI {
    */
   async create<T extends BaseAPI>(apiClass: new (configuration?: Configuration) => T): Promise<T> {
     return new apiClass(await this.getConfiguration());
+  }
+
+  /**
+   * Makes an API request.
+   * @param context - The request context for the API request.
+   * @param initOverrides - (Optional) The request options to use for the API request.
+   * @returns The response from the API request.
+   */
+  async request(context: AppStoreConnectAPIRequest, initOverrides?: RequestInit | InitOverrideFunction) {
+    if (!context.url && !context.path) {
+      throw new Error("No url or path provided");
+    }
+
+    const _context = { ...context };
+    if (!_context.path && _context.url) {
+      if (_context.url.startsWith(BASE_PATH)) {
+        // @ts-ignore
+        _context.path = _context.url.replace(BASE_PATH, "");
+      } else {
+        throw new Error("url must start with " + BASE_PATH);
+      }
+    }
+
+    if (!_context.method) {
+      _context.method = "GET";
+    }
+
+    delete _context.url;
+
+    const globalApi = new GlobalAPI(await this.getConfiguration());
+    return await globalApi.request(_context as RequestOpts, initOverrides)
+  }
+}
+
+class GlobalAPI extends BaseAPI {
+  constructor(configuration?: Configuration) {
+    super(configuration);
+  }
+
+  request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
+    return super.request(context, initOverrides);
   }
 }
 
