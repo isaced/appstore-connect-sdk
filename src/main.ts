@@ -140,12 +140,16 @@ class AppStoreConnectAPI {
 
   /**
    * Returns the current bearer token, generating a new one if necessary.
+   * The token will be refreshed if it's close to expiration (within 2 minutes).
    */
   async getConfiguration() {
     const latestBearerTokenDuration = this.bearerTokenGeneratedAt ? Date.now() - this.bearerTokenGeneratedAt : 0;
     const expirationDurationMs = 1000 * (this.options.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS);
-    const hasExpired = latestBearerTokenDuration > expirationDurationMs;
-    if (!this.configuration || hasExpired) {
+    // Refresh the token if it has expired or will expire within 2 minutes
+    const shouldRefresh = !this.configuration || 
+      latestBearerTokenDuration > expirationDurationMs ||
+      latestBearerTokenDuration > (expirationDurationMs - 2 * 60 * 1000);
+    if (shouldRefresh) {
       await this.genConfiguration();
     }
     return this.configuration;
