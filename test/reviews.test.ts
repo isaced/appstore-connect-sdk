@@ -7,7 +7,8 @@ describe("AppStoreConnectAPI", () => {
 
     beforeAll(() => {
         client = new AppStoreConnectAPI({
-            issuerId: process.env.ISSUER_ID,
+            // if use individual key, don't provide issuerId
+            // issuerId: process.env.ISSUER_ID,
             privateKeyId: process.env.PRIVATE_KEY_ID,
             privateKey: process.env.PRIVATE_KEY,
         });

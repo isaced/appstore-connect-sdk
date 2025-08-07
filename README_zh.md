@@ -40,6 +40,11 @@ import { AppStoreConnectAPI } from "appstore-connect-sdk";
 
 进入 [App Store Connect -> Users and Access -> Keys](https://appstoreconnect.apple.com/access/api) 并创建您自己的密钥，这里也可以找到你的 `private key ID` 和 `issuer ID`.
 
+SDK 支持两种类型的 API 密钥：
+
+- **团队 API 密钥（Team API Keys）**: 团队使用，需要提供 `issuerId`
+- **个人 API 密钥（Individual API Keys）**: 个人开发者使用，不需要 `issuerId`
+
 下载私钥后，通过文本编辑器打开包含私钥的 `.p8` 文件，它看起来像这样：
 
 ```
@@ -51,11 +56,21 @@ nNdXXbA4
 -----END PRIVATE KEY-----
 ```
 
-现在使用这个 `Private Key` + `isuer ID` + `private key ID` 创建请求配置：
+**团队 API 密钥配置：**
 
 ```typescript
 const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
+  privateKeyId: "<YOUR PRIVATE KEY ID>",
+  privateKey: "<YOUR PRIVATE KEY>",
+});
+```
+
+**个人 API 密钥配置：**
+
+```typescript
+const client = new AppStoreConnectAPI({
+  // 个人 API 密钥不需要 issuerId
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });
@@ -79,6 +94,8 @@ console.log(res);
 
 这是完整的示例代码：
 
+**团队 API 密钥示例：**
+
 ```typescript
 import { AppStoreConnectAPI } from "appstore-connect-sdk";
 import {
@@ -88,6 +105,26 @@ import {
 
 const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
+  privateKeyId: "<YOUR PRIVATE KEY ID>",
+  privateKey: "<YOUR PRIVATE KEY>",
+});
+
+const api = await client.create(AppsApi);
+const res = await api.appsGetCollection();
+console.log(res);
+```
+
+**个人 API 密钥示例：**
+
+```typescript
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
+import {
+  AppsApi,
+  AppEventLocalizationsApi,
+} from "appstore-connect-sdk/openapi";
+
+const client = new AppStoreConnectAPI({
+  // 个人 API 密钥不需要 issuerId
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });

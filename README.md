@@ -42,6 +42,11 @@ import { AppStoreConnectAPI } from "appstore-connect-sdk";
 
 Go to [App Store Connect -> Users and Access -> Keys](https://appstoreconnect.apple.com/access/api) and create your own key. This is also the page to find your `private key ID` and the `issuer ID`.
 
+The SDK supports both **Team API Keys** and **Individual API Keys**:
+
+- **Team API Keys**: Used by teams, requires `issuerId`
+- **Individual API Keys**: Used by individual developers, `issuerId` is not required
+
 After downloading your private key, open the `.p8` file containing the private key in a text editor. It should look like this:
 
 ```
@@ -53,11 +58,21 @@ nNdXXbA4
 -----END PRIVATE KEY-----
 ```
 
-Now use this `Private Key` together with the `issuer ID` and the `private key ID` to create your configuration:
+**For Team API Keys:**
 
 ```typescript
 const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
+  privateKeyId: "<YOUR PRIVATE KEY ID>",
+  privateKey: "<YOUR PRIVATE KEY>",
+});
+```
+
+**For Individual API Keys:**
+
+```typescript
+const client = new AppStoreConnectAPI({
+  // No issuerId required for Individual API Keys
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });
@@ -81,6 +96,8 @@ console.log(res);
 
 Here's the complete code example:
 
+**For Team API Keys:**
+
 ```typescript
 import { AppStoreConnectAPI } from "appstore-connect-sdk";
 import {
@@ -90,6 +107,26 @@ import {
 
 const client = new AppStoreConnectAPI({
   issuerId: "<YOUR ISSUER ID>",
+  privateKeyId: "<YOUR PRIVATE KEY ID>",
+  privateKey: "<YOUR PRIVATE KEY>",
+});
+
+const api = await client.create(AppsApi);
+const res = await api.appsGetCollection();
+console.log(res);
+```
+
+**For Individual API Keys:**
+
+```typescript
+import { AppStoreConnectAPI } from "appstore-connect-sdk";
+import {
+  AppsApi,
+  AppEventLocalizationsApi,
+} from "appstore-connect-sdk/openapi";
+
+const client = new AppStoreConnectAPI({
+  // No issuerId for Individual API Keys
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });

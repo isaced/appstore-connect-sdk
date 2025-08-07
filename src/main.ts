@@ -9,6 +9,8 @@ import { generateAuthToken } from "./auth";
 export interface AppStoreConnectAPIOptions {
   /**
    * The issuer ID associated with the private key.
+   * Required for Team API keys, optional for Individual API keys.
+   * When using Individual API keys, leave this undefined.
    */
   issuerId?: string;
 
@@ -91,7 +93,7 @@ class AppStoreConnectAPI {
   /**
    * Creates an instance of the AppStoreConnectAPI.
    * @param options - The configuration options for the API.
-   * @param options.issuerId - The issuer ID for generating JWT token.
+   * @param options.issuerId - (Optional) The issuer ID for generating JWT token. Required for Team API keys, omit for Individual API keys.
    * @param options.privateKeyId - The ID of the private key used for generating JWT token.
    * @param options.privateKey - The content of the private key used for generating JWT token.
    * @param options.fetchApi - (Optional) The FetchAPI implementation to use for API requests.
@@ -112,10 +114,10 @@ class AppStoreConnectAPI {
       return this.options.bearerToken;
     }
 
-    if (this.options.privateKeyId && this.options.issuerId && this.options.privateKey) {
+    if (this.options.privateKeyId && this.options.privateKey) {
       return await generateAuthToken({
         apiKeyId: this.options.privateKeyId,
-        issuerId: this.options.issuerId,
+        issuerId: this.options.issuerId, // Optional: undefined for Individual keys
         privateKey: this.options.privateKey,
         expirationTime: Math.floor(Date.now() / 1000) + (this.options.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS),
       });
@@ -146,7 +148,7 @@ class AppStoreConnectAPI {
     const latestBearerTokenDuration = this.bearerTokenGeneratedAt ? Date.now() - this.bearerTokenGeneratedAt : 0;
     const expirationDurationMs = 1000 * (this.options.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS);
     // Refresh the token if it has expired or will expire within 2 minutes
-    const shouldRefresh = !this.configuration || 
+    const shouldRefresh = !this.configuration ||
       latestBearerTokenDuration > expirationDurationMs ||
       latestBearerTokenDuration > (expirationDurationMs - 2 * 60 * 1000);
     if (shouldRefresh) {
