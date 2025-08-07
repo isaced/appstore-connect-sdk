@@ -1,4 +1,4 @@
-import "@std/dotenv/load";
+import "jsr:@std/dotenv/load";
 import { AppStoreConnectAPI } from "appstore-connect-sdk";
 import { AppsApi } from "appstore-connect-sdk/openapi";
 

@@ -1,6 +1,5 @@
 {
   "imports": {
-    "@std/dotenv": "jsr:@std/dotenv@^0.225.2",
-    "appstore-connect-sdk": "npm:appstore-connect-sdk@^1.2.0"
+    "appstore-connect-sdk": "npm:appstore-connect-sdk@^1.3.2"
   }
 }
