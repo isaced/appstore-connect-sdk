@@ -34,7 +34,7 @@
     "copy:package.cjs.json": "cp ./package.cjs.json ./dist/cjs/package.json && cp ./package.cjs.json ./dist/types/package.json"
   },
   "dependencies": {
-    "jose": "^4.15.9"
+    "jose": "^6.0.12"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",
