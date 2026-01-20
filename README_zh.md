@@ -12,10 +12,10 @@
 
 ## 这个 SDK 包含的功能特性
 
-- [x] API 密钥配置以支持 JWT 签名
-- [x] 每次请求自动生成令牌
-- [x] 借助 OpenAPI 的自动化生成能力，支持苹果所有 API
-- [x] 支持 Deno 运行时
+- [x] **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
+- [x] **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新
+- [x] **完整 API 覆盖** - 通过 OpenAPI 生成的代码支持所有 App Store Connect API 端点
+- [x] **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
 
 ## 示例
 
@@ -81,6 +81,19 @@ const client = createClient({
 - [Creating API Keys for App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api)
 - [Generating Tokens for API Requests](https://developer.apple.com/documentation/appstoreconnectapi/generating_tokens_for_api_requests)
 - [Revoking API Keys](https://developer.apple.com/documentation/appstoreconnectapi/revoking_api_keys)
+
+**配置选项：**
+
+| 选项 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `issuerId` | `string` | 团队密钥必需 | 来自 App Store Connect 的 issuer ID |
+| `privateKeyId` | `string` | 是* | 您的私钥 ID |
+| `privateKey` | `string` | 是* | PEM 格式的私钥内容 |
+| `bearerToken` | `string` | 否 | 直接提供您自己的 JWT 令牌，无需 SDK 生成 |
+| `expirationDuration` | `number` | 否 | 令牌过期时间（秒），默认：1200 = 20 分钟，最大：20 分钟 |
+| `baseUrl` | `string` | 否 | 覆盖 API 基础 URL（默认：`https://api.appstoreconnect.apple.com`） |
+
+*除非提供了 `bearerToken`，否则必需。
 
 #### 3. 调用 API
 

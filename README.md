@@ -14,10 +14,10 @@ English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/mai
 
 The `appstore-connect-sdk` module includes the following features:
 
-- [x] Configuration with API Key and JWT Logic to sign requests
-- [x] Automatic token generation on each request
-- [x] Support for _all_ requests due to OpenAPI generated requests and entities
-- [x] Compatibility with both Node.js and **Deno** environments
+- [x] **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
+- [x] **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry)
+- [x] **Full API Coverage** - Support for all App Store Connect API endpoints through OpenAPI-generated code
+- [x] **Cross-Platform** - Compatible with both Node.js and **Deno** environments
 
 ## Examples
 
@@ -83,6 +83,19 @@ For more information on how JWT works with the App Store Connect API, check out 
 - [Creating API Keys for App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api)
 - [Generating Tokens for API Requests](https://developer.apple.com/documentation/appstoreconnectapi/generating_tokens_for_api_requests)
 - [Revoking API Keys](https://developer.apple.com/documentation/appstoreconnectapi/revoking_api_keys)
+
+**Configuration Options:**
+
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `issuerId` | `string` | For Team keys | Your issuer ID from App Store Connect |
+| `privateKeyId` | `string` | Yes* | The ID of your private key |
+| `privateKey` | `string` | Yes* | The private key content in PEM format |
+| `bearerToken` | `string` | No | Provide your own JWT token instead of having the SDK generate one |
+| `expirationDuration` | `number` | No | Token expiration in seconds (default: 1200 = 20 minutes, max: 20 minutes) |
+| `baseUrl` | `string` | No | Override the API base URL (default: `https://api.appstoreconnect.apple.com`) |
+
+*Required unless `bearerToken` is provided.
 
 #### 3. Make API calls
 

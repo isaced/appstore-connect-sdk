@@ -12,10 +12,10 @@ To use this example, you need to have the following:
 
 ## Getting Started
 
-1. Clone this repository，go to the `deno_example` directory
+1. Clone this repository, go to the `deno_example` directory
 
 ```bash
-git clone https://github.com/yourusername/appstore-connect-sdk.git
+git clone https://github.com/isaced/appstore-connect-sdk.git
 
 cd appstore-connect-sdk/deno_example
 ```
@@ -23,11 +23,17 @@ cd appstore-connect-sdk/deno_example
 2. Set your App Store Connect API keys as environment variables. You can either export them in your terminal or create a `.env` file in the project root with the following content:
 
 ```
-BEARER_TOKEN="xxxxxxx"
+ISSUER_ID="your-issuer-id"
+PRIVATE_KEY_ID="your-private-key-id"
+PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
+...your key content...
+-----END PRIVATE KEY-----"
 ```
+
+Note: For Individual API Keys, you can omit `ISSUER_ID`.
 
 3. Run the example by executing the following command:
 
-```
+```bash
 deno run --allow-all main.ts
 ```
