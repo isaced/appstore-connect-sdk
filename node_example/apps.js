@@ -1,21 +1,19 @@
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
-import { AppsApi } from "appstore-connect-sdk/openapi";
+import { createClient, appsGetCollection } from "appstore-connect-sdk";
 import dotenv from "dotenv";
 
-async function main() {
-    // Load the environment variables from the .env file.
-    dotenv.config();
+// Load the environment variables from the .env file.
+dotenv.config();
 
-    // // Create a new instance of the AppStoreConnectAPI client with the required parameters.
-    const client = new AppStoreConnectAPI({
-        issuerId: process.env.ISSUER_ID,
-        privateKeyId: process.env.PRIVATE_KEY_ID,
-        privateKey: process.env.PRIVATE_KEY,
-    });
+// Create a client with the required parameters.
+const client = createClient({
+  issuerId: process.env.ISSUER_ID,
+  privateKeyId: process.env.PRIVATE_KEY_ID,
+  privateKey: process.env.PRIVATE_KEY,
+});
 
-    const api = await client.create(AppsApi);
-    const res = await api.appsGetCollection();
-    console.log(res);
+// Fetch all apps
+const res = await appsGetCollection({ client });
+if (res.error) {
+  throw new Error(`Error fetching apps: ${JSON.stringify(res.error)}`);
 }
-
-await main();
+console.log(res.data);

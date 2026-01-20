@@ -1,16 +1,17 @@
-import type { FetchAPI, InitOverrideFunction, RequestOpts, HTTPMethod, HTTPHeaders } from "./openapi/runtime";
-import { BASE_PATH, BaseAPI } from "./openapi/runtime";
-import { Configuration } from "./openapi";
+import {
+  createClient as createHeyApiClient,
+  createConfig,
+  type Client,
+} from "./openapi/client";
 import { generateAuthToken } from "./auth";
 
 /**
- * Options for configuring the AppStoreConnectAPI instance.
+ * Options for creating an App Store Connect API client.
  */
-export interface AppStoreConnectAPIOptions {
+export interface AppStoreConnectConfig {
   /**
    * The issuer ID associated with the private key.
    * Required for Team API keys, optional for Individual API keys.
-   * When using Individual API keys, leave this undefined.
    */
   issuerId?: string;
 
@@ -25,187 +26,90 @@ export interface AppStoreConnectAPIOptions {
   privateKey?: string;
 
   /**
-   * An optional FetchAPI instance to use for making HTTP requests.
-   */
-  fetchApi?: FetchAPI;
-
-  /**
-   * A bearer token can be provided directly, which will be used instead of generating a new token
+   * A bearer token can be provided directly, which will be used instead of generating a new token.
    */
   bearerToken?: string;
 
   /**
    * The token's expiration duration in seconds. (default 20 minutes)
-   * Tokens that expire more than 20 minutes in the future are not valid, so set it to a max of 20 minutes.
-   * Reference: https://developer.apple.com/documentation/appstoreconnectapi/generating-tokens-for-api-requests
+   * Tokens that expire more than 20 minutes in the future are not valid.
    */
   expirationDuration?: number;
 
   /**
-   * The base path for the API (without trailing slash, default https://api.appstoreconnect.apple.com).
+   * The base URL for the API (default https://api.appstoreconnect.apple.com).
    */
-  basePath?: string;
+  baseUrl?: string;
 }
 
-/**
- * The request context for the API request.
- * @param url - The URL of the API endpoint, must start with https://api.appstoreconnect.apple.com .
- * @param path - The path of the API endpoint, if provided, the url parameter will be ignored.
- * @param method - The HTTP method to use for the request (default GET).
- * @param headers - The headers to use for the request.
- */
-export type AppStoreConnectAPIRequest = (
-  | { url: string; path?: never }
-  | { url?: never; path: string }
-) & {
-  method?: HTTPMethod;
-  headers?: HTTPHeaders;
-};
-
-/**
- * Default expiration time for the bearer token in seconds. (20 minutes)
- */
 const DEFAULT_EXPIRATION_DURATION_SECONDS = 60 * 20;
+const DEFAULT_BASE_URL = "https://api.appstoreconnect.apple.com";
 
 /**
- * The App Store Connect SDK for Node.js is written in TypeScript and supports all APIs
- * based on OpenAPI Generator.
+ * Create a configured App Store Connect API client.
  *
- * https://github.com/isaced/appstore-connect-sdk
+ * Usage:
+ * ```typescript
+ * import { createClient, appsGetCollection } from 'appstore-connect-sdk';
+ *
+ * const client = createClient({
+ *   privateKeyId: 'YOUR_KEY_ID',
+ *   privateKey: 'YOUR_PRIVATE_KEY',
+ *   issuerId: 'YOUR_ISSUER_ID', // optional for Individual keys
+ * });
+ *
+ * const apps = await appsGetCollection({ client });
+ * console.log(apps.data);
+ * ```
  */
-class AppStoreConnectAPI {
+export function createClient(config: AppStoreConnectConfig): Client {
+  const baseUrl = config.baseUrl?.replace(/\/$/, "") || DEFAULT_BASE_URL;
 
-  /**
-   * The time (in milliseconds) when the current bearer token was generated.
-   */
-  private bearerTokenGeneratedAt = 0;
+  // Token caching state
+  let cachedToken: string | null = null;
+  let tokenGeneratedAt = 0;
 
-  /**
-   * The options for the client instance.
-   */
-  private options: AppStoreConnectAPIOptions;
+  return createHeyApiClient(
+    createConfig({
+      baseUrl,
+      auth: async () => {
+        if (config.bearerToken) {
+          return config.bearerToken;
+        }
 
-  /**
-   * The configuration object for the API.
-   */
-  private configuration?: Configuration;
+        if (config.privateKeyId && config.privateKey) {
+          const expirationDuration =
+            config.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS;
+          const expirationDurationMs = expirationDuration * 1000;
+          const tokenAge = tokenGeneratedAt ? Date.now() - tokenGeneratedAt : 0;
 
-  /**
-   * Creates an instance of the AppStoreConnectAPI.
-   * @param options - The configuration options for the API.
-   * @param options.issuerId - (Optional) The issuer ID for generating JWT token. Required for Team API keys, omit for Individual API keys.
-   * @param options.privateKeyId - The ID of the private key used for generating JWT token.
-   * @param options.privateKey - The content of the private key used for generating JWT token.
-   * @param options.fetchApi - (Optional) The FetchAPI implementation to use for API requests.
-   * @param options.bearerToken - (Optional) A pre-generated bearer token to use for authentication.
-   * @param options.expirationDuration - (Optional) The expiration duration for the bearer token in seconds (default 20 minutes).
-   * @param options.basePath - (Optional) The base path for the API (without trailing slash, default https://api.appstoreconnect.apple.com).
-   * @throws {string} Will throw an error if no bearerToken or private key is provided
-   */
-  constructor(options: AppStoreConnectAPIOptions) {
-    this.options = options;
-  }
+          // Refresh if: no token, expired, or will expire within 2 minutes
+          const shouldRefresh =
+            !cachedToken ||
+            tokenAge > expirationDurationMs ||
+            tokenAge > expirationDurationMs - 2 * 60 * 1000;
 
-  /**
-   * Generates a new bearer token.
-   */
-  async genToken() {
-    if (this.options.bearerToken) {
-      return this.options.bearerToken;
-    }
+          if (shouldRefresh) {
+            cachedToken = await generateAuthToken({
+              apiKeyId: config.privateKeyId,
+              issuerId: config.issuerId,
+              privateKey: config.privateKey,
+              expirationTime: Math.floor(Date.now() / 1000) + expirationDuration,
+            });
+            tokenGeneratedAt = Date.now();
+          }
 
-    if (this.options.privateKeyId && this.options.privateKey) {
-      return await generateAuthToken({
-        apiKeyId: this.options.privateKeyId,
-        issuerId: this.options.issuerId, // Optional: undefined for Individual keys
-        privateKey: this.options.privateKey,
-        expirationTime: Math.floor(Date.now() / 1000) + (this.options.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS),
-      });
-    }
+          return cachedToken!;
+        }
 
-    throw "No bearerToken or private key provided";
-  }
-
-  /**
-   * Create a Configuration object with the authentication token and any provided FetchAPI implementation.
-   */
-  async genConfiguration() {
-    this.configuration = new Configuration({
-      headers: {
-        Authorization: `Bearer ${await this.genToken()}`,
+        throw new Error("No bearerToken or private key provided");
       },
-      fetchApi: this.options.fetchApi,
-      basePath: this.options.basePath?.replace(/\/$/, ""),
-    });
-    this.bearerTokenGeneratedAt = Date.now();
-  }
-
-  /**
-   * Returns the current bearer token, generating a new one if necessary.
-   * The token will be refreshed if it's close to expiration (within 2 minutes).
-   */
-  async getConfiguration() {
-    const latestBearerTokenDuration = this.bearerTokenGeneratedAt ? Date.now() - this.bearerTokenGeneratedAt : 0;
-    const expirationDurationMs = 1000 * (this.options.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS);
-    // Refresh the token if it has expired or will expire within 2 minutes
-    const shouldRefresh = !this.configuration ||
-      latestBearerTokenDuration > expirationDurationMs ||
-      latestBearerTokenDuration > (expirationDurationMs - 2 * 60 * 1000);
-    if (shouldRefresh) {
-      await this.genConfiguration();
-    }
-    return this.configuration;
-  }
-
-  /**
-   * Creates an instance of the specified API class.
-   * @param apiClass - The API class to instantiate.
-   * @returns An instance of the specified API class.
-   */
-  async create<T extends BaseAPI>(apiClass: new (configuration?: Configuration) => T): Promise<T> {
-    return new apiClass(await this.getConfiguration());
-  }
-
-  /**
-   * Makes an API request.
-   * @param context - The request context for the API request.
-   * @param initOverrides - (Optional) The request options to use for the API request.
-   * @returns The response from the API request.
-   */
-  async request(context: AppStoreConnectAPIRequest, initOverrides?: RequestInit | InitOverrideFunction) {
-    if (!context.url && !context.path) {
-      throw new Error("No url or path provided");
-    }
-
-    const _context = { ...context };
-    if (!_context.path && _context.url) {
-      if (_context.url.startsWith(BASE_PATH)) {
-        // @ts-ignore
-        _context.path = _context.url.replace(BASE_PATH, "");
-      } else {
-        throw new Error("url must start with " + BASE_PATH);
-      }
-    }
-
-    if (!_context.method) {
-      _context.method = "GET";
-    }
-
-    delete _context.url;
-
-    const globalApi = new GlobalAPI(await this.getConfiguration());
-    return await globalApi.request(_context as RequestOpts, initOverrides)
-  }
+    })
+  );
 }
 
-class GlobalAPI extends BaseAPI {
-  constructor(configuration?: Configuration) {
-    super(configuration);
-  }
+// Re-export Client type
+export type { Client };
 
-  request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
-    return super.request(context, initOverrides);
-  }
-}
-
-export { AppStoreConnectAPI };
+// Re-export all SDK functions and types from hey-api
+export * from "./openapi";
