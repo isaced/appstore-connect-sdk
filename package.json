@@ -1,7 +1,7 @@
 {
   "name": "appstore-connect-sdk",
-  "version": "1.3.2",
-  "description": "An App Store Connect API client for Node.js",
+  "version": "2.0.0",
+  "description": "App Store Connect API client for Node.js",
   "keywords": [
     "appstore connect",
     "api",
@@ -14,14 +14,14 @@
   "types": "dist/types/main.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/main.d.ts",
       "import": "./dist/main.js",
-      "require": "./dist/cjs/main.js",
-      "types": "./dist/types/main.d.ts"
+      "require": "./dist/cjs/main.js"
     },
     "./openapi": {
+      "types": "./dist/types/openapi/index.d.ts",
       "import": "./dist/openapi/index.js",
-      "require": "./dist/cjs/openapi/index.js",
-      "types": "./dist/types/openapi/index.d.ts"
+      "require": "./dist/cjs/openapi/index.js"
     }
   },
   "files": [
@@ -34,13 +34,14 @@
     "copy:package.cjs.json": "cp ./package.cjs.json ./dist/cjs/package.json && cp ./package.cjs.json ./dist/types/package.json"
   },
   "dependencies": {
-    "jose": "^6.1.0"
+    "jose": "^6.1.3",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.2",
-    "@types/bun": "^1.1.12",
-    "esbuild": "0.24.0",
-    "typescript": "^5.0.0"
+    "@hey-api/openapi-ts": "^0.90.4",
+    "@types/node": "^25.0.9",
+    "esbuild": "0.27.2",
+    "typescript": "^5.9.3"
   },
   "author": "isaced",
   "license": "MIT",

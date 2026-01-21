@@ -1,6 +1,6 @@
 # appstore-connect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
 
-`appstore-connect-sdk` 是一个 Node.js 模块，使用 TypeScript 编写，为开发人员提供了一个方便的与 [App Store Connect API](https://developer.apple.com/app-store-connect/api/) 进行交互。该模块基于 [OpenAPI Generator](https://openapi-generator.tech/) 工具构建，并支持所有基于 OpenAPI 规范的 API。
+`appstore-connect-sdk` 是一个 Node.js 模块，使用 TypeScript 编写，为开发人员提供了一个方便的与 [App Store Connect API](https://developer.apple.com/app-store-connect/api/) 进行交互。该模块基于 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 工具构建，并支持所有基于 OpenAPI 规范的 API。
 
 简体中文 | [English](https://github.com/isaced/appstore-connect-sdk/blob/main/README.md)
 
@@ -12,10 +12,10 @@
 
 ## 这个 SDK 包含的功能特性
 
-- [x] API 密钥配置以支持 JWT 签名
-- [x] 支持自定义网络库发送请求，如 fetch/node-fetch/axios 等…
-- [x] 借助 OpenAPI 的自动化生成能力，支持苹果所有 API
-- [x] 支持 Deno 运行时
+- [x] **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
+- [x] **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新
+- [x] **完整 API 覆盖** - 通过 OpenAPI 生成的代码支持所有 App Store Connect API 端点
+- [x] **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
 
 ## 示例
 
@@ -30,15 +30,15 @@ npm install appstore-connect-sdk
 
 ## 使用
 
-#### 1. Import `appstore-connect-sdk`
+#### 1. 导入 `appstore-connect-sdk`
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk";
 ```
 
-#### 2. 创建 API 配置
+#### 2. 创建客户端
 
-进入 [App Store Connect -> Users and Access -> Keys](https://appstoreconnect.apple.com/access/api) 并创建您自己的密钥，这里也可以找到你的 `private key ID` 和 `issuer ID`.
+进入 [App Store Connect -> Users and Access -> Keys](https://appstoreconnect.apple.com/access/api) 并创建您自己的密钥，这里也可以找到你的 `private key ID` 和 `issuer ID`。
 
 SDK 支持两种类型的 API 密钥：
 
@@ -59,7 +59,7 @@ nNdXXbA4
 **团队 API 密钥配置：**
 
 ```typescript
-const client = new AppStoreConnectAPI({
+const client = createClient({
   issuerId: "<YOUR ISSUER ID>",
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
@@ -69,7 +69,7 @@ const client = new AppStoreConnectAPI({
 **个人 API 密钥配置：**
 
 ```typescript
-const client = new AppStoreConnectAPI({
+const client = createClient({
   // 个人 API 密钥不需要 issuerId
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
@@ -82,14 +82,26 @@ const client = new AppStoreConnectAPI({
 - [Generating Tokens for API Requests](https://developer.apple.com/documentation/appstoreconnectapi/generating_tokens_for_api_requests)
 - [Revoking API Keys](https://developer.apple.com/documentation/appstoreconnectapi/revoking_api_keys)
 
-#### 3. 创建 API 并发送请求
+**配置选项：**
 
-你可以在 [src/openapi/apis](https://github.com/isaced/appstore-connect-sdk/tree/main/src/openapi/apis) 找到所有 API 实体定义, 这些类通过 [App Store Connect API - OpenAPI specification](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip) 进行自动化生成, 如果你遇到任何问题请提交一个 [issue](https://github.com/isaced/appstore-connect-sdk/issues)。
+| 选项 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `issuerId` | `string` | 团队密钥必需 | 来自 App Store Connect 的 issuer ID |
+| `privateKeyId` | `string` | 是* | 您的私钥 ID |
+| `privateKey` | `string` | 是* | PEM 格式的私钥内容 |
+| `bearerToken` | `string` | 否 | 直接提供您自己的 JWT 令牌，无需 SDK 生成 |
+| `expirationDuration` | `number` | 否 | 令牌过期时间（秒），默认：1200 = 20 分钟，最大：20 分钟 |
+| `baseUrl` | `string` | 否 | 覆盖 API 基础 URL（默认：`https://api.appstoreconnect.apple.com`） |
+
+*除非提供了 `bearerToken`，否则必需。
+
+#### 3. 调用 API
+
+所有 API 函数都从 SDK 导出。将客户端传递给每个 API 调用。
 
 ```typescript
-const api = await client.create(AppsApi);
-const res = await api.appsGetCollection();
-console.log(res);
+const res = await appsGetCollection({ client });
+console.log(res.data);
 ```
 
 这是完整的示例代码：
@@ -97,56 +109,81 @@ console.log(res);
 **团队 API 密钥示例：**
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
-import {
-  AppsApi,
-  AppEventLocalizationsApi,
-} from "appstore-connect-sdk/openapi";
+import { createClient, appsGetCollection } from "appstore-connect-sdk";
 
-const client = new AppStoreConnectAPI({
+const client = createClient({
   issuerId: "<YOUR ISSUER ID>",
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });
 
-const api = await client.create(AppsApi);
-const res = await api.appsGetCollection();
-console.log(res);
+const res = await appsGetCollection({ client });
+console.log(res.data);
 ```
 
 **个人 API 密钥示例：**
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
-import {
-  AppsApi,
-  AppEventLocalizationsApi,
-} from "appstore-connect-sdk/openapi";
+import { createClient, appsGetCollection } from "appstore-connect-sdk";
 
-const client = new AppStoreConnectAPI({
+const client = createClient({
   // 个人 API 密钥不需要 issuerId
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });
 
-const api = await client.create(AppsApi);
-const res = await api.appsGetCollection();
-console.log(res);
+const res = await appsGetCollection({ client });
+console.log(res.data);
 ```
 
-### 自定义网络库
+### 可用的 API 函数
 
-默认情况下使用内置的 `fetch` 函数进行 HTTP 请求，但请注意此函数需要 Node.js 版本 v18.0.0 或更高版本。
-
-或者，你也可以通过在 AppStoreConnectAPI 构造函数中设置 `fetchApi` 选项来配置符合 [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch) 标准规范的任何网络库，将其他网络库桥接过来。
+所有 API 函数遵循 OpenAPI 规范的命名约定。一些常见的示例：
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
-import fetch from "node-fetch";
+import {
+  createClient,
+  appsGetCollection,
+  appsGetInstance,
+  buildsGetCollection,
+  betaTestersGetCollection,
+} from "appstore-connect-sdk";
 
-new AppStoreConnectAPI({
+const client = createClient({ /* 你的配置 */ });
+
+// 获取所有应用
+const apps = await appsGetCollection({ client });
+
+// 获取特定应用
+const app = await appsGetInstance({ client, path: { id: "app-id" } });
+
+// 获取应用的构建
+const builds = await buildsGetCollection({ client, query: { "filter[app]": "app-id" } });
+```
+
+### 高级用法
+
+对于高级用例，您可以直接使用客户端进行自定义请求：
+
+```typescript
+import { createClient } from "appstore-connect-sdk";
+
+const client = createClient({ /* 你的配置 */ });
+
+// 直接使用客户端进行自定义请求
+const response = await client.get({ url: "/v1/apps" });
+```
+
+### 覆盖基础 URL
+
+为了集成测试目的，您可以通过设置 `baseUrl` 选项来覆盖 App Store Connect API 的基础路径。例如，您可以使用此选项指向本地模拟服务器。
+
+```typescript
+import { createClient } from "appstore-connect-sdk";
+
+const client = createClient({
   // ...
-  fetchApi: fetch as unknown as FetchAPI, // 这样所有网络请求都通过 node-fetch 接管
+  baseUrl: "http://localhost:3000", // 所有网络请求都发送到 http://localhost:3000
 });
 ```
 
@@ -158,11 +195,11 @@ new AppStoreConnectAPI({
 $ sh gen-openapi.sh
 ```
 
-这将基于由 Apple 官方发布的 [OpenAPI specification](https://github.com/isaced/appstore-connect-sdk/blob/fdabb5bb414e9e3c02341ac1fa3238a5bfa15c30/app_store_connect_api_2.2_openapi.json) 规范文件，通过 [OpenAPI Generator](https://openapi-generator.tech/) 生成 Typescript 代码。
+这将基于由 Apple 官方发布的 OpenAPI 规范文件 (`app_store_connect_api_4.2_openapi.json`)，通过 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 生成 TypeScript 代码。
 
 ## Deno 兼容性
 
-`appstore-connect-sdk` 目前已经支持 Deno 环境，您可以在 [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/deno_example) 中查看在 Deno 环境中使用 `appstore-connect-sdk` 模块的示例。
+`appstore-connect-sdk` 目前已经支持 Deno 环境，您可以在 [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example) 中查看在 Deno 环境中使用 `appstore-connect-sdk` 模块的示例。
 
 我们致力于确保 `appstore-connect-sdk` 模块能够完全兼容 Node.js 和 Deno，我们将继续努力提高其与 Deno 的兼容性，随着 Deno 运行时的发展而不断改进。
 

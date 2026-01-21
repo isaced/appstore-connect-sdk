@@ -1,16 +1,17 @@
 import "jsr:@std/dotenv/load";
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
-import { AppsApi } from "appstore-connect-sdk/openapi";
+import { createClient, appsGetCollection } from "appstore-connect-sdk";
 
-// Create a new instance of the AppStoreConnectAPI client with the required parameters.
-const client = new AppStoreConnectAPI({
+// Create a client with the required parameters.
+const client = createClient({
   issuerId: Deno.env.get("ISSUER_ID")!,
   privateKeyId: Deno.env.get("PRIVATE_KEY_ID")!,
   privateKey: Deno.env.get("PRIVATE_KEY")!,
   // bearerToken: Deno.env.get("BEARER_TOKEN")!,
 });
 
-// Test case to get a list of apps.
-const api = await client.create(AppsApi);
-const res = await api.appsGetCollection();
-console.log(res);
+// Fetch all apps
+const res = await appsGetCollection({ client });
+if (res.error) {
+  throw new Error(`Error fetching apps: ${JSON.stringify(res.error)}`);
+}
+console.log(res.data);

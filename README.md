@@ -1,6 +1,6 @@
 # appstore-connect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
 
-The `appstore-connect-sdk` is a Node.js module written in TypeScript that provides a convenient way for developers to interact with the [App Store Connect API](https://developer.apple.com/app-store-connect/api/). The module is built on top of the [OpenAPI Generator](https://openapi-generator.tech/) tool and provides support for all APIs based on OpenAPI specification.
+The `appstore-connect-sdk` is a Node.js module written in TypeScript that provides a convenient way for developers to interact with the [App Store Connect API](https://developer.apple.com/app-store-connect/api/). The module is built using [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) and provides support for all APIs based on the OpenAPI specification.
 
 English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/main/README_zh.md)
 
@@ -14,10 +14,10 @@ English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/mai
 
 The `appstore-connect-sdk` module includes the following features:
 
-- [x] Configuration with API Key and JWT Logic to sign requests
-- [x] Support for custom network libraries for making requests, such as fetch/node-fetch/axios...
-- [x] Support for _all_ requests due to OpenAPI generated requests and entities
-- [x] Compatibility with both Node.js and **Deno** environments
+- [x] **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
+- [x] **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry)
+- [x] **Full API Coverage** - Support for all App Store Connect API endpoints through OpenAPI-generated code
+- [x] **Cross-Platform** - Compatible with both Node.js and **Deno** environments
 
 ## Examples
 
@@ -35,10 +35,10 @@ npm install appstore-connect-sdk
 #### 1. Import `appstore-connect-sdk`
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk";
 ```
 
-#### 2. Create your API Configuration
+#### 2. Create a client
 
 Go to [App Store Connect -> Users and Access -> Keys](https://appstoreconnect.apple.com/access/api) and create your own key. This is also the page to find your `private key ID` and the `issuer ID`.
 
@@ -61,7 +61,7 @@ nNdXXbA4
 **For Team API Keys:**
 
 ```typescript
-const client = new AppStoreConnectAPI({
+const client = createClient({
   issuerId: "<YOUR ISSUER ID>",
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
@@ -71,7 +71,7 @@ const client = new AppStoreConnectAPI({
 **For Individual API Keys:**
 
 ```typescript
-const client = new AppStoreConnectAPI({
+const client = createClient({
   // No issuerId required for Individual API Keys
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
@@ -84,14 +84,26 @@ For more information on how JWT works with the App Store Connect API, check out 
 - [Generating Tokens for API Requests](https://developer.apple.com/documentation/appstoreconnectapi/generating_tokens_for_api_requests)
 - [Revoking API Keys](https://developer.apple.com/documentation/appstoreconnectapi/revoking_api_keys)
 
-#### 3. Create an API and perform a request
+**Configuration Options:**
 
-You can find all available APIs in [src/openapi/apis](https://github.com/isaced/appstore-connect-sdk/tree/main/src/openapi/apis), these classes are generated according to [App Store Connect API - OpenAPI specification](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip), If you encounter any problems, please open an [issue](https://github.com/isaced/appstore-connect-sdk/issues).
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `issuerId` | `string` | For Team keys | Your issuer ID from App Store Connect |
+| `privateKeyId` | `string` | Yes* | The ID of your private key |
+| `privateKey` | `string` | Yes* | The private key content in PEM format |
+| `bearerToken` | `string` | No | Provide your own JWT token instead of having the SDK generate one |
+| `expirationDuration` | `number` | No | Token expiration in seconds (default: 1200 = 20 minutes, max: 20 minutes) |
+| `baseUrl` | `string` | No | Override the API base URL (default: `https://api.appstoreconnect.apple.com`) |
+
+*Required unless `bearerToken` is provided.
+
+#### 3. Make API calls
+
+All API functions are exported from the SDK. Pass the client to each API call.
 
 ```typescript
-const api = await client.create(AppsApi);
-const res = await api.appsGetCollection();
-console.log(res);
+const res = await appsGetCollection({ client });
+console.log(res.data);
 ```
 
 Here's the complete code example:
@@ -99,69 +111,81 @@ Here's the complete code example:
 **For Team API Keys:**
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
-import {
-  AppsApi,
-  AppEventLocalizationsApi,
-} from "appstore-connect-sdk/openapi";
+import { createClient, appsGetCollection } from "appstore-connect-sdk";
 
-const client = new AppStoreConnectAPI({
+const client = createClient({
   issuerId: "<YOUR ISSUER ID>",
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });
 
-const api = await client.create(AppsApi);
-const res = await api.appsGetCollection();
-console.log(res);
+const res = await appsGetCollection({ client });
+console.log(res.data);
 ```
 
 **For Individual API Keys:**
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
-import {
-  AppsApi,
-  AppEventLocalizationsApi,
-} from "appstore-connect-sdk/openapi";
+import { createClient, appsGetCollection } from "appstore-connect-sdk";
 
-const client = new AppStoreConnectAPI({
+const client = createClient({
   // No issuerId for Individual API Keys
   privateKeyId: "<YOUR PRIVATE KEY ID>",
   privateKey: "<YOUR PRIVATE KEY>",
 });
 
-const api = await client.create(AppsApi);
-const res = await api.appsGetCollection();
-console.log(res);
+const res = await appsGetCollection({ client });
+console.log(res.data);
 ```
 
-### Custom network libraries
+### Available API Functions
 
-By default, AppStoreConnectAPI uses its built-in `fetch` function for HTTP requests. Note that this function requires Node.js version **18.0.0** or higher.
-
-However, you can also configure any network library that adheres to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch) standard specification by setting the `fetchApi` option in the AppStoreConnectAPI constructor.
+All API functions follow the naming convention from the OpenAPI spec. Some common examples:
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
-import fetch from "node-fetch";
+import {
+  createClient,
+  appsGetCollection,
+  appsGetInstance,
+  buildsGetCollection,
+  betaTestersGetCollection,
+} from "appstore-connect-sdk";
 
-new AppStoreConnectAPI({
-  // ...
-  fetchApi: fetch as unknown as FetchAPI, // All network requests are made via node-fetch
-});
+const client = createClient({ /* your config */ });
+
+// Get all apps
+const apps = await appsGetCollection({ client });
+
+// Get a specific app
+const app = await appsGetInstance({ client, path: { id: "app-id" } });
+
+// Get builds for an app
+const builds = await buildsGetCollection({ client, query: { "filter[app]": "app-id" } });
+```
+
+### Advanced Usage
+
+For advanced use cases, you can use the client directly for custom requests:
+
+```typescript
+import { createClient } from "appstore-connect-sdk";
+
+const client = createClient({ /* your config */ });
+
+// Use the client directly for custom requests
+const response = await client.get({ url: "/v1/apps" });
 ```
 
 ### Overriding the base URL
 
-For integration testing purposes, you can override the base path of the App Store Connect API by setting the `basePath` option in the AppStoreConnectAPI constructor. For example, you can use this to point to a local mock server. This allows you to test the behavior of your application in a more controlled environment without making requests to the real API.
+For integration testing purposes, you can override the base URL of the App Store Connect API by setting the `baseUrl` option. For example, you can use this to point to a local mock server.
 
 ```typescript
-import { AppStoreConnectAPI } from "appstore-connect-sdk";
+import { createClient } from "appstore-connect-sdk";
 
-new AppStoreConnectAPI({
+const client = createClient({
   // ...
-  basePath: "http://localhost:3000", // All network requests are made to http://localhost:3000
+  baseUrl: "http://localhost:3000", // All network requests are made to http://localhost:3000
 });
 ```
 
@@ -173,11 +197,11 @@ To update the OpenAPI-generated code, run the following command:
 $ sh gen-openapi.sh
 ```
 
-This will generate Typescript code through [OpenAPI Generator](https://openapi-generator.tech/) based on the [OpenAPI specification](https://github.com/isaced/appstore-connect-sdk/blob/fdabb5bb414e9e3c02341ac1fa3238a5bfa15c30/app_store_connect_api_2.2_openapi.json) file officially released by Apple.
+This will generate TypeScript code through [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) based on the OpenAPI specification file (`app_store_connect_api_4.2_openapi.json`) officially released by Apple.
 
 ## Deno Compatibility
 
-The `appstore-connect-sdk` module is fully compatible with Deno, An example of using the `appstore-connect-sdk` module in a Deno environment can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example).
+The `appstore-connect-sdk` module is fully compatible with Deno. An example of using the `appstore-connect-sdk` module in a Deno environment can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example).
 
 We are committed to ensuring that the `appstore-connect-sdk` module remains fully compatible with both Node.js and Deno, and we will continue to work on improving its compatibility with Deno as the Deno runtime evolves.
 
