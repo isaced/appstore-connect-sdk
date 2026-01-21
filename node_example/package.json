@@ -1,7 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "appstore-connect-sdk": "../",
-    "dotenv": "^16.0.3"
+    "appstore-connect-sdk": "^2.0.0",
+    "dotenv": "^17.0.0"
   }
 }

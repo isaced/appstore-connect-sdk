@@ -1,8 +1,5 @@
 import { createClient, appsGetCollection } from "appstore-connect-sdk";
-import dotenv from "dotenv";
-
-// Load the environment variables from the .env file.
-dotenv.config();
+import 'dotenv/config';
 
 // Create a client with the required parameters.
 const client = createClient({
