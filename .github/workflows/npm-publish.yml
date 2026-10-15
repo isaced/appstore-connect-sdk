@@ -24,4 +24,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
+      - name: Smoke test packed artifact
+        run: node scripts/smoke-test.mjs
       - run: npm publish
