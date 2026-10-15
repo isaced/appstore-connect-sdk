@@ -22,6 +22,26 @@
       "types": "./dist/types/openapi/index.d.ts",
       "import": "./dist/openapi/index.js",
       "require": "./dist/cjs/openapi/index.js"
+    },
+    "./client": {
+      "types": "./dist/types/client.d.ts",
+      "import": "./dist/client.js",
+      "require": "./dist/cjs/client.js"
+    },
+    "./sdk": {
+      "types": "./dist/types/sdk.d.ts",
+      "import": "./dist/sdk.js",
+      "require": "./dist/cjs/sdk.js"
+    },
+    "./schemas": {
+      "types": "./dist/types/schemas.d.ts",
+      "import": "./dist/schemas.js",
+      "require": "./dist/cjs/schemas.js"
+    },
+    "./zod": {
+      "types": "./dist/types/zod.d.ts",
+      "import": "./dist/zod.js",
+      "require": "./dist/cjs/zod.js"
     }
   },
   "files": [

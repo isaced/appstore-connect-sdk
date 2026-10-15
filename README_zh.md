@@ -187,6 +187,29 @@ const client = createClient({
 });
 ```
 
+### 导入入口与内存占用
+
+默认的根入口会一次性初始化完整的生成代码（包括约 3,700 个 Zod schema），会让全新的 Node.js 进程 RSS 增加约 **500 MiB**（[#47](https://github.com/isaced/appstore-connect-sdk/issues/47)）。如果不需要运行时 schema 校验，请从更轻量的子路径入口导入：
+
+| 入口 | 内容 | 约 RSS |
+|---|---|---|
+| `appstore-connect-sdk` | 全部导出（向后兼容） | ~518 MiB |
+| `appstore-connect-sdk/sdk` | 请求函数、TS 类型、`createClient` | ~29 MiB |
+| `appstore-connect-sdk/client` | 仅 `createClient` 与客户端类型 | ~12 MiB |
+| `appstore-connect-sdk/schemas` | JSON schema（按需） | — |
+| `appstore-connect-sdk/zod` | Zod schema，用于运行时校验（按需） | — |
+
+```typescript
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
+```
+
+如果你使用的是命名空间导入，只需改一行即可完成切换（`sdk` 入口同样提供 `createClient`）：
+
+```diff
+- import * as asc from "appstore-connect-sdk";
++ import * as asc from "appstore-connect-sdk/sdk";
+```
+
 ## 更新 OpenAPI 生成的代码
 
 要更新 OpenAPI 生成的代码，请运行以下命令：

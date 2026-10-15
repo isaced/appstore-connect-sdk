@@ -189,6 +189,29 @@ const client = createClient({
 });
 ```
 
+### Import entrypoints (memory footprint)
+
+The default root import eagerly initializes the full generated surface — including ~3,700 Zod schemas — which adds roughly **500 MiB RSS** to a fresh Node.js process ([#47](https://github.com/isaced/appstore-connect-sdk/issues/47)). If you don't need runtime schema validation, import from a lighter subpath entry:
+
+| Entry | Contents | Approx. RSS |
+|---|---|---|
+| `appstore-connect-sdk` | Everything (backward compatible) | ~518 MiB |
+| `appstore-connect-sdk/sdk` | Request functions, TS types, `createClient` | ~29 MiB |
+| `appstore-connect-sdk/client` | `createClient` and client types only | ~12 MiB |
+| `appstore-connect-sdk/schemas` | JSON schemas (opt-in) | — |
+| `appstore-connect-sdk/zod` | Zod schemas for runtime validation (opt-in) | — |
+
+```typescript
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
+```
+
+If you use a namespace import, switching is a one-line change (the `sdk` entry also provides `createClient`):
+
+```diff
+- import * as asc from "appstore-connect-sdk";
++ import * as asc from "appstore-connect-sdk/sdk";
+```
+
 ## Updating OpenAPI generated code
 
 To update the OpenAPI-generated code, run the following command:
