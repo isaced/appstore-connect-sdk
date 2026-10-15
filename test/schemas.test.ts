@@ -4,9 +4,8 @@ import {
   type Client,
   type AppsResponse,
   type App,
-  zAppsResponse,
-  zApp,
-} from "../src/main";
+} from "../src/sdk";
+import { zAppsResponse, zApp } from "../src/zod";
 import { z } from "zod";
 import { describe, beforeAll, test, expect } from "bun:test";
 

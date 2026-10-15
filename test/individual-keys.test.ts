@@ -1,5 +1,5 @@
 import { generateAuthToken } from "../src/auth";
-import { createClient } from "../src/main";
+import { createClient } from "../src/sdk";
 import * as jose from "jose";
 import { describe, test, expect } from "bun:test";
 

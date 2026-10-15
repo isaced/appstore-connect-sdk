@@ -53,6 +53,9 @@
     "build:types": "npx tsc --emitDeclarationOnly --declaration",
     "copy:package.cjs.json": "cp ./package.cjs.json ./dist/cjs/package.json && cp ./package.cjs.json ./dist/types/package.json"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "jose": "^6.1.3",
     "zod": "^4.3.5"

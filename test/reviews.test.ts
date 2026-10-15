@@ -2,9 +2,8 @@ import {
   createClient,
   appsGetCollection,
   appsCustomerReviewsGetToManyRelated,
-  type Client,
-} from "../src/main";
-import type { CustomerReviewsResponse } from "../src/openapi";
+} from "../src/sdk";
+import type { Client, CustomerReviewsResponse } from "../src/sdk";
 import { describe, beforeAll, test, expect } from "bun:test";
 
 describe("Reviews API", () => {
