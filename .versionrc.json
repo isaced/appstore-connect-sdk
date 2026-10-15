@@ -1,0 +1,7 @@
+{
+  "bumpFiles": [
+    "package.json",
+    "package-lock.json",
+    { "filename": "jsr.json", "type": "json" }
+  ]
+}
