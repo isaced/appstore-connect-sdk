@@ -16,7 +16,7 @@ The `appstore-connect-sdk` module includes the following features:
 
 - [x] **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
 - [x] **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry)
-- [x] **Full API Coverage** - Support for all App Store Connect API endpoints through OpenAPI-generated code
+- [x] **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.5** spec, generated from Apple's official OpenAPI description
 - [x] **Cross-Platform** - Compatible with both Node.js and **Deno** environments
 
 ## Examples
@@ -29,6 +29,8 @@ The `appstore-connect-sdk` module includes the following features:
 ```bash
 npm install appstore-connect-sdk
 ```
+
+Requires Node.js **20+**.
 
 ## Usage
 
@@ -193,13 +195,13 @@ const client = createClient({
 
 ### Import entrypoints (memory footprint)
 
-The default root import eagerly initializes the full generated surface — including ~3,700 Zod schemas — which adds roughly **500 MiB RSS** to a fresh Node.js process ([#47](https://github.com/isaced/appstore-connect-sdk/issues/47)). If you don't need runtime schema validation, import from a lighter subpath entry:
+The default root import eagerly initializes the full generated surface — ~5,000 Zod and JSON schemas — which adds roughly **450 MiB RSS** to a fresh Node.js process ([#47](https://github.com/isaced/appstore-connect-sdk/issues/47)). If you don't need runtime schema validation, import from a lighter subpath entry (measured on v2.2.1):
 
 | Entry | Contents | Approx. RSS |
 |---|---|---|
-| `appstore-connect-sdk` | Everything (backward compatible) | ~518 MiB |
-| `appstore-connect-sdk/sdk` | Request functions, TS types, `createClient` | ~29 MiB |
-| `appstore-connect-sdk/client` | `createClient` and client types only | ~12 MiB |
+| `appstore-connect-sdk` | Everything (backward compatible) | ~457 MiB |
+| `appstore-connect-sdk/sdk` | Request functions, TS types, `createClient` | ~36 MiB |
+| `appstore-connect-sdk/client` | `createClient` and client types only | ~20 MiB |
 | `appstore-connect-sdk/schemas` | JSON schemas (opt-in) | — |
 | `appstore-connect-sdk/zod` | Zod schemas for runtime validation (opt-in) | — |
 
@@ -226,7 +228,9 @@ This will generate TypeScript code through [@hey-api/openapi-ts](https://github.
 
 ## Deno Compatibility
 
-The `appstore-connect-sdk` module is fully compatible with Deno. An example of using the `appstore-connect-sdk` module in a Deno environment can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example).
+The `appstore-connect-sdk` module is compatible with Deno via `npm:` specifiers. An example can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example).
+
+> Note: publication to JSR (`jsr:@isaced/appstore-connect-sdk`) is not live yet, so the subpath entries (`/sdk`, `/client`, …) are currently npm-only; Deno users should import the root entry for now.
 
 We are committed to ensuring that the `appstore-connect-sdk` module remains fully compatible with both Node.js and Deno, and we will continue to work on improving its compatibility with Deno as the Deno runtime evolves.
 
