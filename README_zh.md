@@ -220,7 +220,7 @@ import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 $ sh gen-openapi.sh
 ```
 
-这将基于由 Apple 官方发布的 OpenAPI 规范文件 (`app_store_connect_api_4.2_openapi.json`)，通过 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 生成 TypeScript 代码。
+这将基于由 Apple 官方发布的 OpenAPI 规范文件 (`app_store_connect_api_4.5_openapi.json`)，通过 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 生成 TypeScript 代码。
 
 ## Deno 兼容性
 
