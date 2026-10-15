@@ -33,8 +33,10 @@ npm install appstore-connect-sdk
 #### 1. 导入 `appstore-connect-sdk`
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 ```
+
+`sdk` 入口能覆盖绝大多数使用场景，且内存占用远低于根入口（见[导入入口与内存占用](#导入入口与内存占用)）。只有当你需要从根导出面使用生成的 JSON/Zod schema 时，才使用 `import ... from "appstore-connect-sdk"`。
 
 #### 2. 创建客户端
 
@@ -109,7 +111,7 @@ console.log(res.data);
 **团队 API 密钥示例：**
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   issuerId: "<YOUR ISSUER ID>",
@@ -124,7 +126,7 @@ console.log(res.data);
 **个人 API 密钥示例：**
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   // 个人 API 密钥不需要 issuerId
@@ -147,7 +149,7 @@ import {
   appsGetInstance,
   buildsGetCollection,
   betaTestersGetCollection,
-} from "appstore-connect-sdk";
+} from "appstore-connect-sdk/sdk";
 
 const client = createClient({ /* 你的配置 */ });
 
@@ -166,7 +168,7 @@ const builds = await buildsGetCollection({ client, query: { "filter[app]": "app-
 对于高级用例，您可以直接使用客户端进行自定义请求：
 
 ```typescript
-import { createClient } from "appstore-connect-sdk";
+import { createClient } from "appstore-connect-sdk/sdk";
 
 const client = createClient({ /* 你的配置 */ });
 
@@ -179,7 +181,7 @@ const response = await client.get({ url: "/v1/apps" });
 为了集成测试目的，您可以通过设置 `baseUrl` 选项来覆盖 App Store Connect API 的基础路径。例如，您可以使用此选项指向本地模拟服务器。
 
 ```typescript
-import { createClient } from "appstore-connect-sdk";
+import { createClient } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   // ...

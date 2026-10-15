@@ -35,8 +35,10 @@ npm install appstore-connect-sdk
 #### 1. Import `appstore-connect-sdk`
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 ```
+
+The `sdk` entry covers most use cases at a fraction of the memory footprint of the root import (see [Import entrypoints](#import-entrypoints-memory-footprint)). Use `import ... from "appstore-connect-sdk"` only if you need the generated JSON/Zod schemas from the root surface.
 
 #### 2. Create a client
 
@@ -111,7 +113,7 @@ Here's the complete code example:
 **For Team API Keys:**
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   issuerId: "<YOUR ISSUER ID>",
@@ -126,7 +128,7 @@ console.log(res.data);
 **For Individual API Keys:**
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   // No issuerId for Individual API Keys
@@ -149,7 +151,7 @@ import {
   appsGetInstance,
   buildsGetCollection,
   betaTestersGetCollection,
-} from "appstore-connect-sdk";
+} from "appstore-connect-sdk/sdk";
 
 const client = createClient({ /* your config */ });
 
@@ -168,7 +170,7 @@ const builds = await buildsGetCollection({ client, query: { "filter[app]": "app-
 For advanced use cases, you can use the client directly for custom requests:
 
 ```typescript
-import { createClient } from "appstore-connect-sdk";
+import { createClient } from "appstore-connect-sdk/sdk";
 
 const client = createClient({ /* your config */ });
 
@@ -181,7 +183,7 @@ const response = await client.get({ url: "/v1/apps" });
 For integration testing purposes, you can override the base URL of the App Store Connect API by setting the `baseUrl` option. For example, you can use this to point to a local mock server.
 
 ```typescript
-import { createClient } from "appstore-connect-sdk";
+import { createClient } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   // ...
