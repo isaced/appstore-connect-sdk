@@ -1,4 +1,4 @@
-import { createClient, appsGetCollection, type Client } from "../src/main";
+import { createClient, appsGetCollection, type Client } from "../src/sdk";
 import { describe, beforeAll, test, expect } from "bun:test";
 
 describe("AppStoreConnectAPI", () => {

@@ -1,4 +1,4 @@
-import { createClient } from "../src/main";
+import { createClient } from "../src/sdk";
 import { describe, test, expect } from "bun:test";
 
 describe("Test createClient & configuration", () => {
