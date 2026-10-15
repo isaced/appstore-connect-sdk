@@ -1,0 +1,10 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [2.2.0](https://github.com/isaced/appstore-connect-sdk/compare/v2.1.0...v2.2.0) (2026-10-15)
+
+
+### Features
+
+* update OpenAPI spec to 4.5.1 and regenerate client ([#53](https://github.com/isaced/appstore-connect-sdk/issues/53)) ([172ca39](https://github.com/isaced/appstore-connect-sdk/commit/172ca3968eec2e212267b45a6e287503119e5b27))
