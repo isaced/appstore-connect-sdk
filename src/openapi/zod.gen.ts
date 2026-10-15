@@ -10736,11 +10736,7 @@ export const zAppCustomProductPage = z.object({
  */
 export const zAppCustomProductPageVersionsResponse = z.object({
     data: z.array(zAppCustomProductPageVersion),
-    included: z.array(z.union([z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization), z.object({
-            type: z.literal('appCustomProductPages')
-        }).and(zAppCustomProductPage)])).optional(),
+    included: z.array(z.union([zAppCustomProductPageLocalization, zAppCustomProductPage])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -10750,11 +10746,7 @@ export const zAppCustomProductPageVersionsResponse = z.object({
  */
 export const zAppCustomProductPageVersionResponse = z.object({
     data: zAppCustomProductPageVersion,
-    included: z.array(z.union([z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization), z.object({
-            type: z.literal('appCustomProductPages')
-        }).and(zAppCustomProductPage)])).optional(),
+    included: z.array(z.union([zAppCustomProductPageLocalization, zAppCustomProductPage])).optional(),
     links: zDocumentLinks
 });
 
@@ -10964,11 +10956,7 @@ export const zAppPriceSchedule = z.object({
  */
 export const zAppPricesV2Response = z.object({
     data: z.array(zAppPriceV2),
-    included: z.array(z.union([z.object({
-            type: z.literal('appPricePoints')
-        }).and(zAppPricePointV3), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zAppPricePointV3, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -12153,11 +12141,7 @@ export const zGameCenterLeaderboardSet = z.object({
  */
 export const zGameCenterLeaderboardSetReleasesResponse = z.object({
     data: z.array(zGameCenterLeaderboardSetRelease),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail), z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet)])).optional(),
+    included: z.array(z.union([zGameCenterDetail, zGameCenterLeaderboardSet])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -12169,11 +12153,7 @@ export const zGameCenterLeaderboardSetReleasesResponse = z.object({
  */
 export const zGameCenterLeaderboardSetReleaseResponse = z.object({
     data: zGameCenterLeaderboardSetRelease,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail), z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet)])).optional(),
+    included: z.array(z.union([zGameCenterDetail, zGameCenterLeaderboardSet])).optional(),
     links: zDocumentLinks
 });
 
@@ -12243,15 +12223,9 @@ export const zGameCenterMatchmakingQueueResponse = z.object({
 export const zGameCenterMatchmakingRuleSetsResponse = z.object({
     data: z.array(zGameCenterMatchmakingRuleSet),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterMatchmakingQueues')
-        }).and(zGameCenterMatchmakingQueue),
-        z.object({
-            type: z.literal('gameCenterMatchmakingRules')
-        }).and(zGameCenterMatchmakingRule),
-        z.object({
-            type: z.literal('gameCenterMatchmakingTeams')
-        }).and(zGameCenterMatchmakingTeam)
+        zGameCenterMatchmakingQueue,
+        zGameCenterMatchmakingRule,
+        zGameCenterMatchmakingTeam
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -12263,15 +12237,9 @@ export const zGameCenterMatchmakingRuleSetsResponse = z.object({
 export const zGameCenterMatchmakingRuleSetResponse = z.object({
     data: zGameCenterMatchmakingRuleSet,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterMatchmakingQueues')
-        }).and(zGameCenterMatchmakingQueue),
-        z.object({
-            type: z.literal('gameCenterMatchmakingRules')
-        }).and(zGameCenterMatchmakingRule),
-        z.object({
-            type: z.literal('gameCenterMatchmakingTeams')
-        }).and(zGameCenterMatchmakingTeam)
+        zGameCenterMatchmakingQueue,
+        zGameCenterMatchmakingRule,
+        zGameCenterMatchmakingTeam
     ])).optional(),
     links: zDocumentLinks
 });
@@ -12382,11 +12350,7 @@ export const zInAppPurchasePricePoint = z.object({
  */
 export const zInAppPurchaseOfferPricesResponse = z.object({
     data: z.array(zInAppPurchaseOfferPrice),
-    included: z.array(z.union([z.object({
-            type: z.literal('inAppPurchasePricePoints')
-        }).and(zInAppPurchasePricePoint), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zInAppPurchasePricePoint, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -12440,11 +12404,7 @@ export const zInAppPurchasePriceSchedule = z.object({
  */
 export const zInAppPurchasePriceScheduleResponse = z.object({
     data: zInAppPurchasePriceSchedule,
-    included: z.array(z.union([z.object({
-            type: z.literal('inAppPurchasePrices')
-        }).and(zInAppPurchasePrice), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zInAppPurchasePrice, zTerritory])).optional(),
     links: zDocumentLinks
 });
 
@@ -12453,11 +12413,7 @@ export const zInAppPurchasePriceScheduleResponse = z.object({
  */
 export const zInAppPurchasePricesResponse = z.object({
     data: z.array(zInAppPurchasePrice),
-    included: z.array(z.union([z.object({
-            type: z.literal('inAppPurchasePricePoints')
-        }).and(zInAppPurchasePricePoint), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zInAppPurchasePricePoint, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -12791,11 +12747,7 @@ export const zSubscriptionGroupLocalizationResponse = z.object({
  */
 export const zSubscriptionGroupVersionsResponse = z.object({
     data: z.array(zSubscriptionGroupVersion),
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionGroupLocalizations')
-        }).and(zSubscriptionGroupLocalizationV2), z.object({
-            type: z.literal('subscriptionGroups')
-        }).and(zSubscriptionGroup)])).optional(),
+    included: z.array(z.union([zSubscriptionGroupLocalizationV2, zSubscriptionGroup])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -12805,11 +12757,7 @@ export const zSubscriptionGroupVersionsResponse = z.object({
  */
 export const zSubscriptionGroupVersionResponse = z.object({
     data: zSubscriptionGroupVersion,
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionGroupLocalizations')
-        }).and(zSubscriptionGroupLocalizationV2), z.object({
-            type: z.literal('subscriptionGroups')
-        }).and(zSubscriptionGroup)])).optional(),
+    included: z.array(z.union([zSubscriptionGroupLocalizationV2, zSubscriptionGroup])).optional(),
     links: zDocumentLinks
 });
 
@@ -12846,11 +12794,7 @@ export const zSubscriptionPricePoint = z.object({
  */
 export const zSubscriptionOfferCodePricesResponse = z.object({
     data: z.array(zSubscriptionOfferCodePrice),
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionPricePoints')
-        }).and(zSubscriptionPricePoint), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zSubscriptionPricePoint, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -12879,11 +12823,7 @@ export const zSubscriptionPricePointResponse = z.object({
  */
 export const zSubscriptionPromotionalOfferPricesResponse = z.object({
     data: z.array(zSubscriptionPromotionalOfferPrice),
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionPricePoints')
-        }).and(zSubscriptionPricePoint), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zSubscriptionPricePoint, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -13113,15 +13053,9 @@ export const zSubscription = z.object({
 export const zSubscriptionGroupsResponse = z.object({
     data: z.array(zSubscriptionGroup),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('subscriptionGroupLocalizations')
-        }).and(zSubscriptionGroupLocalization),
-        z.object({
-            type: z.literal('subscriptionGroupVersions')
-        }).and(zSubscriptionGroupVersion),
-        z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)
+        zSubscriptionGroupLocalization,
+        zSubscriptionGroupVersion,
+        zSubscription
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -13133,15 +13067,9 @@ export const zSubscriptionGroupsResponse = z.object({
 export const zSubscriptionGroupResponse = z.object({
     data: zSubscriptionGroup,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('subscriptionGroupLocalizations')
-        }).and(zSubscriptionGroupLocalization),
-        z.object({
-            type: z.literal('subscriptionGroupVersions')
-        }).and(zSubscriptionGroupVersion),
-        z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)
+        zSubscriptionGroupLocalization,
+        zSubscriptionGroupVersion,
+        zSubscription
     ])).optional(),
     links: zDocumentLinks
 });
@@ -13179,11 +13107,7 @@ export const zSubscriptionSubmissionResponse = z.object({
  */
 export const zWinBackOfferPricesResponse = z.object({
     data: z.array(zWinBackOfferPrice),
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionPricePoints')
-        }).and(zSubscriptionPricePoint), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zSubscriptionPricePoint, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -15206,15 +15130,9 @@ export const zPassTypeIdResponse = z.object({
 export const zProfilesResponse = z.object({
     data: z.array(zProfile),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('bundleIds')
-        }).and(zBundleId),
-        z.object({
-            type: z.literal('certificates')
-        }).and(zCertificate),
-        z.object({
-            type: z.literal('devices')
-        }).and(zDevice)
+        zBundleId,
+        zCertificate,
+        zDevice
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -15226,15 +15144,9 @@ export const zProfilesResponse = z.object({
 export const zProfileResponse = z.object({
     data: zProfile,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('bundleIds')
-        }).and(zBundleId),
-        z.object({
-            type: z.literal('certificates')
-        }).and(zCertificate),
-        z.object({
-            type: z.literal('devices')
-        }).and(zDevice)
+        zBundleId,
+        zCertificate,
+        zDevice
     ])).optional(),
     links: zDocumentLinks
 });
@@ -15289,15 +15201,9 @@ export const zAlternativeDistributionPackage = z.object({
 export const zAlternativeDistributionPackageVersionsResponse = z.object({
     data: z.array(zAlternativeDistributionPackageVersion),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('alternativeDistributionPackageDeltas')
-        }).and(zAlternativeDistributionPackageDelta),
-        z.object({
-            type: z.literal('alternativeDistributionPackageVariants')
-        }).and(zAlternativeDistributionPackageVariant),
-        z.object({
-            type: z.literal('alternativeDistributionPackages')
-        }).and(zAlternativeDistributionPackage)
+        zAlternativeDistributionPackageDelta,
+        zAlternativeDistributionPackageVariant,
+        zAlternativeDistributionPackage
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -15309,15 +15215,9 @@ export const zAlternativeDistributionPackageVersionsResponse = z.object({
 export const zAlternativeDistributionPackageVersionResponse = z.object({
     data: zAlternativeDistributionPackageVersion,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('alternativeDistributionPackageDeltas')
-        }).and(zAlternativeDistributionPackageDelta),
-        z.object({
-            type: z.literal('alternativeDistributionPackageVariants')
-        }).and(zAlternativeDistributionPackageVariant),
-        z.object({
-            type: z.literal('alternativeDistributionPackages')
-        }).and(zAlternativeDistributionPackage)
+        zAlternativeDistributionPackageDelta,
+        zAlternativeDistributionPackageVariant,
+        zAlternativeDistributionPackage
     ])).optional(),
     links: zDocumentLinks
 });
@@ -15834,18 +15734,10 @@ export const zCiWorkflow = z.object({
 export const zCiWorkflowsResponse = z.object({
     data: z.array(zCiWorkflow),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('ciMacOsVersions')
-        }).and(zCiMacOsVersion),
-        z.object({
-            type: z.literal('ciProducts')
-        }).and(zCiProduct),
-        z.object({
-            type: z.literal('ciXcodeVersions')
-        }).and(zCiXcodeVersion),
-        z.object({
-            type: z.literal('scmRepositories')
-        }).and(zScmRepository)
+        zCiMacOsVersion,
+        zCiProduct,
+        zCiXcodeVersion,
+        zScmRepository
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -15857,18 +15749,10 @@ export const zCiWorkflowsResponse = z.object({
 export const zCiWorkflowResponse = z.object({
     data: zCiWorkflow,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('ciMacOsVersions')
-        }).and(zCiMacOsVersion),
-        z.object({
-            type: z.literal('ciProducts')
-        }).and(zCiProduct),
-        z.object({
-            type: z.literal('ciXcodeVersions')
-        }).and(zCiXcodeVersion),
-        z.object({
-            type: z.literal('scmRepositories')
-        }).and(zScmRepository)
+        zCiMacOsVersion,
+        zCiProduct,
+        zCiXcodeVersion,
+        zScmRepository
     ])).optional(),
     links: zDocumentLinks
 });
@@ -16781,11 +16665,7 @@ export const zGameCenterMatchmakingRuleSetTest = z.object({
  */
 export const zGameCenterMatchmakingRuleSetTestResponse = z.object({
     data: zGameCenterMatchmakingRuleSetTest,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterMatchmakingTestPlayerProperties')
-        }).and(zGameCenterMatchmakingTestPlayerProperty), z.object({
-            type: z.literal('gameCenterMatchmakingTestRequests')
-        }).and(zGameCenterMatchmakingTestRequest)])).optional(),
+    included: z.array(z.union([zGameCenterMatchmakingTestPlayerProperty, zGameCenterMatchmakingTestRequest])).optional(),
     links: zDocumentLinks
 });
 
@@ -16998,11 +16878,7 @@ export const zGameCenterLeaderboardSetVersionV2 = z.object({
  */
 export const zGameCenterLeaderboardSetVersionsV2Response = z.object({
     data: z.array(zGameCenterLeaderboardSetVersionV2),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardSetLocalizations')
-        }).and(zGameCenterLeaderboardSetLocalizationV2), z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSetV2)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardSetLocalizationV2, zGameCenterLeaderboardSetV2])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -17012,11 +16888,7 @@ export const zGameCenterLeaderboardSetVersionsV2Response = z.object({
  */
 export const zGameCenterLeaderboardSetVersionV2Response = z.object({
     data: zGameCenterLeaderboardSetVersionV2,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardSetLocalizations')
-        }).and(zGameCenterLeaderboardSetLocalizationV2), z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSetV2)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardSetLocalizationV2, zGameCenterLeaderboardSetV2])).optional(),
     links: zDocumentLinks
 });
 
@@ -17204,11 +17076,7 @@ export const zAppStoreVersionExperimentTreatment = z.object({
  */
 export const zAppStoreVersionExperimentTreatmentsResponse = z.object({
     data: z.array(zAppStoreVersionExperimentTreatment),
-    included: z.array(z.union([z.object({
-            type: z.literal('appStoreVersionExperimentTreatmentLocalizations')
-        }).and(zAppStoreVersionExperimentTreatmentLocalization), z.object({
-            type: z.literal('appStoreVersionExperiments')
-        }).and(zAppStoreVersionExperiment)])).optional(),
+    included: z.array(z.union([zAppStoreVersionExperimentTreatmentLocalization, zAppStoreVersionExperiment])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -17218,11 +17086,7 @@ export const zAppStoreVersionExperimentTreatmentsResponse = z.object({
  */
 export const zAppStoreVersionExperimentTreatmentResponse = z.object({
     data: zAppStoreVersionExperimentTreatment,
-    included: z.array(z.union([z.object({
-            type: z.literal('appStoreVersionExperimentTreatmentLocalizations')
-        }).and(zAppStoreVersionExperimentTreatmentLocalization), z.object({
-            type: z.literal('appStoreVersionExperiments')
-        }).and(zAppStoreVersionExperiment)])).optional(),
+    included: z.array(z.union([zAppStoreVersionExperimentTreatmentLocalization, zAppStoreVersionExperiment])).optional(),
     links: zDocumentLinks
 });
 
@@ -17417,21 +17281,11 @@ export const zBetaBuildLocalizationResponse = z.object({
 export const zCiBuildRunsResponse = z.object({
     data: z.array(zCiBuildRun),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild),
-        z.object({
-            type: z.literal('ciProducts')
-        }).and(zCiProduct),
-        z.object({
-            type: z.literal('ciWorkflows')
-        }).and(zCiWorkflow),
-        z.object({
-            type: z.literal('scmGitReferences')
-        }).and(zScmGitReference),
-        z.object({
-            type: z.literal('scmPullRequests')
-        }).and(zScmPullRequest)
+        zBuild,
+        zCiProduct,
+        zCiWorkflow,
+        zScmGitReference,
+        zScmPullRequest
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -17443,21 +17297,11 @@ export const zCiBuildRunsResponse = z.object({
 export const zCiBuildRunResponse = z.object({
     data: zCiBuildRun,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild),
-        z.object({
-            type: z.literal('ciProducts')
-        }).and(zCiProduct),
-        z.object({
-            type: z.literal('ciWorkflows')
-        }).and(zCiWorkflow),
-        z.object({
-            type: z.literal('scmGitReferences')
-        }).and(zScmGitReference),
-        z.object({
-            type: z.literal('scmPullRequests')
-        }).and(zScmPullRequest)
+        zBuild,
+        zCiProduct,
+        zCiWorkflow,
+        zScmGitReference,
+        zScmPullRequest
     ])).optional(),
     links: zDocumentLinks
 });
@@ -17670,11 +17514,7 @@ export const zInAppPurchaseV2CreateRequest = z.object({
  */
 export const zPromotedPurchasesResponse = z.object({
     data: z.array(zPromotedPurchase),
-    included: z.array(z.union([z.object({
-            type: z.literal('inAppPurchases')
-        }).and(zInAppPurchaseV2), z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)])).optional(),
+    included: z.array(z.union([zInAppPurchaseV2, zSubscription])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -17684,11 +17524,7 @@ export const zPromotedPurchasesResponse = z.object({
  */
 export const zPromotedPurchaseResponse = z.object({
     data: zPromotedPurchase,
-    included: z.array(z.union([z.object({
-            type: z.literal('inAppPurchases')
-        }).and(zInAppPurchaseV2), z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)])).optional(),
+    included: z.array(z.union([zInAppPurchaseV2, zSubscription])).optional(),
     links: zDocumentLinks
 });
 
@@ -18178,15 +18014,9 @@ export const zInAppPurchaseOfferCodeOneTimeUseCodeCreateRequest = z.object({
 export const zInAppPurchaseOfferCodesResponse = z.object({
     data: z.array(zInAppPurchaseOfferCode),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('inAppPurchaseOfferCodeCustomCodes')
-        }).and(zInAppPurchaseOfferCodeCustomCode),
-        z.object({
-            type: z.literal('inAppPurchaseOfferCodeOneTimeUseCodes')
-        }).and(zInAppPurchaseOfferCodeOneTimeUseCode),
-        z.object({
-            type: z.literal('inAppPurchaseOfferPrices')
-        }).and(zInAppPurchaseOfferPrice)
+        zInAppPurchaseOfferCodeCustomCode,
+        zInAppPurchaseOfferCodeOneTimeUseCode,
+        zInAppPurchaseOfferPrice
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -18198,15 +18028,9 @@ export const zInAppPurchaseOfferCodesResponse = z.object({
 export const zInAppPurchaseOfferCodeResponse = z.object({
     data: zInAppPurchaseOfferCode,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('inAppPurchaseOfferCodeCustomCodes')
-        }).and(zInAppPurchaseOfferCodeCustomCode),
-        z.object({
-            type: z.literal('inAppPurchaseOfferCodeOneTimeUseCodes')
-        }).and(zInAppPurchaseOfferCodeOneTimeUseCode),
-        z.object({
-            type: z.literal('inAppPurchaseOfferPrices')
-        }).and(zInAppPurchaseOfferPrice)
+        zInAppPurchaseOfferCodeCustomCode,
+        zInAppPurchaseOfferCodeOneTimeUseCode,
+        zInAppPurchaseOfferPrice
     ])).optional(),
     links: zDocumentLinks
 });
@@ -18653,18 +18477,10 @@ export const zAppStoreVersion = z.object({
 export const zAppClipDefaultExperiencesResponse = z.object({
     data: z.array(zAppClipDefaultExperience),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appClipAppStoreReviewDetails')
-        }).and(zAppClipAppStoreReviewDetail),
-        z.object({
-            type: z.literal('appClipDefaultExperienceLocalizations')
-        }).and(zAppClipDefaultExperienceLocalization),
-        z.object({
-            type: z.literal('appClips')
-        }).and(zAppClip),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion)
+        zAppClipAppStoreReviewDetail,
+        zAppClipDefaultExperienceLocalization,
+        zAppClip,
+        zAppStoreVersion
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -18676,18 +18492,10 @@ export const zAppClipDefaultExperiencesResponse = z.object({
 export const zAppClipDefaultExperienceResponse = z.object({
     data: zAppClipDefaultExperience,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appClipAppStoreReviewDetails')
-        }).and(zAppClipAppStoreReviewDetail),
-        z.object({
-            type: z.literal('appClipDefaultExperienceLocalizations')
-        }).and(zAppClipDefaultExperienceLocalization),
-        z.object({
-            type: z.literal('appClips')
-        }).and(zAppClip),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion)
+        zAppClipAppStoreReviewDetail,
+        zAppClipDefaultExperienceLocalization,
+        zAppClip,
+        zAppStoreVersion
     ])).optional(),
     links: zDocumentLinks
 });
@@ -18699,11 +18507,7 @@ export const zAppClipDefaultExperienceResponse = z.object({
  */
 export const zAppStoreVersionExperimentsResponse = z.object({
     data: z.array(zAppStoreVersionExperiment),
-    included: z.array(z.union([z.object({
-            type: z.literal('appStoreVersionExperimentTreatments')
-        }).and(zAppStoreVersionExperimentTreatment), z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion)])).optional(),
+    included: z.array(z.union([zAppStoreVersionExperimentTreatment, zAppStoreVersion])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -18715,11 +18519,7 @@ export const zAppStoreVersionExperimentsResponse = z.object({
  */
 export const zAppStoreVersionExperimentResponse = z.object({
     data: zAppStoreVersionExperiment,
-    included: z.array(z.union([z.object({
-            type: z.literal('appStoreVersionExperimentTreatments')
-        }).and(zAppStoreVersionExperimentTreatment), z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion)])).optional(),
+    included: z.array(z.union([zAppStoreVersionExperimentTreatment, zAppStoreVersion])).optional(),
     links: zDocumentLinks
 });
 
@@ -18829,11 +18629,7 @@ export const zBetaFeedbackCrashSubmission = z.object({
  */
 export const zBetaFeedbackCrashSubmissionsResponse = z.object({
     data: z.array(zBetaFeedbackCrashSubmission),
-    included: z.array(z.union([z.object({
-            type: z.literal('betaTesters')
-        }).and(zBetaTester), z.object({
-            type: z.literal('builds')
-        }).and(zBuild)])).optional(),
+    included: z.array(z.union([zBetaTester, zBuild])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -18843,11 +18639,7 @@ export const zBetaFeedbackCrashSubmissionsResponse = z.object({
  */
 export const zBetaFeedbackCrashSubmissionResponse = z.object({
     data: zBetaFeedbackCrashSubmission,
-    included: z.array(z.union([z.object({
-            type: z.literal('betaTesters')
-        }).and(zBetaTester), z.object({
-            type: z.literal('builds')
-        }).and(zBuild)])).optional(),
+    included: z.array(z.union([zBetaTester, zBuild])).optional(),
     links: zDocumentLinks
 });
 
@@ -18902,11 +18694,7 @@ export const zBetaFeedbackScreenshotSubmission = z.object({
  */
 export const zBetaFeedbackScreenshotSubmissionsResponse = z.object({
     data: z.array(zBetaFeedbackScreenshotSubmission),
-    included: z.array(z.union([z.object({
-            type: z.literal('betaTesters')
-        }).and(zBetaTester), z.object({
-            type: z.literal('builds')
-        }).and(zBuild)])).optional(),
+    included: z.array(z.union([zBetaTester, zBuild])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -18916,11 +18704,7 @@ export const zBetaFeedbackScreenshotSubmissionsResponse = z.object({
  */
 export const zBetaFeedbackScreenshotSubmissionResponse = z.object({
     data: zBetaFeedbackScreenshotSubmission,
-    included: z.array(z.union([z.object({
-            type: z.literal('betaTesters')
-        }).and(zBetaTester), z.object({
-            type: z.literal('builds')
-        }).and(zBuild)])).optional(),
+    included: z.array(z.union([zBetaTester, zBuild])).optional(),
     links: zDocumentLinks
 });
 
@@ -18984,11 +18768,7 @@ export const zCustomerReviewSummarizationsResponse = z.object({
  */
 export const zGameCenterAppVersionsResponse = z.object({
     data: z.array(zGameCenterAppVersion),
-    included: z.array(z.union([z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion), z.object({
-            type: z.literal('gameCenterAppVersions')
-        }).and(zGameCenterAppVersion)])).optional(),
+    included: z.array(z.union([zAppStoreVersion, zGameCenterAppVersion])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -18998,11 +18778,7 @@ export const zGameCenterAppVersionsResponse = z.object({
  */
 export const zGameCenterAppVersionResponse = z.object({
     data: zGameCenterAppVersion,
-    included: z.array(z.union([z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion), z.object({
-            type: z.literal('gameCenterAppVersions')
-        }).and(zGameCenterAppVersion)])).optional(),
+    included: z.array(z.union([zAppStoreVersion, zGameCenterAppVersion])).optional(),
     links: zDocumentLinks
 });
 
@@ -19453,11 +19229,7 @@ export const zScmProviderResponse = z.object({
  */
 export const zScmRepositoriesResponse = z.object({
     data: z.array(zScmRepository),
-    included: z.array(z.union([z.object({
-            type: z.literal('scmGitReferences')
-        }).and(zScmGitReference), z.object({
-            type: z.literal('scmProviders')
-        }).and(zScmProvider)])).optional(),
+    included: z.array(z.union([zScmGitReference, zScmProvider])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -19467,11 +19239,7 @@ export const zScmRepositoriesResponse = z.object({
  */
 export const zScmRepositoryResponse = z.object({
     data: zScmRepository,
-    included: z.array(z.union([z.object({
-            type: z.literal('scmGitReferences')
-        }).and(zScmGitReference), z.object({
-            type: z.literal('scmProviders')
-        }).and(zScmProvider)])).optional(),
+    included: z.array(z.union([zScmGitReference, zScmProvider])).optional(),
     links: zDocumentLinks
 });
 
@@ -19751,21 +19519,11 @@ export const zAppAssetLibraryVideoWaitingForReviewAttributes = zAppAssetLibraryV
 export const zAppCustomProductPageLocalizationsResponse = z.object({
     data: z.array(zAppCustomProductPageLocalization),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryPlacements')
-        }).and(zAppAssetLibraryPlacement),
-        z.object({
-            type: z.literal('appCustomProductPageVersions')
-        }).and(zAppCustomProductPageVersion),
-        z.object({
-            type: z.literal('appKeywords')
-        }).and(zAppKeyword),
-        z.object({
-            type: z.literal('appPreviewSets')
-        }).and(zAppPreviewSet),
-        z.object({
-            type: z.literal('appScreenshotSets')
-        }).and(zAppScreenshotSet)
+        zAppAssetLibraryPlacement,
+        zAppCustomProductPageVersion,
+        zAppKeyword,
+        zAppPreviewSet,
+        zAppScreenshotSet
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -19777,21 +19535,11 @@ export const zAppCustomProductPageLocalizationsResponse = z.object({
 export const zAppCustomProductPageLocalizationResponse = z.object({
     data: zAppCustomProductPageLocalization,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryPlacements')
-        }).and(zAppAssetLibraryPlacement),
-        z.object({
-            type: z.literal('appCustomProductPageVersions')
-        }).and(zAppCustomProductPageVersion),
-        z.object({
-            type: z.literal('appKeywords')
-        }).and(zAppKeyword),
-        z.object({
-            type: z.literal('appPreviewSets')
-        }).and(zAppPreviewSet),
-        z.object({
-            type: z.literal('appScreenshotSets')
-        }).and(zAppScreenshotSet)
+        zAppAssetLibraryPlacement,
+        zAppCustomProductPageVersion,
+        zAppKeyword,
+        zAppPreviewSet,
+        zAppScreenshotSet
     ])).optional(),
     links: zDocumentLinks
 });
@@ -19802,18 +19550,10 @@ export const zAppCustomProductPageLocalizationResponse = z.object({
 export const zAppStoreVersionExperimentTreatmentLocalizationsResponse = z.object({
     data: z.array(zAppStoreVersionExperimentTreatmentLocalization),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryPlacements')
-        }).and(zAppAssetLibraryPlacement),
-        z.object({
-            type: z.literal('appPreviewSets')
-        }).and(zAppPreviewSet),
-        z.object({
-            type: z.literal('appScreenshotSets')
-        }).and(zAppScreenshotSet),
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatments')
-        }).and(zAppStoreVersionExperimentTreatment)
+        zAppAssetLibraryPlacement,
+        zAppPreviewSet,
+        zAppScreenshotSet,
+        zAppStoreVersionExperimentTreatment
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -19825,18 +19565,10 @@ export const zAppStoreVersionExperimentTreatmentLocalizationsResponse = z.object
 export const zAppStoreVersionExperimentTreatmentLocalizationResponse = z.object({
     data: zAppStoreVersionExperimentTreatmentLocalization,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryPlacements')
-        }).and(zAppAssetLibraryPlacement),
-        z.object({
-            type: z.literal('appPreviewSets')
-        }).and(zAppPreviewSet),
-        z.object({
-            type: z.literal('appScreenshotSets')
-        }).and(zAppScreenshotSet),
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatments')
-        }).and(zAppStoreVersionExperimentTreatment)
+        zAppAssetLibraryPlacement,
+        zAppPreviewSet,
+        zAppScreenshotSet,
+        zAppStoreVersionExperimentTreatment
     ])).optional(),
     links: zDocumentLinks
 });
@@ -19847,21 +19579,11 @@ export const zAppStoreVersionExperimentTreatmentLocalizationResponse = z.object(
 export const zAppStoreVersionLocalizationsResponse = z.object({
     data: z.array(zAppStoreVersionLocalization),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryPlacements')
-        }).and(zAppAssetLibraryPlacement),
-        z.object({
-            type: z.literal('appKeywords')
-        }).and(zAppKeyword),
-        z.object({
-            type: z.literal('appPreviewSets')
-        }).and(zAppPreviewSet),
-        z.object({
-            type: z.literal('appScreenshotSets')
-        }).and(zAppScreenshotSet),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion)
+        zAppAssetLibraryPlacement,
+        zAppKeyword,
+        zAppPreviewSet,
+        zAppScreenshotSet,
+        zAppStoreVersion
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -19873,21 +19595,11 @@ export const zAppStoreVersionLocalizationsResponse = z.object({
 export const zAppStoreVersionLocalizationResponse = z.object({
     data: zAppStoreVersionLocalization,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryPlacements')
-        }).and(zAppAssetLibraryPlacement),
-        z.object({
-            type: z.literal('appKeywords')
-        }).and(zAppKeyword),
-        z.object({
-            type: z.literal('appPreviewSets')
-        }).and(zAppPreviewSet),
-        z.object({
-            type: z.literal('appScreenshotSets')
-        }).and(zAppScreenshotSet),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion)
+        zAppAssetLibraryPlacement,
+        zAppKeyword,
+        zAppPreviewSet,
+        zAppScreenshotSet,
+        zAppStoreVersion
     ])).optional(),
     links: zDocumentLinks
 });
@@ -19987,21 +19699,11 @@ export const zBackgroundAssetVersionInternalBetaReleaseResponse = z.object({
 export const zBackgroundAssetVersionsResponse = z.object({
     data: z.array(zBackgroundAssetVersion),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('backgroundAssetUploadFiles')
-        }).and(zBackgroundAssetUploadFile),
-        z.object({
-            type: z.literal('backgroundAssetVersionAppStoreReleases')
-        }).and(zBackgroundAssetVersionAppStoreRelease),
-        z.object({
-            type: z.literal('backgroundAssetVersionExternalBetaReleases')
-        }).and(zBackgroundAssetVersionExternalBetaRelease),
-        z.object({
-            type: z.literal('backgroundAssetVersionInternalBetaReleases')
-        }).and(zBackgroundAssetVersionInternalBetaRelease),
-        z.object({
-            type: z.literal('backgroundAssets')
-        }).and(zBackgroundAsset)
+        zBackgroundAssetUploadFile,
+        zBackgroundAssetVersionAppStoreRelease,
+        zBackgroundAssetVersionExternalBetaRelease,
+        zBackgroundAssetVersionInternalBetaRelease,
+        zBackgroundAsset
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -20013,21 +19715,11 @@ export const zBackgroundAssetVersionsResponse = z.object({
 export const zBackgroundAssetVersionResponse = z.object({
     data: zBackgroundAssetVersion,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('backgroundAssetUploadFiles')
-        }).and(zBackgroundAssetUploadFile),
-        z.object({
-            type: z.literal('backgroundAssetVersionAppStoreReleases')
-        }).and(zBackgroundAssetVersionAppStoreRelease),
-        z.object({
-            type: z.literal('backgroundAssetVersionExternalBetaReleases')
-        }).and(zBackgroundAssetVersionExternalBetaRelease),
-        z.object({
-            type: z.literal('backgroundAssetVersionInternalBetaReleases')
-        }).and(zBackgroundAssetVersionInternalBetaRelease),
-        z.object({
-            type: z.literal('backgroundAssets')
-        }).and(zBackgroundAsset)
+        zBackgroundAssetUploadFile,
+        zBackgroundAssetVersionAppStoreRelease,
+        zBackgroundAssetVersionExternalBetaRelease,
+        zBackgroundAssetVersionInternalBetaRelease,
+        zBackgroundAsset
     ])).optional(),
     links: zDocumentLinks
 });
@@ -20088,11 +19780,7 @@ export const zBuildUpload = z.object({
  */
 export const zBuildUploadsResponse = z.object({
     data: z.array(zBuildUpload),
-    included: z.array(z.union([z.object({
-            type: z.literal('buildUploadFiles')
-        }).and(zBuildUploadFile), z.object({
-            type: z.literal('builds')
-        }).and(zBuild)])).optional(),
+    included: z.array(z.union([zBuildUploadFile, zBuild])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -20102,11 +19790,7 @@ export const zBuildUploadsResponse = z.object({
  */
 export const zBuildUploadResponse = z.object({
     data: zBuildUpload,
-    included: z.array(z.union([z.object({
-            type: z.literal('buildUploadFiles')
-        }).and(zBuildUploadFile), z.object({
-            type: z.literal('builds')
-        }).and(zBuild)])).optional(),
+    included: z.array(z.union([zBuildUploadFile, zBuild])).optional(),
     links: zDocumentLinks
 });
 
@@ -20164,11 +19848,7 @@ export const zGameCenterAchievementV2 = z.object({
  */
 export const zGameCenterAchievementVersionsV2Response = z.object({
     data: z.array(zGameCenterAchievementVersionV2),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterAchievementLocalizations')
-        }).and(zGameCenterAchievementLocalizationV2), z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievementV2)])).optional(),
+    included: z.array(z.union([zGameCenterAchievementLocalizationV2, zGameCenterAchievementV2])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -20178,11 +19858,7 @@ export const zGameCenterAchievementVersionsV2Response = z.object({
  */
 export const zGameCenterAchievementVersionV2Response = z.object({
     data: zGameCenterAchievementVersionV2,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterAchievementLocalizations')
-        }).and(zGameCenterAchievementLocalizationV2), z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievementV2)])).optional(),
+    included: z.array(z.union([zGameCenterAchievementLocalizationV2, zGameCenterAchievementV2])).optional(),
     links: zDocumentLinks
 });
 
@@ -20313,11 +19989,7 @@ export const zGameCenterAchievement = z.object({
  */
 export const zGameCenterAchievementReleasesResponse = z.object({
     data: z.array(zGameCenterAchievementRelease),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement), z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail)])).optional(),
+    included: z.array(z.union([zGameCenterAchievement, zGameCenterDetail])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -20329,11 +20001,7 @@ export const zGameCenterAchievementReleasesResponse = z.object({
  */
 export const zGameCenterAchievementReleaseResponse = z.object({
     data: zGameCenterAchievementRelease,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement), z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail)])).optional(),
+    included: z.array(z.union([zGameCenterAchievement, zGameCenterDetail])).optional(),
     links: zDocumentLinks
 });
 
@@ -20469,18 +20137,10 @@ export const zGameCenterActivity = z.object({
 export const zGameCenterAchievementsV2Response = z.object({
     data: z.array(zGameCenterAchievementV2),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterAchievementVersions')
-        }).and(zGameCenterAchievementVersionV2),
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup)
+        zGameCenterAchievementVersionV2,
+        zGameCenterActivity,
+        zGameCenterDetail,
+        zGameCenterGroup
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -20492,18 +20152,10 @@ export const zGameCenterAchievementsV2Response = z.object({
 export const zGameCenterAchievementV2Response = z.object({
     data: zGameCenterAchievementV2,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterAchievementVersions')
-        }).and(zGameCenterAchievementVersionV2),
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup)
+        zGameCenterAchievementVersionV2,
+        zGameCenterActivity,
+        zGameCenterDetail,
+        zGameCenterGroup
     ])).optional(),
     links: zDocumentLinks
 });
@@ -20516,24 +20168,12 @@ export const zGameCenterAchievementV2Response = z.object({
 export const zGameCenterAchievementsResponse = z.object({
     data: z.array(zGameCenterAchievement),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterAchievementLocalizations')
-        }).and(zGameCenterAchievementLocalization),
-        z.object({
-            type: z.literal('gameCenterAchievementReleases')
-        }).and(zGameCenterAchievementRelease),
-        z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement),
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup)
+        zGameCenterAchievementLocalization,
+        zGameCenterAchievementRelease,
+        zGameCenterAchievement,
+        zGameCenterActivity,
+        zGameCenterDetail,
+        zGameCenterGroup
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -20547,24 +20187,12 @@ export const zGameCenterAchievementsResponse = z.object({
 export const zGameCenterAchievementResponse = z.object({
     data: zGameCenterAchievement,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterAchievementLocalizations')
-        }).and(zGameCenterAchievementLocalization),
-        z.object({
-            type: z.literal('gameCenterAchievementReleases')
-        }).and(zGameCenterAchievementRelease),
-        z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement),
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup)
+        zGameCenterAchievementLocalization,
+        zGameCenterAchievementRelease,
+        zGameCenterAchievement,
+        zGameCenterActivity,
+        zGameCenterDetail,
+        zGameCenterGroup
     ])).optional(),
     links: zDocumentLinks
 });
@@ -20717,21 +20345,11 @@ export const zGameCenterLeaderboard = z.object({
 export const zGameCenterActivitiesResponse = z.object({
     data: z.array(zGameCenterActivity),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement),
-        z.object({
-            type: z.literal('gameCenterActivityVersions')
-        }).and(zGameCenterActivityVersion),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterAchievement,
+        zGameCenterActivityVersion,
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -20743,21 +20361,11 @@ export const zGameCenterActivitiesResponse = z.object({
 export const zGameCenterActivityResponse = z.object({
     data: zGameCenterActivity,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement),
-        z.object({
-            type: z.literal('gameCenterActivityVersions')
-        }).and(zGameCenterActivityVersion),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterAchievement,
+        zGameCenterActivityVersion,
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zDocumentLinks
 });
@@ -20768,18 +20376,10 @@ export const zGameCenterActivityResponse = z.object({
 export const zGameCenterChallengesResponse = z.object({
     data: z.array(zGameCenterChallenge),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterChallengeVersions')
-        }).and(zGameCenterChallengeVersion),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterChallengeVersion,
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -20791,18 +20391,10 @@ export const zGameCenterChallengesResponse = z.object({
 export const zGameCenterChallengeResponse = z.object({
     data: zGameCenterChallenge,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterChallengeVersions')
-        }).and(zGameCenterChallengeVersion),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterChallengeVersion,
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zDocumentLinks
 });
@@ -20813,24 +20405,12 @@ export const zGameCenterChallengeResponse = z.object({
 export const zGameCenterGroupsResponse = z.object({
     data: z.array(zGameCenterGroup),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement),
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterAchievement,
+        zGameCenterActivity,
+        zGameCenterChallenge,
+        zGameCenterDetail,
+        zGameCenterLeaderboardSet,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -20842,24 +20422,12 @@ export const zGameCenterGroupsResponse = z.object({
 export const zGameCenterGroupResponse = z.object({
     data: zGameCenterGroup,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement),
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterAchievement,
+        zGameCenterActivity,
+        zGameCenterChallenge,
+        zGameCenterDetail,
+        zGameCenterLeaderboardSet,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zDocumentLinks
 });
@@ -20871,11 +20439,7 @@ export const zGameCenterGroupResponse = z.object({
  */
 export const zGameCenterLeaderboardReleasesResponse = z.object({
     data: z.array(zGameCenterLeaderboardRelease),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail), z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)])).optional(),
+    included: z.array(z.union([zGameCenterDetail, zGameCenterLeaderboard])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -20887,11 +20451,7 @@ export const zGameCenterLeaderboardReleasesResponse = z.object({
  */
 export const zGameCenterLeaderboardReleaseResponse = z.object({
     data: zGameCenterLeaderboardRelease,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail), z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)])).optional(),
+    included: z.array(z.union([zGameCenterDetail, zGameCenterLeaderboard])).optional(),
     links: zDocumentLinks
 });
 
@@ -20900,11 +20460,7 @@ export const zGameCenterLeaderboardReleaseResponse = z.object({
  */
 export const zGameCenterLeaderboardSetMemberLocalizationsResponse = z.object({
     data: z.array(zGameCenterLeaderboardSetMemberLocalization),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet), z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardSet, zGameCenterLeaderboard])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -20914,11 +20470,7 @@ export const zGameCenterLeaderboardSetMemberLocalizationsResponse = z.object({
  */
 export const zGameCenterLeaderboardSetMemberLocalizationResponse = z.object({
     data: zGameCenterLeaderboardSetMemberLocalization,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet), z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardSet, zGameCenterLeaderboard])).optional(),
     links: zDocumentLinks
 });
 
@@ -20930,24 +20482,12 @@ export const zGameCenterLeaderboardSetMemberLocalizationResponse = z.object({
 export const zGameCenterLeaderboardSetsResponse = z.object({
     data: z.array(zGameCenterLeaderboardSet),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetLocalizations')
-        }).and(zGameCenterLeaderboardSetLocalization),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetReleases')
-        }).and(zGameCenterLeaderboardSetRelease),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboardSetLocalization,
+        zGameCenterLeaderboardSetRelease,
+        zGameCenterLeaderboardSet,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -20961,24 +20501,12 @@ export const zGameCenterLeaderboardSetsResponse = z.object({
 export const zGameCenterLeaderboardSetResponse = z.object({
     data: zGameCenterLeaderboardSet,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetLocalizations')
-        }).and(zGameCenterLeaderboardSetLocalization),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetReleases')
-        }).and(zGameCenterLeaderboardSetRelease),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboardSetLocalization,
+        zGameCenterLeaderboardSetRelease,
+        zGameCenterLeaderboardSet,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zDocumentLinks
 });
@@ -20991,30 +20519,14 @@ export const zGameCenterLeaderboardSetResponse = z.object({
 export const zGameCenterLeaderboardsResponse = z.object({
     data: z.array(zGameCenterLeaderboard),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardLocalizations')
-        }).and(zGameCenterLeaderboardLocalization),
-        z.object({
-            type: z.literal('gameCenterLeaderboardReleases')
-        }).and(zGameCenterLeaderboardRelease),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterActivity,
+        zGameCenterChallenge,
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboardLocalization,
+        zGameCenterLeaderboardRelease,
+        zGameCenterLeaderboardSet,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -21028,30 +20540,14 @@ export const zGameCenterLeaderboardsResponse = z.object({
 export const zGameCenterLeaderboardResponse = z.object({
     data: zGameCenterLeaderboard,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardLocalizations')
-        }).and(zGameCenterLeaderboardLocalization),
-        z.object({
-            type: z.literal('gameCenterLeaderboardReleases')
-        }).and(zGameCenterLeaderboardRelease),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zGameCenterActivity,
+        zGameCenterChallenge,
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboardLocalization,
+        zGameCenterLeaderboardRelease,
+        zGameCenterLeaderboardSet,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zDocumentLinks
 });
@@ -21203,18 +20699,10 @@ export const zGameCenterLeaderboardV2 = z.object({
 export const zGameCenterLeaderboardSetsV2Response = z.object({
     data: z.array(zGameCenterLeaderboardSetV2),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetVersions')
-        }).and(zGameCenterLeaderboardSetVersionV2),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboardV2)
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboardSetVersionV2,
+        zGameCenterLeaderboardV2
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -21226,18 +20714,10 @@ export const zGameCenterLeaderboardSetsV2Response = z.object({
 export const zGameCenterLeaderboardSetV2Response = z.object({
     data: zGameCenterLeaderboardSetV2,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetVersions')
-        }).and(zGameCenterLeaderboardSetVersionV2),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboardV2)
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboardSetVersionV2,
+        zGameCenterLeaderboardV2
     ])).optional(),
     links: zDocumentLinks
 });
@@ -21247,11 +20727,7 @@ export const zGameCenterLeaderboardSetV2Response = z.object({
  */
 export const zGameCenterLeaderboardVersionsV2Response = z.object({
     data: z.array(zGameCenterLeaderboardVersionV2),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardLocalizations')
-        }).and(zGameCenterLeaderboardLocalizationV2), z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboardV2)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardLocalizationV2, zGameCenterLeaderboardV2])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -21261,11 +20737,7 @@ export const zGameCenterLeaderboardVersionsV2Response = z.object({
  */
 export const zGameCenterLeaderboardVersionV2Response = z.object({
     data: zGameCenterLeaderboardVersionV2,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardLocalizations')
-        }).and(zGameCenterLeaderboardLocalizationV2), z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboardV2)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardLocalizationV2, zGameCenterLeaderboardV2])).optional(),
     links: zDocumentLinks
 });
 
@@ -21275,24 +20747,12 @@ export const zGameCenterLeaderboardVersionV2Response = z.object({
 export const zGameCenterLeaderboardsV2Response = z.object({
     data: z.array(zGameCenterLeaderboardV2),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSetV2),
-        z.object({
-            type: z.literal('gameCenterLeaderboardVersions')
-        }).and(zGameCenterLeaderboardVersionV2)
+        zGameCenterActivity,
+        zGameCenterChallenge,
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboardSetV2,
+        zGameCenterLeaderboardVersionV2
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -21304,24 +20764,12 @@ export const zGameCenterLeaderboardsV2Response = z.object({
 export const zGameCenterLeaderboardV2Response = z.object({
     data: zGameCenterLeaderboardV2,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSetV2),
-        z.object({
-            type: z.literal('gameCenterLeaderboardVersions')
-        }).and(zGameCenterLeaderboardVersionV2)
+        zGameCenterActivity,
+        zGameCenterChallenge,
+        zGameCenterDetail,
+        zGameCenterGroup,
+        zGameCenterLeaderboardSetV2,
+        zGameCenterLeaderboardVersionV2
     ])).optional(),
     links: zDocumentLinks
 });
@@ -21548,15 +20996,9 @@ export const zSubscriptionIntroductoryOfferInlineCreate = z.object({
 export const zSubscriptionIntroductoryOffersResponse = z.object({
     data: z.array(zSubscriptionIntroductoryOffer),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('subscriptionPricePoints')
-        }).and(zSubscriptionPricePoint),
-        z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription),
-        z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)
+        zSubscriptionPricePoint,
+        zSubscription,
+        zTerritory
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -21568,15 +21010,9 @@ export const zSubscriptionIntroductoryOffersResponse = z.object({
 export const zSubscriptionIntroductoryOfferResponse = z.object({
     data: zSubscriptionIntroductoryOffer,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('subscriptionPricePoints')
-        }).and(zSubscriptionPricePoint),
-        z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription),
-        z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)
+        zSubscriptionPricePoint,
+        zSubscription,
+        zTerritory
     ])).optional(),
     links: zDocumentLinks
 });
@@ -21718,18 +21154,10 @@ export const zSubscriptionOfferCodeOneTimeUseCodeResponse = z.object({
 export const zSubscriptionOfferCodesResponse = z.object({
     data: z.array(zSubscriptionOfferCode),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('subscriptionOfferCodeCustomCodes')
-        }).and(zSubscriptionOfferCodeCustomCode),
-        z.object({
-            type: z.literal('subscriptionOfferCodeOneTimeUseCodes')
-        }).and(zSubscriptionOfferCodeOneTimeUseCode),
-        z.object({
-            type: z.literal('subscriptionOfferCodePrices')
-        }).and(zSubscriptionOfferCodePrice),
-        z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)
+        zSubscriptionOfferCodeCustomCode,
+        zSubscriptionOfferCodeOneTimeUseCode,
+        zSubscriptionOfferCodePrice,
+        zSubscription
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -21741,18 +21169,10 @@ export const zSubscriptionOfferCodesResponse = z.object({
 export const zSubscriptionOfferCodeResponse = z.object({
     data: zSubscriptionOfferCode,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('subscriptionOfferCodeCustomCodes')
-        }).and(zSubscriptionOfferCodeCustomCode),
-        z.object({
-            type: z.literal('subscriptionOfferCodeOneTimeUseCodes')
-        }).and(zSubscriptionOfferCodeOneTimeUseCode),
-        z.object({
-            type: z.literal('subscriptionOfferCodePrices')
-        }).and(zSubscriptionOfferCodePrice),
-        z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)
+        zSubscriptionOfferCodeCustomCode,
+        zSubscriptionOfferCodeOneTimeUseCode,
+        zSubscriptionOfferCodePrice,
+        zSubscription
     ])).optional(),
     links: zDocumentLinks
 });
@@ -21923,11 +21343,7 @@ export const zSubscriptionPriceInlineCreate = z.object({
  */
 export const zSubscriptionPricesResponse = z.object({
     data: z.array(zSubscriptionPrice),
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionPricePoints')
-        }).and(zSubscriptionPricePoint), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zSubscriptionPricePoint, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -21937,11 +21353,7 @@ export const zSubscriptionPricesResponse = z.object({
  */
 export const zSubscriptionPriceResponse = z.object({
     data: zSubscriptionPrice,
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionPricePoints')
-        }).and(zSubscriptionPricePoint), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zSubscriptionPricePoint, zTerritory])).optional(),
     links: zDocumentLinks
 });
 
@@ -22044,11 +21456,7 @@ export const zSubscriptionPromotionalOfferInlineCreate = z.object({
  */
 export const zSubscriptionPromotionalOffersResponse = z.object({
     data: z.array(zSubscriptionPromotionalOffer),
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionPromotionalOfferPrices')
-        }).and(zSubscriptionPromotionalOfferPrice), z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)])).optional(),
+    included: z.array(z.union([zSubscriptionPromotionalOfferPrice, zSubscription])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -22058,11 +21466,7 @@ export const zSubscriptionPromotionalOffersResponse = z.object({
  */
 export const zSubscriptionPromotionalOfferResponse = z.object({
     data: zSubscriptionPromotionalOffer,
-    included: z.array(z.union([z.object({
-            type: z.literal('subscriptionPromotionalOfferPrices')
-        }).and(zSubscriptionPromotionalOfferPrice), z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)])).optional(),
+    included: z.array(z.union([zSubscriptionPromotionalOfferPrice, zSubscription])).optional(),
     links: zDocumentLinks
 });
 
@@ -22529,11 +21933,7 @@ export const zApp = z.object({
  */
 export const zAppClipsResponse = z.object({
     data: z.array(zAppClip),
-    included: z.array(z.union([z.object({
-            type: z.literal('appClipDefaultExperiences')
-        }).and(zAppClipDefaultExperience), z.object({
-            type: z.literal('apps')
-        }).and(zApp)])).optional(),
+    included: z.array(z.union([zAppClipDefaultExperience, zApp])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -22543,11 +21943,7 @@ export const zAppClipsResponse = z.object({
  */
 export const zAppClipResponse = z.object({
     data: zAppClip,
-    included: z.array(z.union([z.object({
-            type: z.literal('appClipDefaultExperiences')
-        }).and(zAppClipDefaultExperience), z.object({
-            type: z.literal('apps')
-        }).and(zApp)])).optional(),
+    included: z.array(z.union([zAppClipDefaultExperience, zApp])).optional(),
     links: zDocumentLinks
 });
 
@@ -22557,15 +21953,9 @@ export const zAppClipResponse = z.object({
 export const zAppCustomProductPagesResponse = z.object({
     data: z.array(zAppCustomProductPage),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization),
-        z.object({
-            type: z.literal('appCustomProductPageVersions')
-        }).and(zAppCustomProductPageVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp)
+        zAppCustomProductPageLocalization,
+        zAppCustomProductPageVersion,
+        zApp
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -22577,15 +21967,9 @@ export const zAppCustomProductPagesResponse = z.object({
 export const zAppCustomProductPageResponse = z.object({
     data: zAppCustomProductPage,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization),
-        z.object({
-            type: z.literal('appCustomProductPageVersions')
-        }).and(zAppCustomProductPageVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp)
+        zAppCustomProductPageLocalization,
+        zAppCustomProductPageVersion,
+        zApp
     ])).optional(),
     links: zDocumentLinks
 });
@@ -22596,18 +21980,10 @@ export const zAppCustomProductPageResponse = z.object({
 export const zAppInfosResponse = z.object({
     data: z.array(zAppInfo),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('ageRatingDeclarations')
-        }).and(zAgeRatingDeclaration),
-        z.object({
-            type: z.literal('appCategories')
-        }).and(zAppCategory),
-        z.object({
-            type: z.literal('appInfoLocalizations')
-        }).and(zAppInfoLocalization),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp)
+        zAgeRatingDeclaration,
+        zAppCategory,
+        zAppInfoLocalization,
+        zApp
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -22619,18 +21995,10 @@ export const zAppInfosResponse = z.object({
 export const zAppInfoResponse = z.object({
     data: zAppInfo,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('ageRatingDeclarations')
-        }).and(zAgeRatingDeclaration),
-        z.object({
-            type: z.literal('appCategories')
-        }).and(zAppCategory),
-        z.object({
-            type: z.literal('appInfoLocalizations')
-        }).and(zAppInfoLocalization),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp)
+        zAgeRatingDeclaration,
+        zAppCategory,
+        zAppInfoLocalization,
+        zApp
     ])).optional(),
     links: zDocumentLinks
 });
@@ -22640,11 +22008,7 @@ export const zAppInfoResponse = z.object({
  */
 export const zAppPricePointsV3Response = z.object({
     data: z.array(zAppPricePointV3),
-    included: z.array(z.union([z.object({
-            type: z.literal('apps')
-        }).and(zApp), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zApp, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -22654,11 +22018,7 @@ export const zAppPricePointsV3Response = z.object({
  */
 export const zAppPricePointV3Response = z.object({
     data: zAppPricePointV3,
-    included: z.array(z.union([z.object({
-            type: z.literal('apps')
-        }).and(zApp), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zApp, zTerritory])).optional(),
     links: zDocumentLinks
 });
 
@@ -22668,15 +22028,9 @@ export const zAppPricePointV3Response = z.object({
 export const zAppPriceScheduleResponse = z.object({
     data: zAppPriceSchedule,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appPrices')
-        }).and(zAppPriceV2),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)
+        zAppPriceV2,
+        zApp,
+        zTerritory
     ])).optional(),
     links: zDocumentLinks
 });
@@ -22687,15 +22041,9 @@ export const zAppPriceScheduleResponse = z.object({
 export const zAppStoreVersionExperimentsV2Response = z.object({
     data: z.array(zAppStoreVersionExperimentV2),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatments')
-        }).and(zAppStoreVersionExperimentTreatment),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp)
+        zAppStoreVersionExperimentTreatment,
+        zAppStoreVersion,
+        zApp
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -22707,15 +22055,9 @@ export const zAppStoreVersionExperimentsV2Response = z.object({
 export const zAppStoreVersionExperimentV2Response = z.object({
     data: zAppStoreVersionExperimentV2,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatments')
-        }).and(zAppStoreVersionExperimentTreatment),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp)
+        zAppStoreVersionExperimentTreatment,
+        zAppStoreVersion,
+        zApp
     ])).optional(),
     links: zDocumentLinks
 });
@@ -22726,78 +22068,30 @@ export const zAppStoreVersionExperimentV2Response = z.object({
 export const zAppsResponse = z.object({
     data: z.array(zApp),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('androidToIosAppMappingDetails')
-        }).and(zAndroidToIosAppMappingDetail),
-        z.object({
-            type: z.literal('appClips')
-        }).and(zAppClip),
-        z.object({
-            type: z.literal('appCustomProductPages')
-        }).and(zAppCustomProductPage),
-        z.object({
-            type: z.literal('appEncryptionDeclarations')
-        }).and(zAppEncryptionDeclaration),
-        z.object({
-            type: z.literal('appEvents')
-        }).and(zAppEvent),
-        z.object({
-            type: z.literal('appInfos')
-        }).and(zAppInfo),
-        z.object({
-            type: z.literal('appStoreVersionExperiments')
-        }).and(zAppStoreVersionExperimentV2),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('betaAppLocalizations')
-        }).and(zBetaAppLocalization),
-        z.object({
-            type: z.literal('betaAppReviewDetails')
-        }).and(zBetaAppReviewDetail),
-        z.object({
-            type: z.literal('betaGroups')
-        }).and(zBetaGroup),
-        z.object({
-            type: z.literal('betaLicenseAgreements')
-        }).and(zBetaLicenseAgreement),
-        z.object({
-            type: z.literal('buildIcons')
-        }).and(zBuildIcon),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild),
-        z.object({
-            type: z.literal('ciProducts')
-        }).and(zCiProduct),
-        z.object({
-            type: z.literal('endUserLicenseAgreements')
-        }).and(zEndUserLicenseAgreement),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterEnabledVersions')
-        }).and(zGameCenterEnabledVersion),
-        z.object({
-            type: z.literal('inAppPurchases')
-        }).and(zInAppPurchase),
-        z.object({
-            type: z.literal('preReleaseVersions')
-        }).and(zPrereleaseVersion),
-        z.object({
-            type: z.literal('promotedPurchases')
-        }).and(zPromotedPurchase),
-        z.object({
-            type: z.literal('reviewSubmissions')
-        }).and(zReviewSubmission),
-        z.object({
-            type: z.literal('subscriptionGracePeriods')
-        }).and(zSubscriptionGracePeriod),
-        z.object({
-            type: z.literal('subscriptionGroups')
-        }).and(zSubscriptionGroup)
+        zAndroidToIosAppMappingDetail,
+        zAppClip,
+        zAppCustomProductPage,
+        zAppEncryptionDeclaration,
+        zAppEvent,
+        zAppInfo,
+        zAppStoreVersionExperimentV2,
+        zAppStoreVersion,
+        zBetaAppLocalization,
+        zBetaAppReviewDetail,
+        zBetaGroup,
+        zBetaLicenseAgreement,
+        zBuildIcon,
+        zBuild,
+        zCiProduct,
+        zEndUserLicenseAgreement,
+        zGameCenterDetail,
+        zGameCenterEnabledVersion,
+        zInAppPurchase,
+        zPrereleaseVersion,
+        zPromotedPurchase,
+        zReviewSubmission,
+        zSubscriptionGracePeriod,
+        zSubscriptionGroup
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -22809,78 +22103,30 @@ export const zAppsResponse = z.object({
 export const zAppResponse = z.object({
     data: zApp,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('androidToIosAppMappingDetails')
-        }).and(zAndroidToIosAppMappingDetail),
-        z.object({
-            type: z.literal('appClips')
-        }).and(zAppClip),
-        z.object({
-            type: z.literal('appCustomProductPages')
-        }).and(zAppCustomProductPage),
-        z.object({
-            type: z.literal('appEncryptionDeclarations')
-        }).and(zAppEncryptionDeclaration),
-        z.object({
-            type: z.literal('appEvents')
-        }).and(zAppEvent),
-        z.object({
-            type: z.literal('appInfos')
-        }).and(zAppInfo),
-        z.object({
-            type: z.literal('appStoreVersionExperiments')
-        }).and(zAppStoreVersionExperimentV2),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('betaAppLocalizations')
-        }).and(zBetaAppLocalization),
-        z.object({
-            type: z.literal('betaAppReviewDetails')
-        }).and(zBetaAppReviewDetail),
-        z.object({
-            type: z.literal('betaGroups')
-        }).and(zBetaGroup),
-        z.object({
-            type: z.literal('betaLicenseAgreements')
-        }).and(zBetaLicenseAgreement),
-        z.object({
-            type: z.literal('buildIcons')
-        }).and(zBuildIcon),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild),
-        z.object({
-            type: z.literal('ciProducts')
-        }).and(zCiProduct),
-        z.object({
-            type: z.literal('endUserLicenseAgreements')
-        }).and(zEndUserLicenseAgreement),
-        z.object({
-            type: z.literal('gameCenterDetails')
-        }).and(zGameCenterDetail),
-        z.object({
-            type: z.literal('gameCenterEnabledVersions')
-        }).and(zGameCenterEnabledVersion),
-        z.object({
-            type: z.literal('inAppPurchases')
-        }).and(zInAppPurchase),
-        z.object({
-            type: z.literal('preReleaseVersions')
-        }).and(zPrereleaseVersion),
-        z.object({
-            type: z.literal('promotedPurchases')
-        }).and(zPromotedPurchase),
-        z.object({
-            type: z.literal('reviewSubmissions')
-        }).and(zReviewSubmission),
-        z.object({
-            type: z.literal('subscriptionGracePeriods')
-        }).and(zSubscriptionGracePeriod),
-        z.object({
-            type: z.literal('subscriptionGroups')
-        }).and(zSubscriptionGroup)
+        zAndroidToIosAppMappingDetail,
+        zAppClip,
+        zAppCustomProductPage,
+        zAppEncryptionDeclaration,
+        zAppEvent,
+        zAppInfo,
+        zAppStoreVersionExperimentV2,
+        zAppStoreVersion,
+        zBetaAppLocalization,
+        zBetaAppReviewDetail,
+        zBetaGroup,
+        zBetaLicenseAgreement,
+        zBuildIcon,
+        zBuild,
+        zCiProduct,
+        zEndUserLicenseAgreement,
+        zGameCenterDetail,
+        zGameCenterEnabledVersion,
+        zInAppPurchase,
+        zPrereleaseVersion,
+        zPromotedPurchase,
+        zReviewSubmission,
+        zSubscriptionGracePeriod,
+        zSubscriptionGroup
     ])).optional(),
     links: zDocumentLinks
 });
@@ -22911,11 +22157,7 @@ export const zAppUpdateRequest = z.object({
  */
 export const zBackgroundAssetsResponse = z.object({
     data: z.array(zBackgroundAsset),
-    included: z.array(z.union([z.object({
-            type: z.literal('apps')
-        }).and(zApp), z.object({
-            type: z.literal('backgroundAssetVersions')
-        }).and(zBackgroundAssetVersion)])).optional(),
+    included: z.array(z.union([zApp, zBackgroundAssetVersion])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -22925,11 +22167,7 @@ export const zBackgroundAssetsResponse = z.object({
  */
 export const zBackgroundAssetResponse = z.object({
     data: zBackgroundAsset,
-    included: z.array(z.union([z.object({
-            type: z.literal('apps')
-        }).and(zApp), z.object({
-            type: z.literal('backgroundAssetVersions')
-        }).and(zBackgroundAssetVersion)])).optional(),
+    included: z.array(z.union([zApp, zBackgroundAssetVersion])).optional(),
     links: zDocumentLinks
 });
 
@@ -22977,18 +22215,10 @@ export const zBetaAppReviewDetailResponse = z.object({
 export const zBetaGroupsResponse = z.object({
     data: z.array(zBetaGroup),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('betaRecruitmentCriteria')
-        }).and(zBetaRecruitmentCriterion),
-        z.object({
-            type: z.literal('betaTesters')
-        }).and(zBetaTester),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild)
+        zApp,
+        zBetaRecruitmentCriterion,
+        zBetaTester,
+        zBuild
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23000,18 +22230,10 @@ export const zBetaGroupsResponse = z.object({
 export const zBetaGroupResponse = z.object({
     data: zBetaGroup,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('betaRecruitmentCriteria')
-        }).and(zBetaRecruitmentCriterion),
-        z.object({
-            type: z.literal('betaTesters')
-        }).and(zBetaTester),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild)
+        zApp,
+        zBetaRecruitmentCriterion,
+        zBetaTester,
+        zBuild
     ])).optional(),
     links: zDocumentLinks
 });
@@ -23041,15 +22263,9 @@ export const zBetaLicenseAgreementResponse = z.object({
 export const zBetaTestersResponse = z.object({
     data: z.array(zBetaTester),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('betaGroups')
-        }).and(zBetaGroup),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild)
+        zApp,
+        zBetaGroup,
+        zBuild
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23061,15 +22277,9 @@ export const zBetaTestersResponse = z.object({
 export const zBetaTesterResponse = z.object({
     data: zBetaTester,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('betaGroups')
-        }).and(zBetaGroup),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild)
+        zApp,
+        zBetaGroup,
+        zBuild
     ])).optional(),
     links: zDocumentLinks
 });
@@ -23080,42 +22290,18 @@ export const zBetaTesterResponse = z.object({
 export const zBuildsResponse = z.object({
     data: z.array(zBuild),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appEncryptionDeclarations')
-        }).and(zAppEncryptionDeclaration),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('betaAppReviewSubmissions')
-        }).and(zBetaAppReviewSubmission),
-        z.object({
-            type: z.literal('betaBuildLocalizations')
-        }).and(zBetaBuildLocalization),
-        z.object({
-            type: z.literal('betaGroups')
-        }).and(zBetaGroup),
-        z.object({
-            type: z.literal('betaTesters')
-        }).and(zBetaTester),
-        z.object({
-            type: z.literal('buildBetaDetails')
-        }).and(zBuildBetaDetail),
-        z.object({
-            type: z.literal('buildBundles')
-        }).and(zBuildBundle),
-        z.object({
-            type: z.literal('buildIcons')
-        }).and(zBuildIcon),
-        z.object({
-            type: z.literal('buildUploads')
-        }).and(zBuildUpload),
-        z.object({
-            type: z.literal('preReleaseVersions')
-        }).and(zPrereleaseVersion)
+        zAppEncryptionDeclaration,
+        zAppStoreVersion,
+        zApp,
+        zBetaAppReviewSubmission,
+        zBetaBuildLocalization,
+        zBetaGroup,
+        zBetaTester,
+        zBuildBetaDetail,
+        zBuildBundle,
+        zBuildIcon,
+        zBuildUpload,
+        zPrereleaseVersion
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23127,42 +22313,18 @@ export const zBuildsResponse = z.object({
 export const zBuildResponse = z.object({
     data: zBuild,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appEncryptionDeclarations')
-        }).and(zAppEncryptionDeclaration),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('betaAppReviewSubmissions')
-        }).and(zBetaAppReviewSubmission),
-        z.object({
-            type: z.literal('betaBuildLocalizations')
-        }).and(zBetaBuildLocalization),
-        z.object({
-            type: z.literal('betaGroups')
-        }).and(zBetaGroup),
-        z.object({
-            type: z.literal('betaTesters')
-        }).and(zBetaTester),
-        z.object({
-            type: z.literal('buildBetaDetails')
-        }).and(zBuildBetaDetail),
-        z.object({
-            type: z.literal('buildBundles')
-        }).and(zBuildBundle),
-        z.object({
-            type: z.literal('buildIcons')
-        }).and(zBuildIcon),
-        z.object({
-            type: z.literal('buildUploads')
-        }).and(zBuildUpload),
-        z.object({
-            type: z.literal('preReleaseVersions')
-        }).and(zPrereleaseVersion)
+        zAppEncryptionDeclaration,
+        zAppStoreVersion,
+        zApp,
+        zBetaAppReviewSubmission,
+        zBetaBuildLocalization,
+        zBetaGroup,
+        zBetaTester,
+        zBuildBetaDetail,
+        zBuildBundle,
+        zBuildIcon,
+        zBuildUpload,
+        zPrereleaseVersion
     ])).optional(),
     links: zDocumentLinks
 });
@@ -23173,15 +22335,9 @@ export const zBuildResponse = z.object({
 export const zBundleIdsResponse = z.object({
     data: z.array(zBundleId),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('bundleIdCapabilities')
-        }).and(zBundleIdCapability),
-        z.object({
-            type: z.literal('profiles')
-        }).and(zProfile)
+        zApp,
+        zBundleIdCapability,
+        zProfile
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23193,15 +22349,9 @@ export const zBundleIdsResponse = z.object({
 export const zBundleIdResponse = z.object({
     data: zBundleId,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('bundleIdCapabilities')
-        }).and(zBundleIdCapability),
-        z.object({
-            type: z.literal('profiles')
-        }).and(zProfile)
+        zApp,
+        zBundleIdCapability,
+        zProfile
     ])).optional(),
     links: zDocumentLinks
 });
@@ -23212,15 +22362,9 @@ export const zBundleIdResponse = z.object({
 export const zCiProductsResponse = z.object({
     data: z.array(zCiProduct),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('bundleIds')
-        }).and(zBundleId),
-        z.object({
-            type: z.literal('scmRepositories')
-        }).and(zScmRepository)
+        zApp,
+        zBundleId,
+        zScmRepository
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23232,15 +22376,9 @@ export const zCiProductsResponse = z.object({
 export const zCiProductResponse = z.object({
     data: zCiProduct,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('bundleIds')
-        }).and(zBundleId),
-        z.object({
-            type: z.literal('scmRepositories')
-        }).and(zScmRepository)
+        zApp,
+        zBundleId,
+        zScmRepository
     ])).optional(),
     links: zDocumentLinks
 });
@@ -23250,11 +22388,7 @@ export const zCiProductResponse = z.object({
  */
 export const zEndUserLicenseAgreementResponse = z.object({
     data: zEndUserLicenseAgreement,
-    included: z.array(z.union([z.object({
-            type: z.literal('apps')
-        }).and(zApp), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zApp, zTerritory])).optional(),
     links: zDocumentLinks
 });
 
@@ -23264,48 +22398,20 @@ export const zEndUserLicenseAgreementResponse = z.object({
 export const zGameCenterDetailsResponse = z.object({
     data: z.array(zGameCenterDetail),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('gameCenterAchievementReleases')
-        }).and(zGameCenterAchievementRelease),
-        z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement),
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterActivityVersionReleases')
-        }).and(zGameCenterActivityVersionRelease),
-        z.object({
-            type: z.literal('gameCenterAppVersions')
-        }).and(zGameCenterAppVersion),
-        z.object({
-            type: z.literal('gameCenterChallengeVersionReleases')
-        }).and(zGameCenterChallengeVersionRelease),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardReleases')
-        }).and(zGameCenterLeaderboardRelease),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetReleases')
-        }).and(zGameCenterLeaderboardSetRelease),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zAppStoreVersion,
+        zApp,
+        zGameCenterAchievementRelease,
+        zGameCenterAchievement,
+        zGameCenterActivity,
+        zGameCenterActivityVersionRelease,
+        zGameCenterAppVersion,
+        zGameCenterChallengeVersionRelease,
+        zGameCenterChallenge,
+        zGameCenterGroup,
+        zGameCenterLeaderboardRelease,
+        zGameCenterLeaderboardSetRelease,
+        zGameCenterLeaderboardSet,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23317,48 +22423,20 @@ export const zGameCenterDetailsResponse = z.object({
 export const zGameCenterDetailResponse = z.object({
     data: zGameCenterDetail,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('gameCenterAchievementReleases')
-        }).and(zGameCenterAchievementRelease),
-        z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement),
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterActivityVersionReleases')
-        }).and(zGameCenterActivityVersionRelease),
-        z.object({
-            type: z.literal('gameCenterAppVersions')
-        }).and(zGameCenterAppVersion),
-        z.object({
-            type: z.literal('gameCenterChallengeVersionReleases')
-        }).and(zGameCenterChallengeVersionRelease),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge),
-        z.object({
-            type: z.literal('gameCenterGroups')
-        }).and(zGameCenterGroup),
-        z.object({
-            type: z.literal('gameCenterLeaderboardReleases')
-        }).and(zGameCenterLeaderboardRelease),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetReleases')
-        }).and(zGameCenterLeaderboardSetRelease),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet),
-        z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)
+        zAppStoreVersion,
+        zApp,
+        zGameCenterAchievementRelease,
+        zGameCenterAchievement,
+        zGameCenterActivity,
+        zGameCenterActivityVersionRelease,
+        zGameCenterAppVersion,
+        zGameCenterChallengeVersionRelease,
+        zGameCenterChallenge,
+        zGameCenterGroup,
+        zGameCenterLeaderboardRelease,
+        zGameCenterLeaderboardSetRelease,
+        zGameCenterLeaderboardSet,
+        zGameCenterLeaderboard
     ])).optional(),
     links: zDocumentLinks
 });
@@ -23370,11 +22448,7 @@ export const zGameCenterDetailResponse = z.object({
  */
 export const zGameCenterEnabledVersionsResponse = z.object({
     data: z.array(zGameCenterEnabledVersion),
-    included: z.array(z.union([z.object({
-            type: z.literal('apps')
-        }).and(zApp), z.object({
-            type: z.literal('gameCenterEnabledVersions')
-        }).and(zGameCenterEnabledVersion)])).optional(),
+    included: z.array(z.union([zApp, zGameCenterEnabledVersion])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -23408,18 +22482,10 @@ export const zInAppPurchaseResponse = z.object({
 export const zNominationsResponse = z.object({
     data: z.array(zNomination),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('actors')
-        }).and(zActor),
-        z.object({
-            type: z.literal('appEvents')
-        }).and(zAppEvent),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)
+        zActor,
+        zAppEvent,
+        zApp,
+        zTerritory
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23431,18 +22497,10 @@ export const zNominationsResponse = z.object({
 export const zNominationResponse = z.object({
     data: zNomination,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('actors')
-        }).and(zActor),
-        z.object({
-            type: z.literal('appEvents')
-        }).and(zAppEvent),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)
+        zActor,
+        zAppEvent,
+        zApp,
+        zTerritory
     ])).optional(),
     links: zDocumentLinks
 });
@@ -23452,11 +22510,7 @@ export const zNominationResponse = z.object({
  */
 export const zPreReleaseVersionsResponse = z.object({
     data: z.array(zPrereleaseVersion),
-    included: z.array(z.union([z.object({
-            type: z.literal('apps')
-        }).and(zApp), z.object({
-            type: z.literal('builds')
-        }).and(zBuild)])).optional(),
+    included: z.array(z.union([zApp, zBuild])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -23466,11 +22520,7 @@ export const zPreReleaseVersionsResponse = z.object({
  */
 export const zPrereleaseVersionResponse = z.object({
     data: zPrereleaseVersion,
-    included: z.array(z.union([z.object({
-            type: z.literal('apps')
-        }).and(zApp), z.object({
-            type: z.literal('builds')
-        }).and(zBuild)])).optional(),
+    included: z.array(z.union([zApp, zBuild])).optional(),
     links: zDocumentLinks
 });
 
@@ -23480,18 +22530,10 @@ export const zPrereleaseVersionResponse = z.object({
 export const zReviewSubmissionsResponse = z.object({
     data: z.array(zReviewSubmission),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('actors')
-        }).and(zActor),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('reviewSubmissionItems')
-        }).and(zReviewSubmissionItem)
+        zActor,
+        zAppStoreVersion,
+        zApp,
+        zReviewSubmissionItem
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23503,18 +22545,10 @@ export const zReviewSubmissionsResponse = z.object({
 export const zReviewSubmissionResponse = z.object({
     data: zReviewSubmission,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('actors')
-        }).and(zActor),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('reviewSubmissionItems')
-        }).and(zReviewSubmissionItem)
+        zActor,
+        zAppStoreVersion,
+        zApp,
+        zReviewSubmissionItem
     ])).optional(),
     links: zDocumentLinks
 });
@@ -23818,11 +22852,7 @@ export const zCustomerReviewResponseV1Response = z.object({
  */
 export const zCustomerReviewsResponse = z.object({
     data: z.array(zCustomerReview),
-    included: z.array(z.union([z.object({
-            type: z.literal('customerReviewResponses')
-        }).and(zCustomerReviewResponseV1), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zCustomerReviewResponseV1, zTerritory])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -23832,11 +22862,7 @@ export const zCustomerReviewsResponse = z.object({
  */
 export const zCustomerReviewResponse = z.object({
     data: zCustomerReview,
-    included: z.array(z.union([z.object({
-            type: z.literal('customerReviewResponses')
-        }).and(zCustomerReviewResponseV1), z.object({
-            type: z.literal('territories')
-        }).and(zTerritory)])).optional(),
+    included: z.array(z.union([zCustomerReviewResponseV1, zTerritory])).optional(),
     links: zDocumentLinks
 });
 
@@ -23948,16 +22974,10 @@ export const zAppAssetLibraryImage = z.object({
             state: z.literal('FAILED')
         }).and(zAppAssetLibraryImageFailedAttributes),
         z.object({
-            state: z.union([
-                z.literal('COMPLETE'),
-                z.literal('PREPARE_FOR_SUBMISSION')
-            ])
+            state: z.literal('COMPLETE')
         }).and(zAppAssetLibraryImageCommonAttributes),
         z.object({
-            state: z.union([
-                z.literal('COMPLETE'),
-                z.literal('PREPARE_FOR_SUBMISSION')
-            ])
+            state: z.literal('PREPARE_FOR_SUBMISSION')
         }).and(zAppAssetLibraryImageCommonAttributes),
         z.object({
             state: z.literal('READY_FOR_REVIEW')
@@ -24051,16 +23071,10 @@ export const zAppAssetLibraryVideo = z.object({
             state: z.literal('FAILED')
         }).and(zAppAssetLibraryVideoFailedAttributes),
         z.object({
-            state: z.union([
-                z.literal('COMPLETE'),
-                z.literal('PREPARE_FOR_SUBMISSION')
-            ])
+            state: z.literal('COMPLETE')
         }).and(zAppAssetLibraryVideoCommonAttributes),
         z.object({
-            state: z.union([
-                z.literal('COMPLETE'),
-                z.literal('PREPARE_FOR_SUBMISSION')
-            ])
+            state: z.literal('PREPARE_FOR_SUBMISSION')
         }).and(zAppAssetLibraryVideoCommonAttributes),
         z.object({
             state: z.literal('READY_FOR_REVIEW')
@@ -24103,24 +23117,12 @@ export const zAppAssetLibraryVideo = z.object({
 export const zAppAssetLibraryPlacementsResponse = z.object({
     data: z.array(zAppAssetLibraryPlacement),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryImages')
-        }).and(zAppAssetLibraryImage),
-        z.object({
-            type: z.literal('appAssetLibraryVideos')
-        }).and(zAppAssetLibraryVideo),
-        z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization),
-        z.object({
-            type: z.literal('appEventLocalizations')
-        }).and(zAppEventLocalization),
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatmentLocalizations')
-        }).and(zAppStoreVersionExperimentTreatmentLocalization),
-        z.object({
-            type: z.literal('appStoreVersionLocalizations')
-        }).and(zAppStoreVersionLocalization)
+        zAppAssetLibraryImage,
+        zAppAssetLibraryVideo,
+        zAppCustomProductPageLocalization,
+        zAppEventLocalization,
+        zAppStoreVersionExperimentTreatmentLocalization,
+        zAppStoreVersionLocalization
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -24132,24 +23134,12 @@ export const zAppAssetLibraryPlacementsResponse = z.object({
 export const zAppAssetLibraryPlacementResponse = z.object({
     data: zAppAssetLibraryPlacement,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryImages')
-        }).and(zAppAssetLibraryImage),
-        z.object({
-            type: z.literal('appAssetLibraryVideos')
-        }).and(zAppAssetLibraryVideo),
-        z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization),
-        z.object({
-            type: z.literal('appEventLocalizations')
-        }).and(zAppEventLocalization),
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatmentLocalizations')
-        }).and(zAppStoreVersionExperimentTreatmentLocalization),
-        z.object({
-            type: z.literal('appStoreVersionLocalizations')
-        }).and(zAppStoreVersionLocalization)
+        zAppAssetLibraryImage,
+        zAppAssetLibraryVideo,
+        zAppCustomProductPageLocalization,
+        zAppEventLocalization,
+        zAppStoreVersionExperimentTreatmentLocalization,
+        zAppStoreVersionLocalization
     ])).optional(),
     links: zDocumentLinks
 });
@@ -24204,15 +23194,9 @@ export const zAppClipAdvancedExperienceImageResponse = z.object({
 export const zAppClipAdvancedExperiencesResponse = z.object({
     data: z.array(zAppClipAdvancedExperience),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appClipAdvancedExperienceImages')
-        }).and(zAppClipAdvancedExperienceImage),
-        z.object({
-            type: z.literal('appClipAdvancedExperienceLocalizations')
-        }).and(zAppClipAdvancedExperienceLocalization),
-        z.object({
-            type: z.literal('appClips')
-        }).and(zAppClip)
+        zAppClipAdvancedExperienceImage,
+        zAppClipAdvancedExperienceLocalization,
+        zAppClip
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -24224,15 +23208,9 @@ export const zAppClipAdvancedExperiencesResponse = z.object({
 export const zAppClipAdvancedExperienceResponse = z.object({
     data: zAppClipAdvancedExperience,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appClipAdvancedExperienceImages')
-        }).and(zAppClipAdvancedExperienceImage),
-        z.object({
-            type: z.literal('appClipAdvancedExperienceLocalizations')
-        }).and(zAppClipAdvancedExperienceLocalization),
-        z.object({
-            type: z.literal('appClips')
-        }).and(zAppClip)
+        zAppClipAdvancedExperienceImage,
+        zAppClipAdvancedExperienceLocalization,
+        zAppClip
     ])).optional(),
     links: zDocumentLinks
 });
@@ -24267,11 +23245,7 @@ export const zAppClipHeaderImage = z.object({
  */
 export const zAppClipDefaultExperienceLocalizationsResponse = z.object({
     data: z.array(zAppClipDefaultExperienceLocalization),
-    included: z.array(z.union([z.object({
-            type: z.literal('appClipDefaultExperiences')
-        }).and(zAppClipDefaultExperience), z.object({
-            type: z.literal('appClipHeaderImages')
-        }).and(zAppClipHeaderImage)])).optional(),
+    included: z.array(z.union([zAppClipDefaultExperience, zAppClipHeaderImage])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -24281,11 +23255,7 @@ export const zAppClipDefaultExperienceLocalizationsResponse = z.object({
  */
 export const zAppClipDefaultExperienceLocalizationResponse = z.object({
     data: zAppClipDefaultExperienceLocalization,
-    included: z.array(z.union([z.object({
-            type: z.literal('appClipDefaultExperiences')
-        }).and(zAppClipDefaultExperience), z.object({
-            type: z.literal('appClipHeaderImages')
-        }).and(zAppClipHeaderImage)])).optional(),
+    included: z.array(z.union([zAppClipDefaultExperience, zAppClipHeaderImage])).optional(),
     links: zDocumentLinks
 });
 
@@ -24330,15 +23300,9 @@ export const zAppEncryptionDeclarationDocumentResponse = z.object({
 export const zAppEncryptionDeclarationsResponse = z.object({
     data: z.array(zAppEncryptionDeclaration),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appEncryptionDeclarationDocuments')
-        }).and(zAppEncryptionDeclarationDocument),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild)
+        zAppEncryptionDeclarationDocument,
+        zApp,
+        zBuild
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -24350,15 +23314,9 @@ export const zAppEncryptionDeclarationsResponse = z.object({
 export const zAppEncryptionDeclarationResponse = z.object({
     data: zAppEncryptionDeclaration,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appEncryptionDeclarationDocuments')
-        }).and(zAppEncryptionDeclarationDocument),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild)
+        zAppEncryptionDeclarationDocument,
+        zApp,
+        zBuild
     ])).optional(),
     links: zDocumentLinks
 });
@@ -24443,18 +23401,10 @@ export const zAppEventVideoClip = z.object({
 export const zAppEventLocalizationsResponse = z.object({
     data: z.array(zAppEventLocalization),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryPlacements')
-        }).and(zAppAssetLibraryPlacement),
-        z.object({
-            type: z.literal('appEventScreenshots')
-        }).and(zAppEventScreenshot),
-        z.object({
-            type: z.literal('appEventVideoClips')
-        }).and(zAppEventVideoClip),
-        z.object({
-            type: z.literal('appEvents')
-        }).and(zAppEvent)
+        zAppAssetLibraryPlacement,
+        zAppEventScreenshot,
+        zAppEventVideoClip,
+        zAppEvent
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -24466,18 +23416,10 @@ export const zAppEventLocalizationsResponse = z.object({
 export const zAppEventLocalizationResponse = z.object({
     data: zAppEventLocalization,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryPlacements')
-        }).and(zAppAssetLibraryPlacement),
-        z.object({
-            type: z.literal('appEventScreenshots')
-        }).and(zAppEventScreenshot),
-        z.object({
-            type: z.literal('appEventVideoClips')
-        }).and(zAppEventVideoClip),
-        z.object({
-            type: z.literal('appEvents')
-        }).and(zAppEvent)
+        zAppAssetLibraryPlacement,
+        zAppEventScreenshot,
+        zAppEventVideoClip,
+        zAppEvent
     ])).optional(),
     links: zDocumentLinks
 });
@@ -24537,18 +23479,10 @@ export const zAppPreview = z.object({
 export const zAppPreviewSetsResponse = z.object({
     data: z.array(zAppPreviewSet),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization),
-        z.object({
-            type: z.literal('appPreviews')
-        }).and(zAppPreview),
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatmentLocalizations')
-        }).and(zAppStoreVersionExperimentTreatmentLocalization),
-        z.object({
-            type: z.literal('appStoreVersionLocalizations')
-        }).and(zAppStoreVersionLocalization)
+        zAppCustomProductPageLocalization,
+        zAppPreview,
+        zAppStoreVersionExperimentTreatmentLocalization,
+        zAppStoreVersionLocalization
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -24560,18 +23494,10 @@ export const zAppPreviewSetsResponse = z.object({
 export const zAppPreviewSetResponse = z.object({
     data: zAppPreviewSet,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization),
-        z.object({
-            type: z.literal('appPreviews')
-        }).and(zAppPreview),
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatmentLocalizations')
-        }).and(zAppStoreVersionExperimentTreatmentLocalization),
-        z.object({
-            type: z.literal('appStoreVersionLocalizations')
-        }).and(zAppStoreVersionLocalization)
+        zAppCustomProductPageLocalization,
+        zAppPreview,
+        zAppStoreVersionExperimentTreatmentLocalization,
+        zAppStoreVersionLocalization
     ])).optional(),
     links: zDocumentLinks
 });
@@ -24628,18 +23554,10 @@ export const zAppScreenshot = z.object({
 export const zAppScreenshotSetsResponse = z.object({
     data: z.array(zAppScreenshotSet),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization),
-        z.object({
-            type: z.literal('appScreenshots')
-        }).and(zAppScreenshot),
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatmentLocalizations')
-        }).and(zAppStoreVersionExperimentTreatmentLocalization),
-        z.object({
-            type: z.literal('appStoreVersionLocalizations')
-        }).and(zAppStoreVersionLocalization)
+        zAppCustomProductPageLocalization,
+        zAppScreenshot,
+        zAppStoreVersionExperimentTreatmentLocalization,
+        zAppStoreVersionLocalization
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -24651,18 +23569,10 @@ export const zAppScreenshotSetsResponse = z.object({
 export const zAppScreenshotSetResponse = z.object({
     data: zAppScreenshotSet,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appCustomProductPageLocalizations')
-        }).and(zAppCustomProductPageLocalization),
-        z.object({
-            type: z.literal('appScreenshots')
-        }).and(zAppScreenshot),
-        z.object({
-            type: z.literal('appStoreVersionExperimentTreatmentLocalizations')
-        }).and(zAppStoreVersionExperimentTreatmentLocalization),
-        z.object({
-            type: z.literal('appStoreVersionLocalizations')
-        }).and(zAppStoreVersionLocalization)
+        zAppCustomProductPageLocalization,
+        zAppScreenshot,
+        zAppStoreVersionExperimentTreatmentLocalization,
+        zAppStoreVersionLocalization
     ])).optional(),
     links: zDocumentLinks
 });
@@ -24734,11 +23644,7 @@ export const zAppStoreReviewAttachmentResponse = z.object({
  */
 export const zAppStoreReviewDetailResponse = z.object({
     data: zAppStoreReviewDetail,
-    included: z.array(z.union([z.object({
-            type: z.literal('appStoreReviewAttachments')
-        }).and(zAppStoreReviewAttachment), z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion)])).optional(),
+    included: z.array(z.union([zAppStoreReviewAttachment, zAppStoreVersion])).optional(),
     links: zDocumentLinks
 });
 
@@ -24817,11 +23723,7 @@ export const zGameCenterAchievementImageV2Response = z.object({
  */
 export const zGameCenterAchievementLocalizationsV2Response = z.object({
     data: z.array(zGameCenterAchievementLocalizationV2),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterAchievementImages')
-        }).and(zGameCenterAchievementImageV2), z.object({
-            type: z.literal('gameCenterAchievementVersions')
-        }).and(zGameCenterAchievementVersionV2)])).optional(),
+    included: z.array(z.union([zGameCenterAchievementImageV2, zGameCenterAchievementVersionV2])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -24831,11 +23733,7 @@ export const zGameCenterAchievementLocalizationsV2Response = z.object({
  */
 export const zGameCenterAchievementLocalizationV2Response = z.object({
     data: zGameCenterAchievementLocalizationV2,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterAchievementImages')
-        }).and(zGameCenterAchievementImageV2), z.object({
-            type: z.literal('gameCenterAchievementVersions')
-        }).and(zGameCenterAchievementVersionV2)])).optional(),
+    included: z.array(z.union([zGameCenterAchievementImageV2, zGameCenterAchievementVersionV2])).optional(),
     links: zDocumentLinks
 });
 
@@ -24846,11 +23744,7 @@ export const zGameCenterAchievementLocalizationV2Response = z.object({
  */
 export const zGameCenterAchievementLocalizationsResponse = z.object({
     data: z.array(zGameCenterAchievementLocalization),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterAchievementImages')
-        }).and(zGameCenterAchievementImage), z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement)])).optional(),
+    included: z.array(z.union([zGameCenterAchievementImage, zGameCenterAchievement])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -24862,11 +23756,7 @@ export const zGameCenterAchievementLocalizationsResponse = z.object({
  */
 export const zGameCenterAchievementLocalizationResponse = z.object({
     data: zGameCenterAchievementLocalization,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterAchievementImages')
-        }).and(zGameCenterAchievementImage), z.object({
-            type: z.literal('gameCenterAchievements')
-        }).and(zGameCenterAchievement)])).optional(),
+    included: z.array(z.union([zGameCenterAchievementImage, zGameCenterAchievement])).optional(),
     links: zDocumentLinks
 });
 
@@ -24899,11 +23789,7 @@ export const zGameCenterActivityImageResponse = z.object({
  */
 export const zGameCenterActivityLocalizationsResponse = z.object({
     data: z.array(zGameCenterActivityLocalization),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterActivityImages')
-        }).and(zGameCenterActivityImage), z.object({
-            type: z.literal('gameCenterActivityVersions')
-        }).and(zGameCenterActivityVersion)])).optional(),
+    included: z.array(z.union([zGameCenterActivityImage, zGameCenterActivityVersion])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -24913,11 +23799,7 @@ export const zGameCenterActivityLocalizationsResponse = z.object({
  */
 export const zGameCenterActivityLocalizationResponse = z.object({
     data: zGameCenterActivityLocalization,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterActivityImages')
-        }).and(zGameCenterActivityImage), z.object({
-            type: z.literal('gameCenterActivityVersions')
-        }).and(zGameCenterActivityVersion)])).optional(),
+    included: z.array(z.union([zGameCenterActivityImage, zGameCenterActivityVersion])).optional(),
     links: zDocumentLinks
 });
 
@@ -24927,18 +23809,10 @@ export const zGameCenterActivityLocalizationResponse = z.object({
 export const zGameCenterActivityVersionsResponse = z.object({
     data: z.array(zGameCenterActivityVersion),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterActivityImages')
-        }).and(zGameCenterActivityImage),
-        z.object({
-            type: z.literal('gameCenterActivityLocalizations')
-        }).and(zGameCenterActivityLocalization),
-        z.object({
-            type: z.literal('gameCenterActivityVersionReleases')
-        }).and(zGameCenterActivityVersionRelease)
+        zGameCenterActivity,
+        zGameCenterActivityImage,
+        zGameCenterActivityLocalization,
+        zGameCenterActivityVersionRelease
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -24950,18 +23824,10 @@ export const zGameCenterActivityVersionsResponse = z.object({
 export const zGameCenterActivityVersionResponse = z.object({
     data: zGameCenterActivityVersion,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterActivities')
-        }).and(zGameCenterActivity),
-        z.object({
-            type: z.literal('gameCenterActivityImages')
-        }).and(zGameCenterActivityImage),
-        z.object({
-            type: z.literal('gameCenterActivityLocalizations')
-        }).and(zGameCenterActivityLocalization),
-        z.object({
-            type: z.literal('gameCenterActivityVersionReleases')
-        }).and(zGameCenterActivityVersionRelease)
+        zGameCenterActivity,
+        zGameCenterActivityImage,
+        zGameCenterActivityLocalization,
+        zGameCenterActivityVersionRelease
     ])).optional(),
     links: zDocumentLinks
 });
@@ -24995,11 +23861,7 @@ export const zGameCenterChallengeImageResponse = z.object({
  */
 export const zGameCenterChallengeLocalizationsResponse = z.object({
     data: z.array(zGameCenterChallengeLocalization),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterChallengeImages')
-        }).and(zGameCenterChallengeImage), z.object({
-            type: z.literal('gameCenterChallengeVersions')
-        }).and(zGameCenterChallengeVersion)])).optional(),
+    included: z.array(z.union([zGameCenterChallengeImage, zGameCenterChallengeVersion])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -25009,11 +23871,7 @@ export const zGameCenterChallengeLocalizationsResponse = z.object({
  */
 export const zGameCenterChallengeLocalizationResponse = z.object({
     data: zGameCenterChallengeLocalization,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterChallengeImages')
-        }).and(zGameCenterChallengeImage), z.object({
-            type: z.literal('gameCenterChallengeVersions')
-        }).and(zGameCenterChallengeVersion)])).optional(),
+    included: z.array(z.union([zGameCenterChallengeImage, zGameCenterChallengeVersion])).optional(),
     links: zDocumentLinks
 });
 
@@ -25023,18 +23881,10 @@ export const zGameCenterChallengeLocalizationResponse = z.object({
 export const zGameCenterChallengeVersionsResponse = z.object({
     data: z.array(zGameCenterChallengeVersion),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterChallengeImages')
-        }).and(zGameCenterChallengeImage),
-        z.object({
-            type: z.literal('gameCenterChallengeLocalizations')
-        }).and(zGameCenterChallengeLocalization),
-        z.object({
-            type: z.literal('gameCenterChallengeVersionReleases')
-        }).and(zGameCenterChallengeVersionRelease),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge)
+        zGameCenterChallengeImage,
+        zGameCenterChallengeLocalization,
+        zGameCenterChallengeVersionRelease,
+        zGameCenterChallenge
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -25046,18 +23896,10 @@ export const zGameCenterChallengeVersionsResponse = z.object({
 export const zGameCenterChallengeVersionResponse = z.object({
     data: zGameCenterChallengeVersion,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('gameCenterChallengeImages')
-        }).and(zGameCenterChallengeImage),
-        z.object({
-            type: z.literal('gameCenterChallengeLocalizations')
-        }).and(zGameCenterChallengeLocalization),
-        z.object({
-            type: z.literal('gameCenterChallengeVersionReleases')
-        }).and(zGameCenterChallengeVersionRelease),
-        z.object({
-            type: z.literal('gameCenterChallenges')
-        }).and(zGameCenterChallenge)
+        zGameCenterChallengeImage,
+        zGameCenterChallengeLocalization,
+        zGameCenterChallengeVersionRelease,
+        zGameCenterChallenge
     ])).optional(),
     links: zDocumentLinks
 });
@@ -25139,11 +23981,7 @@ export const zGameCenterLeaderboardImageV2Response = z.object({
  */
 export const zGameCenterLeaderboardLocalizationsResponse = z.object({
     data: z.array(zGameCenterLeaderboardLocalization),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardImages')
-        }).and(zGameCenterLeaderboardImage), z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardImage, zGameCenterLeaderboard])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -25155,11 +23993,7 @@ export const zGameCenterLeaderboardLocalizationsResponse = z.object({
  */
 export const zGameCenterLeaderboardLocalizationResponse = z.object({
     data: zGameCenterLeaderboardLocalization,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardImages')
-        }).and(zGameCenterLeaderboardImage), z.object({
-            type: z.literal('gameCenterLeaderboards')
-        }).and(zGameCenterLeaderboard)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardImage, zGameCenterLeaderboard])).optional(),
     links: zDocumentLinks
 });
 
@@ -25168,11 +24002,7 @@ export const zGameCenterLeaderboardLocalizationResponse = z.object({
  */
 export const zGameCenterLeaderboardLocalizationsV2Response = z.object({
     data: z.array(zGameCenterLeaderboardLocalizationV2),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardImages')
-        }).and(zGameCenterLeaderboardImageV2), z.object({
-            type: z.literal('gameCenterLeaderboardVersions')
-        }).and(zGameCenterLeaderboardVersionV2)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardImageV2, zGameCenterLeaderboardVersionV2])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -25182,11 +24012,7 @@ export const zGameCenterLeaderboardLocalizationsV2Response = z.object({
  */
 export const zGameCenterLeaderboardLocalizationV2Response = z.object({
     data: zGameCenterLeaderboardLocalizationV2,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardImages')
-        }).and(zGameCenterLeaderboardImageV2), z.object({
-            type: z.literal('gameCenterLeaderboardVersions')
-        }).and(zGameCenterLeaderboardVersionV2)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardImageV2, zGameCenterLeaderboardVersionV2])).optional(),
     links: zDocumentLinks
 });
 
@@ -25267,11 +24093,7 @@ export const zGameCenterLeaderboardSetImageV2Response = z.object({
  */
 export const zGameCenterLeaderboardSetLocalizationsResponse = z.object({
     data: z.array(zGameCenterLeaderboardSetLocalization),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardSetImages')
-        }).and(zGameCenterLeaderboardSetImage), z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardSetImage, zGameCenterLeaderboardSet])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -25283,11 +24105,7 @@ export const zGameCenterLeaderboardSetLocalizationsResponse = z.object({
  */
 export const zGameCenterLeaderboardSetLocalizationResponse = z.object({
     data: zGameCenterLeaderboardSetLocalization,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardSetImages')
-        }).and(zGameCenterLeaderboardSetImage), z.object({
-            type: z.literal('gameCenterLeaderboardSets')
-        }).and(zGameCenterLeaderboardSet)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardSetImage, zGameCenterLeaderboardSet])).optional(),
     links: zDocumentLinks
 });
 
@@ -25296,11 +24114,7 @@ export const zGameCenterLeaderboardSetLocalizationResponse = z.object({
  */
 export const zGameCenterLeaderboardSetLocalizationsV2Response = z.object({
     data: z.array(zGameCenterLeaderboardSetLocalizationV2),
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardSetImages')
-        }).and(zGameCenterLeaderboardSetImageV2), z.object({
-            type: z.literal('gameCenterLeaderboardSetVersions')
-        }).and(zGameCenterLeaderboardSetVersionV2)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardSetImageV2, zGameCenterLeaderboardSetVersionV2])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -25310,11 +24124,7 @@ export const zGameCenterLeaderboardSetLocalizationsV2Response = z.object({
  */
 export const zGameCenterLeaderboardSetLocalizationV2Response = z.object({
     data: zGameCenterLeaderboardSetLocalizationV2,
-    included: z.array(z.union([z.object({
-            type: z.literal('gameCenterLeaderboardSetImages')
-        }).and(zGameCenterLeaderboardSetImageV2), z.object({
-            type: z.literal('gameCenterLeaderboardSetVersions')
-        }).and(zGameCenterLeaderboardSetVersionV2)])).optional(),
+    included: z.array(z.union([zGameCenterLeaderboardSetImageV2, zGameCenterLeaderboardSetVersionV2])).optional(),
     links: zDocumentLinks
 });
 
@@ -25447,15 +24257,9 @@ export const zInAppPurchaseImageV2Response = z.object({
 export const zInAppPurchaseVersionsResponse = z.object({
     data: z.array(zInAppPurchaseVersion),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('inAppPurchaseImages')
-        }).and(zInAppPurchaseImageV2),
-        z.object({
-            type: z.literal('inAppPurchaseLocalizations')
-        }).and(zInAppPurchaseLocalizationV2),
-        z.object({
-            type: z.literal('inAppPurchases')
-        }).and(zInAppPurchaseV2)
+        zInAppPurchaseImageV2,
+        zInAppPurchaseLocalizationV2,
+        zInAppPurchaseV2
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -25467,15 +24271,9 @@ export const zInAppPurchaseVersionsResponse = z.object({
 export const zInAppPurchaseVersionResponse = z.object({
     data: zInAppPurchaseVersion,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('inAppPurchaseImages')
-        }).and(zInAppPurchaseImageV2),
-        z.object({
-            type: z.literal('inAppPurchaseLocalizations')
-        }).and(zInAppPurchaseLocalizationV2),
-        z.object({
-            type: z.literal('inAppPurchases')
-        }).and(zInAppPurchaseV2)
+        zInAppPurchaseImageV2,
+        zInAppPurchaseLocalizationV2,
+        zInAppPurchaseV2
     ])).optional(),
     links: zDocumentLinks
 });
@@ -25486,36 +24284,16 @@ export const zInAppPurchaseVersionResponse = z.object({
 export const zInAppPurchasesV2Response = z.object({
     data: z.array(zInAppPurchaseV2),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('inAppPurchaseAppStoreReviewScreenshots')
-        }).and(zInAppPurchaseAppStoreReviewScreenshot),
-        z.object({
-            type: z.literal('inAppPurchaseAvailabilities')
-        }).and(zInAppPurchaseAvailability),
-        z.object({
-            type: z.literal('inAppPurchaseContents')
-        }).and(zInAppPurchaseContent),
-        z.object({
-            type: z.literal('inAppPurchaseImages')
-        }).and(zInAppPurchaseImage),
-        z.object({
-            type: z.literal('inAppPurchaseLocalizations')
-        }).and(zInAppPurchaseLocalization),
-        z.object({
-            type: z.literal('inAppPurchaseOfferCodes')
-        }).and(zInAppPurchaseOfferCode),
-        z.object({
-            type: z.literal('inAppPurchasePricePoints')
-        }).and(zInAppPurchasePricePoint),
-        z.object({
-            type: z.literal('inAppPurchasePriceSchedules')
-        }).and(zInAppPurchasePriceSchedule),
-        z.object({
-            type: z.literal('inAppPurchaseVersions')
-        }).and(zInAppPurchaseVersion),
-        z.object({
-            type: z.literal('promotedPurchases')
-        }).and(zPromotedPurchase)
+        zInAppPurchaseAppStoreReviewScreenshot,
+        zInAppPurchaseAvailability,
+        zInAppPurchaseContent,
+        zInAppPurchaseImage,
+        zInAppPurchaseLocalization,
+        zInAppPurchaseOfferCode,
+        zInAppPurchasePricePoint,
+        zInAppPurchasePriceSchedule,
+        zInAppPurchaseVersion,
+        zPromotedPurchase
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -25527,36 +24305,16 @@ export const zInAppPurchasesV2Response = z.object({
 export const zInAppPurchaseV2Response = z.object({
     data: zInAppPurchaseV2,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('inAppPurchaseAppStoreReviewScreenshots')
-        }).and(zInAppPurchaseAppStoreReviewScreenshot),
-        z.object({
-            type: z.literal('inAppPurchaseAvailabilities')
-        }).and(zInAppPurchaseAvailability),
-        z.object({
-            type: z.literal('inAppPurchaseContents')
-        }).and(zInAppPurchaseContent),
-        z.object({
-            type: z.literal('inAppPurchaseImages')
-        }).and(zInAppPurchaseImage),
-        z.object({
-            type: z.literal('inAppPurchaseLocalizations')
-        }).and(zInAppPurchaseLocalization),
-        z.object({
-            type: z.literal('inAppPurchaseOfferCodes')
-        }).and(zInAppPurchaseOfferCode),
-        z.object({
-            type: z.literal('inAppPurchasePricePoints')
-        }).and(zInAppPurchasePricePoint),
-        z.object({
-            type: z.literal('inAppPurchasePriceSchedules')
-        }).and(zInAppPurchasePriceSchedule),
-        z.object({
-            type: z.literal('inAppPurchaseVersions')
-        }).and(zInAppPurchaseVersion),
-        z.object({
-            type: z.literal('promotedPurchases')
-        }).and(zPromotedPurchase)
+        zInAppPurchaseAppStoreReviewScreenshot,
+        zInAppPurchaseAvailability,
+        zInAppPurchaseContent,
+        zInAppPurchaseImage,
+        zInAppPurchaseLocalization,
+        zInAppPurchaseOfferCode,
+        zInAppPurchasePricePoint,
+        zInAppPurchasePriceSchedule,
+        zInAppPurchaseVersion,
+        zPromotedPurchase
     ])).optional(),
     links: zDocumentLinks
 });
@@ -25567,51 +24325,21 @@ export const zInAppPurchaseV2Response = z.object({
 export const zReviewSubmissionItemsResponse = z.object({
     data: z.array(zReviewSubmissionItem),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryImages')
-        }).and(zAppAssetLibraryImage),
-        z.object({
-            type: z.literal('appAssetLibraryVideos')
-        }).and(zAppAssetLibraryVideo),
-        z.object({
-            type: z.literal('appCustomProductPageVersions')
-        }).and(zAppCustomProductPageVersion),
-        z.object({
-            type: z.literal('appEvents')
-        }).and(zAppEvent),
-        z.object({
-            type: z.literal('appStoreVersionExperiments')
-        }).and(zAppStoreVersionExperiment),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('backgroundAssetVersions')
-        }).and(zBackgroundAssetVersion),
-        z.object({
-            type: z.literal('gameCenterAchievementVersions')
-        }).and(zGameCenterAchievementVersionV2),
-        z.object({
-            type: z.literal('gameCenterActivityVersions')
-        }).and(zGameCenterActivityVersion),
-        z.object({
-            type: z.literal('gameCenterChallengeVersions')
-        }).and(zGameCenterChallengeVersion),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetVersions')
-        }).and(zGameCenterLeaderboardSetVersionV2),
-        z.object({
-            type: z.literal('gameCenterLeaderboardVersions')
-        }).and(zGameCenterLeaderboardVersionV2),
-        z.object({
-            type: z.literal('inAppPurchaseVersions')
-        }).and(zInAppPurchaseVersion),
-        z.object({
-            type: z.literal('subscriptionGroupVersions')
-        }).and(zSubscriptionGroupVersion),
-        z.object({
-            type: z.literal('subscriptionVersions')
-        }).and(zSubscriptionVersion)
+        zAppAssetLibraryImage,
+        zAppAssetLibraryVideo,
+        zAppCustomProductPageVersion,
+        zAppEvent,
+        zAppStoreVersionExperiment,
+        zAppStoreVersion,
+        zBackgroundAssetVersion,
+        zGameCenterAchievementVersionV2,
+        zGameCenterActivityVersion,
+        zGameCenterChallengeVersion,
+        zGameCenterLeaderboardSetVersionV2,
+        zGameCenterLeaderboardVersionV2,
+        zInAppPurchaseVersion,
+        zSubscriptionGroupVersion,
+        zSubscriptionVersion
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -25623,51 +24351,21 @@ export const zReviewSubmissionItemsResponse = z.object({
 export const zReviewSubmissionItemResponse = z.object({
     data: zReviewSubmissionItem,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('appAssetLibraryImages')
-        }).and(zAppAssetLibraryImage),
-        z.object({
-            type: z.literal('appAssetLibraryVideos')
-        }).and(zAppAssetLibraryVideo),
-        z.object({
-            type: z.literal('appCustomProductPageVersions')
-        }).and(zAppCustomProductPageVersion),
-        z.object({
-            type: z.literal('appEvents')
-        }).and(zAppEvent),
-        z.object({
-            type: z.literal('appStoreVersionExperiments')
-        }).and(zAppStoreVersionExperiment),
-        z.object({
-            type: z.literal('appStoreVersions')
-        }).and(zAppStoreVersion),
-        z.object({
-            type: z.literal('backgroundAssetVersions')
-        }).and(zBackgroundAssetVersion),
-        z.object({
-            type: z.literal('gameCenterAchievementVersions')
-        }).and(zGameCenterAchievementVersionV2),
-        z.object({
-            type: z.literal('gameCenterActivityVersions')
-        }).and(zGameCenterActivityVersion),
-        z.object({
-            type: z.literal('gameCenterChallengeVersions')
-        }).and(zGameCenterChallengeVersion),
-        z.object({
-            type: z.literal('gameCenterLeaderboardSetVersions')
-        }).and(zGameCenterLeaderboardSetVersionV2),
-        z.object({
-            type: z.literal('gameCenterLeaderboardVersions')
-        }).and(zGameCenterLeaderboardVersionV2),
-        z.object({
-            type: z.literal('inAppPurchaseVersions')
-        }).and(zInAppPurchaseVersion),
-        z.object({
-            type: z.literal('subscriptionGroupVersions')
-        }).and(zSubscriptionGroupVersion),
-        z.object({
-            type: z.literal('subscriptionVersions')
-        }).and(zSubscriptionVersion)
+        zAppAssetLibraryImage,
+        zAppAssetLibraryVideo,
+        zAppCustomProductPageVersion,
+        zAppEvent,
+        zAppStoreVersionExperiment,
+        zAppStoreVersion,
+        zBackgroundAssetVersion,
+        zGameCenterAchievementVersionV2,
+        zGameCenterActivityVersion,
+        zGameCenterChallengeVersion,
+        zGameCenterLeaderboardSetVersionV2,
+        zGameCenterLeaderboardVersionV2,
+        zInAppPurchaseVersion,
+        zSubscriptionGroupVersion,
+        zSubscriptionVersion
     ])).optional(),
     links: zDocumentLinks
 });
@@ -25702,39 +24400,17 @@ export const zRoutingAppCoverage = z.object({
 export const zAppStoreVersionsResponse = z.object({
     data: z.array(zAppStoreVersion),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('alternativeDistributionPackages')
-        }).and(zAlternativeDistributionPackage),
-        z.object({
-            type: z.literal('appClipDefaultExperiences')
-        }).and(zAppClipDefaultExperience),
-        z.object({
-            type: z.literal('appStoreReviewDetails')
-        }).and(zAppStoreReviewDetail),
-        z.object({
-            type: z.literal('appStoreVersionExperiments')
-        }).and(zAppStoreVersionExperiment),
-        z.object({
-            type: z.literal('appStoreVersionLocalizations')
-        }).and(zAppStoreVersionLocalization),
-        z.object({
-            type: z.literal('appStoreVersionPhasedReleases')
-        }).and(zAppStoreVersionPhasedRelease),
-        z.object({
-            type: z.literal('appStoreVersionSubmissions')
-        }).and(zAppStoreVersionSubmission),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild),
-        z.object({
-            type: z.literal('gameCenterAppVersions')
-        }).and(zGameCenterAppVersion),
-        z.object({
-            type: z.literal('routingAppCoverages')
-        }).and(zRoutingAppCoverage)
+        zAlternativeDistributionPackage,
+        zAppClipDefaultExperience,
+        zAppStoreReviewDetail,
+        zAppStoreVersionExperiment,
+        zAppStoreVersionLocalization,
+        zAppStoreVersionPhasedRelease,
+        zAppStoreVersionSubmission,
+        zApp,
+        zBuild,
+        zGameCenterAppVersion,
+        zRoutingAppCoverage
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -25746,39 +24422,17 @@ export const zAppStoreVersionsResponse = z.object({
 export const zAppStoreVersionResponse = z.object({
     data: zAppStoreVersion,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('alternativeDistributionPackages')
-        }).and(zAlternativeDistributionPackage),
-        z.object({
-            type: z.literal('appClipDefaultExperiences')
-        }).and(zAppClipDefaultExperience),
-        z.object({
-            type: z.literal('appStoreReviewDetails')
-        }).and(zAppStoreReviewDetail),
-        z.object({
-            type: z.literal('appStoreVersionExperiments')
-        }).and(zAppStoreVersionExperiment),
-        z.object({
-            type: z.literal('appStoreVersionLocalizations')
-        }).and(zAppStoreVersionLocalization),
-        z.object({
-            type: z.literal('appStoreVersionPhasedReleases')
-        }).and(zAppStoreVersionPhasedRelease),
-        z.object({
-            type: z.literal('appStoreVersionSubmissions')
-        }).and(zAppStoreVersionSubmission),
-        z.object({
-            type: z.literal('apps')
-        }).and(zApp),
-        z.object({
-            type: z.literal('builds')
-        }).and(zBuild),
-        z.object({
-            type: z.literal('gameCenterAppVersions')
-        }).and(zGameCenterAppVersion),
-        z.object({
-            type: z.literal('routingAppCoverages')
-        }).and(zRoutingAppCoverage)
+        zAlternativeDistributionPackage,
+        zAppClipDefaultExperience,
+        zAppStoreReviewDetail,
+        zAppStoreVersionExperiment,
+        zAppStoreVersionLocalization,
+        zAppStoreVersionPhasedRelease,
+        zAppStoreVersionSubmission,
+        zApp,
+        zBuild,
+        zGameCenterAppVersion,
+        zRoutingAppCoverage
     ])).optional(),
     links: zDocumentLinks
 });
@@ -25921,15 +24575,9 @@ export const zSubscriptionImageV2Response = z.object({
 export const zSubscriptionVersionsResponse = z.object({
     data: z.array(zSubscriptionVersion),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('subscriptionImages')
-        }).and(zSubscriptionImageV2),
-        z.object({
-            type: z.literal('subscriptionLocalizations')
-        }).and(zSubscriptionLocalizationV2),
-        z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)
+        zSubscriptionImageV2,
+        zSubscriptionLocalizationV2,
+        zSubscription
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -25941,15 +24589,9 @@ export const zSubscriptionVersionsResponse = z.object({
 export const zSubscriptionVersionResponse = z.object({
     data: zSubscriptionVersion,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('subscriptionImages')
-        }).and(zSubscriptionImageV2),
-        z.object({
-            type: z.literal('subscriptionLocalizations')
-        }).and(zSubscriptionLocalizationV2),
-        z.object({
-            type: z.literal('subscriptions')
-        }).and(zSubscription)
+        zSubscriptionImageV2,
+        zSubscriptionLocalizationV2,
+        zSubscription
     ])).optional(),
     links: zDocumentLinks
 });
@@ -25960,45 +24602,19 @@ export const zSubscriptionVersionResponse = z.object({
 export const zSubscriptionsResponse = z.object({
     data: z.array(zSubscription),
     included: z.array(z.union([
-        z.object({
-            type: z.literal('promotedPurchases')
-        }).and(zPromotedPurchase),
-        z.object({
-            type: z.literal('subscriptionAppStoreReviewScreenshots')
-        }).and(zSubscriptionAppStoreReviewScreenshot),
-        z.object({
-            type: z.literal('subscriptionAvailabilities')
-        }).and(zSubscriptionAvailability),
-        z.object({
-            type: z.literal('subscriptionGroups')
-        }).and(zSubscriptionGroup),
-        z.object({
-            type: z.literal('subscriptionImages')
-        }).and(zSubscriptionImage),
-        z.object({
-            type: z.literal('subscriptionIntroductoryOffers')
-        }).and(zSubscriptionIntroductoryOffer),
-        z.object({
-            type: z.literal('subscriptionLocalizations')
-        }).and(zSubscriptionLocalization),
-        z.object({
-            type: z.literal('subscriptionOfferCodes')
-        }).and(zSubscriptionOfferCode),
-        z.object({
-            type: z.literal('subscriptionPlanAvailabilities')
-        }).and(zSubscriptionPlanAvailability),
-        z.object({
-            type: z.literal('subscriptionPrices')
-        }).and(zSubscriptionPrice),
-        z.object({
-            type: z.literal('subscriptionPromotionalOffers')
-        }).and(zSubscriptionPromotionalOffer),
-        z.object({
-            type: z.literal('subscriptionVersions')
-        }).and(zSubscriptionVersion),
-        z.object({
-            type: z.literal('winBackOffers')
-        }).and(zWinBackOffer)
+        zPromotedPurchase,
+        zSubscriptionAppStoreReviewScreenshot,
+        zSubscriptionAvailability,
+        zSubscriptionGroup,
+        zSubscriptionImage,
+        zSubscriptionIntroductoryOffer,
+        zSubscriptionLocalization,
+        zSubscriptionOfferCode,
+        zSubscriptionPlanAvailability,
+        zSubscriptionPrice,
+        zSubscriptionPromotionalOffer,
+        zSubscriptionVersion,
+        zWinBackOffer
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -26010,45 +24626,19 @@ export const zSubscriptionsResponse = z.object({
 export const zSubscriptionResponse = z.object({
     data: zSubscription,
     included: z.array(z.union([
-        z.object({
-            type: z.literal('promotedPurchases')
-        }).and(zPromotedPurchase),
-        z.object({
-            type: z.literal('subscriptionAppStoreReviewScreenshots')
-        }).and(zSubscriptionAppStoreReviewScreenshot),
-        z.object({
-            type: z.literal('subscriptionAvailabilities')
-        }).and(zSubscriptionAvailability),
-        z.object({
-            type: z.literal('subscriptionGroups')
-        }).and(zSubscriptionGroup),
-        z.object({
-            type: z.literal('subscriptionImages')
-        }).and(zSubscriptionImage),
-        z.object({
-            type: z.literal('subscriptionIntroductoryOffers')
-        }).and(zSubscriptionIntroductoryOffer),
-        z.object({
-            type: z.literal('subscriptionLocalizations')
-        }).and(zSubscriptionLocalization),
-        z.object({
-            type: z.literal('subscriptionOfferCodes')
-        }).and(zSubscriptionOfferCode),
-        z.object({
-            type: z.literal('subscriptionPlanAvailabilities')
-        }).and(zSubscriptionPlanAvailability),
-        z.object({
-            type: z.literal('subscriptionPrices')
-        }).and(zSubscriptionPrice),
-        z.object({
-            type: z.literal('subscriptionPromotionalOffers')
-        }).and(zSubscriptionPromotionalOffer),
-        z.object({
-            type: z.literal('subscriptionVersions')
-        }).and(zSubscriptionVersion),
-        z.object({
-            type: z.literal('winBackOffers')
-        }).and(zWinBackOffer)
+        zPromotedPurchase,
+        zSubscriptionAppStoreReviewScreenshot,
+        zSubscriptionAvailability,
+        zSubscriptionGroup,
+        zSubscriptionImage,
+        zSubscriptionIntroductoryOffer,
+        zSubscriptionLocalization,
+        zSubscriptionOfferCode,
+        zSubscriptionPlanAvailability,
+        zSubscriptionPrice,
+        zSubscriptionPromotionalOffer,
+        zSubscriptionVersion,
+        zWinBackOffer
     ])).optional(),
     links: zDocumentLinks
 });
