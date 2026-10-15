@@ -14,7 +14,7 @@
 
 - [x] **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
 - [x] **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新
-- [x] **完整 API 覆盖** - 通过 OpenAPI 生成的代码支持所有 App Store Connect API 端点
+- [x] **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.5** 版 App Store Connect API 端点
 - [x] **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
 
 ## 示例
@@ -27,6 +27,8 @@
 ```bash
 npm install appstore-connect-sdk
 ```
+
+需要 Node.js **20+**。
 
 ## 使用
 
@@ -191,13 +193,13 @@ const client = createClient({
 
 ### 导入入口与内存占用
 
-默认的根入口会一次性初始化完整的生成代码（包括约 3,700 个 Zod schema），会让全新的 Node.js 进程 RSS 增加约 **500 MiB**（[#47](https://github.com/isaced/appstore-connect-sdk/issues/47)）。如果不需要运行时 schema 校验，请从更轻量的子路径入口导入：
+默认的根入口会一次性初始化完整的生成代码（约 5,000 个 Zod/JSON schema），会让全新的 Node.js 进程 RSS 增加约 **450 MiB**（[#47](https://github.com/isaced/appstore-connect-sdk/issues/47)）。如果不需要运行时 schema 校验，请从更轻量的子路径入口导入（v2.2.1 实测）：
 
 | 入口 | 内容 | 约 RSS |
 |---|---|---|
-| `appstore-connect-sdk` | 全部导出（向后兼容） | ~518 MiB |
-| `appstore-connect-sdk/sdk` | 请求函数、TS 类型、`createClient` | ~29 MiB |
-| `appstore-connect-sdk/client` | 仅 `createClient` 与客户端类型 | ~12 MiB |
+| `appstore-connect-sdk` | 全部导出（向后兼容） | ~457 MiB |
+| `appstore-connect-sdk/sdk` | 请求函数、TS 类型、`createClient` | ~36 MiB |
+| `appstore-connect-sdk/client` | 仅 `createClient` 与客户端类型 | ~20 MiB |
 | `appstore-connect-sdk/schemas` | JSON schema（按需） | — |
 | `appstore-connect-sdk/zod` | Zod schema，用于运行时校验（按需） | — |
 
@@ -224,7 +226,9 @@ $ sh gen-openapi.sh
 
 ## Deno 兼容性
 
-`appstore-connect-sdk` 目前已经支持 Deno 环境，您可以在 [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example) 中查看在 Deno 环境中使用 `appstore-connect-sdk` 模块的示例。
+`appstore-connect-sdk` 已经可以通过 `npm:` 说明符在 Deno 中使用，示例见 [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example)。
+
+> 注意：JSR（`jsr:@isaced/appstore-connect-sdk`）发布尚未接通，子路径入口（`/sdk`、`/client` 等）目前仅 npm 可用；Deno 用户暂时请导入根入口。
 
 我们致力于确保 `appstore-connect-sdk` 模块能够完全兼容 Node.js 和 Deno，我们将继续努力提高其与 Deno 的兼容性，随着 Deno 运行时的发展而不断改进。
 
