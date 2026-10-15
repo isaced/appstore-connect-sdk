@@ -222,7 +222,7 @@ To update the OpenAPI-generated code, run the following command:
 $ sh gen-openapi.sh
 ```
 
-This will generate TypeScript code through [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) based on the OpenAPI specification file (`app_store_connect_api_4.2_openapi.json`) officially released by Apple.
+This will generate TypeScript code through [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) based on the OpenAPI specification file (`app_store_connect_api_4.5_openapi.json`) officially released by Apple.
 
 ## Deno Compatibility
 
