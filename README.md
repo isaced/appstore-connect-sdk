@@ -35,8 +35,10 @@ npm install appstore-connect-sdk
 #### 1. Import `appstore-connect-sdk`
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 ```
+
+The `sdk` entry covers most use cases at a fraction of the memory footprint of the root import (see [Import entrypoints](#import-entrypoints-memory-footprint)). Use `import ... from "appstore-connect-sdk"` only if you need the generated JSON/Zod schemas from the root surface.
 
 #### 2. Create a client
 
@@ -111,7 +113,7 @@ Here's the complete code example:
 **For Team API Keys:**
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   issuerId: "<YOUR ISSUER ID>",
@@ -126,7 +128,7 @@ console.log(res.data);
 **For Individual API Keys:**
 
 ```typescript
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   // No issuerId for Individual API Keys
@@ -149,7 +151,7 @@ import {
   appsGetInstance,
   buildsGetCollection,
   betaTestersGetCollection,
-} from "appstore-connect-sdk";
+} from "appstore-connect-sdk/sdk";
 
 const client = createClient({ /* your config */ });
 
@@ -168,7 +170,7 @@ const builds = await buildsGetCollection({ client, query: { "filter[app]": "app-
 For advanced use cases, you can use the client directly for custom requests:
 
 ```typescript
-import { createClient } from "appstore-connect-sdk";
+import { createClient } from "appstore-connect-sdk/sdk";
 
 const client = createClient({ /* your config */ });
 
@@ -181,12 +183,35 @@ const response = await client.get({ url: "/v1/apps" });
 For integration testing purposes, you can override the base URL of the App Store Connect API by setting the `baseUrl` option. For example, you can use this to point to a local mock server.
 
 ```typescript
-import { createClient } from "appstore-connect-sdk";
+import { createClient } from "appstore-connect-sdk/sdk";
 
 const client = createClient({
   // ...
   baseUrl: "http://localhost:3000", // All network requests are made to http://localhost:3000
 });
+```
+
+### Import entrypoints (memory footprint)
+
+The default root import eagerly initializes the full generated surface — including ~3,700 Zod schemas — which adds roughly **500 MiB RSS** to a fresh Node.js process ([#47](https://github.com/isaced/appstore-connect-sdk/issues/47)). If you don't need runtime schema validation, import from a lighter subpath entry:
+
+| Entry | Contents | Approx. RSS |
+|---|---|---|
+| `appstore-connect-sdk` | Everything (backward compatible) | ~518 MiB |
+| `appstore-connect-sdk/sdk` | Request functions, TS types, `createClient` | ~29 MiB |
+| `appstore-connect-sdk/client` | `createClient` and client types only | ~12 MiB |
+| `appstore-connect-sdk/schemas` | JSON schemas (opt-in) | — |
+| `appstore-connect-sdk/zod` | Zod schemas for runtime validation (opt-in) | — |
+
+```typescript
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
+```
+
+If you use a namespace import, switching is a one-line change (the `sdk` entry also provides `createClient`):
+
+```diff
+- import * as asc from "appstore-connect-sdk";
++ import * as asc from "appstore-connect-sdk/sdk";
 ```
 
 ## Updating OpenAPI generated code

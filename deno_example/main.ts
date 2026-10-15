@@ -1,4 +1,7 @@
 import "jsr:@std/dotenv/load";
+// NOTE: `appstore-connect-sdk/sdk` (lightweight entry, see README) becomes
+// available once the subpath exports ship in a release; until then keep the
+// root entry to stay runnable against the published version.
 import { createClient, appsGetCollection } from "appstore-connect-sdk";
 
 // Create a client with the required parameters.

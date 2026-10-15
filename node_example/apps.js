@@ -1,4 +1,4 @@
-import { createClient, appsGetCollection } from "appstore-connect-sdk";
+import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 import 'dotenv/config';
 
 // Create a client with the required parameters.
