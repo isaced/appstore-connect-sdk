@@ -1,5 +1,5 @@
 {
   "imports": {
-    "appstore-connect-sdk": "npm:appstore-connect-sdk@^1.3.2"
+    "appstore-connect-sdk": "npm:appstore-connect-sdk@^2.0.0"
   }
 }

@@ -4,7 +4,11 @@
     "license": "MIT",
     "exports": {
         ".": "./src/main.ts",
-        "./openapi": "./src/openapi/index.ts"
+        "./openapi": "./src/openapi/index.ts",
+        "./client": "./src/client.ts",
+        "./sdk": "./src/sdk.ts",
+        "./schemas": "./src/schemas.ts",
+        "./zod": "./src/zod.ts"
     },
     "publish": {
         "include": [
