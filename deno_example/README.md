@@ -32,6 +32,8 @@ PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
 
 Note: For Individual API Keys, you can omit `ISSUER_ID`.
 
+Alternatively, set `PRIVATE_KEY_PATH` to the downloaded `.p8` file instead of the multi-line `PRIVATE_KEY` (the `privateKeyId` is inferred from the `AuthKey_<KEYID>.p8` filename).
+
 3. Run the example by executing the following command:
 
 ```bash
