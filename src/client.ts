@@ -48,6 +48,9 @@ const DEFAULT_BASE_URL = "https://api.appstoreconnect.apple.com";
 /**
  * Create a configured App Store Connect API client.
  *
+ * Tokens are cached and refreshed automatically; concurrent requests hitting
+ * an expiry share a single token generation (single-flight).
+ *
  * Usage:
  * ```typescript
  * import { createClient, appsGetCollection } from 'appstore-connect-sdk/client';
@@ -68,6 +71,9 @@ export function createClient(config: AppStoreConnectConfig): Client {
   // Token caching state
   let cachedToken: string | null = null;
   let tokenGeneratedAt = 0;
+  // Single-flight: concurrent auth() calls share one in-flight generation
+  // instead of each signing their own JWT at expiry.
+  let inflight: Promise<string> | null = null;
 
   return createHeyApiClient(
     createConfig({
@@ -89,17 +95,28 @@ export function createClient(config: AppStoreConnectConfig): Client {
             tokenAge > expirationDurationMs ||
             tokenAge > expirationDurationMs - 2 * 60 * 1000;
 
-          if (shouldRefresh) {
-            cachedToken = await generateAuthToken({
+          if (!shouldRefresh && cachedToken) {
+            return cachedToken;
+          }
+
+          if (!inflight) {
+            inflight = generateAuthToken({
               apiKeyId: config.privateKeyId,
               issuerId: config.issuerId,
               privateKey: config.privateKey,
               expirationTime: Math.floor(Date.now() / 1000) + expirationDuration,
-            });
-            tokenGeneratedAt = Date.now();
+            })
+              .then((token) => {
+                cachedToken = token;
+                tokenGeneratedAt = Date.now();
+                return token;
+              })
+              .finally(() => {
+                inflight = null;
+              });
           }
 
-          return cachedToken!;
+          return inflight;
         }
 
         throw new Error("No bearerToken or private key provided");
