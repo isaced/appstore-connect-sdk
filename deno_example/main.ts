@@ -1,19 +1,33 @@
 import "jsr:@std/dotenv/load";
-// Deno consumes the npm package through `npm:` specifiers; the `/sdk`
-// lightweight entry is recommended (see README "Import entrypoints").
-import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
+import {
+  createClient,
+  paginateItems,
+  getRateLimit,
+  appsGetCollection,
+} from "appstore-connect-sdk/sdk";
 
-// Create a client with the required parameters.
-const client = createClient({
-  issuerId: Deno.env.get("ISSUER_ID")!,
-  privateKeyId: Deno.env.get("PRIVATE_KEY_ID")!,
-  privateKey: Deno.env.get("PRIVATE_KEY")!,
-  // bearerToken: Deno.env.get("BEARER_TOKEN")!,
-});
+// Create a client. Two credential styles (pick one):
+// 1. PRIVATE_KEY_PATH -> .p8 file, privateKeyId inferred from AuthKey_<ID>.p8
+// 2. PRIVATE_KEY      -> inline PEM from the env
+const client = createClient(
+  Deno.env.get("PRIVATE_KEY_PATH")
+    ? { issuerId: Deno.env.get("ISSUER_ID")!, privateKeyPath: Deno.env.get("PRIVATE_KEY_PATH") }
+    : {
+        issuerId: Deno.env.get("ISSUER_ID")!,
+        privateKeyId: Deno.env.get("PRIVATE_KEY_ID")!,
+        privateKey: Deno.env.get("PRIVATE_KEY")!,
+      },
+);
 
-// Fetch all apps
-const res = await appsGetCollection({ client });
-if (res.error) {
-  throw new Error(`Error fetching apps: ${JSON.stringify(res.error)}`);
+// Stream the first 10 apps across pages — `paginateItems` follows `links.next`
+// lazily and 429 responses are retried automatically at the fetch layer.
+console.log("First 10 apps:");
+let seen = 0;
+for await (const app of paginateItems(appsGetCollection, { client, query: { limit: 10 } })) {
+  console.log(`- ${app.id}  ${app.attributes?.name}`);
+  if (++seen >= 10) break;
 }
-console.log(res.data);
+
+// Read the hourly quota off any response.
+const { response } = await appsGetCollection({ client, query: { limit: 1 } });
+console.log("Rate limit:", getRateLimit(response));
