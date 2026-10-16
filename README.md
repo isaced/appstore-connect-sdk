@@ -10,6 +10,7 @@ The `appstore-connect-sdk` module includes the following features:
 
 - **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
 - **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry); concurrent requests hitting an expiry share a single token generation
+- **Pagination Helpers** - `paginate`, `paginateItems`, and `paginateToArray` follow `links.next` automatically with typed results
 - **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.5.1** spec, generated from Apple's official OpenAPI description
 - **Cross-Platform** - Compatible with both Node.js and **Deno** environments
 
@@ -185,26 +186,35 @@ const res = await appsGetCollection({ client, throwOnError: true }); // throws o
 
 ### Pagination
 
-App Store Connect uses cursor-based pagination. Request a page size with `limit`, then follow `links.next`:
+App Store Connect uses cursor-based pagination. The SDK provides three helpers (exported from the `/sdk` and root entries) that follow `links.next` for you:
 
 ```typescript
-import type { AppsResponse } from "appstore-connect-sdk/sdk";
+import { createClient, paginate, paginateItems, paginateToArray, appsGetCollection } from "appstore-connect-sdk/sdk";
 
-const first = await appsGetCollection({ client, query: { limit: 200 } });
-const apps = [...first.data?.data ?? []];
-let nextUrl = first.data?.links?.next;
-
-while (nextUrl) {
-  // `links.next` is an absolute URL; convert it back to a path the client understands
-  const next = new URL(nextUrl);
-  const res = await client.get({ url: next.pathname + next.search });
-  const page = res.data as AppsResponse;
-  apps.push(...page.data);
-  nextUrl = page.links?.next;
+// 1. Iterate pages (lazily — the next page is fetched only when you continue the loop)
+for await (const page of paginate(appsGetCollection, { client, query: { limit: 200 } })) {
+  for (const app of page.data) console.log(app.id);
 }
+
+// 2. Iterate individual resources across all pages
+for await (const app of paginateItems(appsGetCollection, { client })) {
+  console.log(app.attributes?.name);
+}
+
+// 3. Collect everything into an array (bounded — recommended for large collections)
+const apps = await paginateToArray(appsGetCollection, { client, maxItems: 5000 });
 ```
 
-> Note: don't pass the absolute `links.next` URL directly as `url` — it is resolved against the client's `baseUrl` and produces an invalid request.
+Unlike the plain endpoint functions (which resolve to `{ data, error }`), the pagination helpers **throw** when any page fails: `PaginationError` (carries `status` and Apple's error body, and also guards against `links.next` URLs that don't belong to your client's `baseUrl`) or `PaginationLimitError` (when `paginateToArray` would exceed `maxItems`).
+
+<details>
+<summary>How it works under the hood</summary>
+
+`links.next` is an absolute URL, while the generated client resolves `url` as `baseUrl + path` — passing the absolute URL directly produces an invalid request. The helpers validate that each `links.next` starts with the client's `baseUrl`, strip the prefix, and re-request the remainder via `client.get({ url: "/v1/...?cursor=..." })`, stopping when `links.next` is absent.
+
+For hard cancellation, pass a wrapping `fetch` in the options (e.g. one built around an `AbortSignal`) — `fetch` and `headers` are forwarded to every follow-up request; the generated client itself doesn't take a per-request `signal`.
+
+</details>
 
 ### Runtime schema validation (Zod)
 

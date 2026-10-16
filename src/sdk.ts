@@ -7,3 +7,4 @@ export type * from "./openapi/types.gen";
 // Explicitly re-export `Options` — the generated `export *` chains don't surface it.
 export type { Options } from "./openapi/sdk.gen";
 export { createClient, type AppStoreConnectConfig, type Client } from "./client";
+export * from "./paginate";

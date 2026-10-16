@@ -49,6 +49,7 @@
   ],
   "scripts": {
     "test": "bun test",
+    "test:types": "bun check -p tsconfig.typecheck.json",
     "update:spec": "node scripts/update-spec.mjs",
     "build": "rm -rf ./dist && node build.js && npm run build:types && npm run copy:package.cjs.json",
     "build:types": "npx tsc --emitDeclarationOnly --declaration",

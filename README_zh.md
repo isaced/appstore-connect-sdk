@@ -8,6 +8,7 @@
 
 - **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
 - **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新；并发请求命中同一过期时刻时共享单次令牌生成（single-flight）
+- **分页辅助函数** - `paginate`、`paginateItems`、`paginateToArray` 自动跟随 `links.next`，返回值保持类型推导
 - **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.5.1** 版 App Store Connect API 端点
 - **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
 
@@ -183,26 +184,35 @@ const res = await appsGetCollection({ client, throwOnError: true }); // 非 2xx 
 
 ### 分页
 
-App Store Connect 采用游标分页。通过 `limit` 指定页大小，然后跟随 `links.next`：
+App Store Connect 采用游标分页。SDK 提供三个自动跟随 `links.next` 的分页辅助函数（从 `/sdk` 与根入口导出）：
 
 ```typescript
-import type { AppsResponse } from "appstore-connect-sdk/sdk";
+import { createClient, paginate, paginateItems, paginateToArray, appsGetCollection } from "appstore-connect-sdk/sdk";
 
-const first = await appsGetCollection({ client, query: { limit: 200 } });
-const apps = [...first.data?.data ?? []];
-let nextUrl = first.data?.links?.next;
-
-while (nextUrl) {
-  // `links.next` 是绝对 URL；转换回客户端可识别的路径
-  const next = new URL(nextUrl);
-  const res = await client.get({ url: next.pathname + next.search });
-  const page = res.data as AppsResponse;
-  apps.push(...page.data);
-  nextUrl = page.links?.next;
+// 1. 按页迭代（惰性——只有继续循环时才会请求下一页）
+for await (const page of paginate(appsGetCollection, { client, query: { limit: 200 } })) {
+  for (const app of page.data) console.log(app.id);
 }
+
+// 2. 跨页逐个迭代资源
+for await (const app of paginateItems(appsGetCollection, { client })) {
+  console.log(app.attributes?.name);
+}
+
+// 3. 收集为完整数组（有上限保护——大集合推荐）
+const apps = await paginateToArray(appsGetCollection, { client, maxItems: 5000 });
 ```
 
-> 注意：不要把绝对 URL `links.next` 直接作为 `url` 传入——它会相对于客户端的 `baseUrl` 拼接，产生非法请求。
+与普通端点函数（resolve 为 `{ data, error }`）不同，分页辅助函数在任何一页失败时会**抛出**：`PaginationError`（携带 `status` 与 Apple 错误体，同时防御不属于当前 `baseUrl` 的 `links.next`），或 `PaginationLimitError`（`paginateToArray` 超过 `maxItems` 时）。
+
+<details>
+<summary>底层机制</summary>
+
+`links.next` 是绝对 URL，而生成客户端按 `baseUrl + path` 解析 `url`——直接传入绝对 URL 会产生非法请求。辅助函数会校验每个 `links.next` 以客户端 `baseUrl` 为前缀，去掉前缀后通过 `client.get({ url: "/v1/...?cursor=..." })` 重新请求，`links.next` 不存在时结束。
+
+如需强制取消，可在参数中传入包装过的 `fetch`（例如基于 `AbortSignal` 构造）——`fetch` 与 `headers` 会透传给每一个跟随请求；生成客户端本身不支持逐请求的 `signal`。
+
+</details>
 
 ### Zod 运行时校验
 
