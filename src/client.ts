@@ -103,12 +103,19 @@ export function createClient(config: AppStoreConnectConfig): Client {
 
   let cache: TokenCache | undefined;
   let keyPromise: Promise<string> | undefined;
-  const resolvePrivateKey = (): Promise<string> => {
-    if (config.privateKey) return Promise.resolve(config.privateKey);
+  const resolvePrivateKey = async (): Promise<string> => {
+    if (config.privateKey) return config.privateKey;
     keyPromise ??= import("node:fs/promises").then((fs) =>
       fs.readFile(config.privateKeyPath as string, "utf8"),
     );
-    return keyPromise;
+    try {
+      return await keyPromise;
+    } catch (e) {
+      // Don't cache a failed read: the file may appear later (e.g. race with
+      // provisioning); the next request should retry rather than stick on ENOENT.
+      keyPromise = undefined;
+      throw e;
+    }
   };
 
   const retryFetch =

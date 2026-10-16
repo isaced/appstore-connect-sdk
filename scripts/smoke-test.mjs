@@ -2,6 +2,8 @@
 // directory, and assert every public entrypoint behaves. Runs BEFORE
 // `npm publish` in CI so a broken bundle can never reach the registry.
 import { execFileSync } from "node:child_process";
+import { generateKeyPairSync } from "node:crypto";
+import { createServer } from "node:http";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -79,6 +81,59 @@ try {
 
   const cjsOut = run("node", ["-e", 'const m=require("appstore-connect-sdk");const z=require("appstore-connect-sdk/zod");if(typeof m.createClient!=="function")throw new Error("cjs root broken");if(Object.keys(z).length<100)throw new Error("cjs /zod broken");process.stdout.write("ok")'], work);
   check("cjs require path", () => (cjsOut === "ok" ? "root + /zod" : new Error(cjsOut)));
+
+  // privateKeyPath end-to-end: the lazy dynamic import("node:fs/promises")
+  // must survive both the ESM and CJS bundles.
+  const keyPem = generateKeyPairSync("ec", {
+    namedCurve: "prime256v1",
+    privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    publicKeyEncoding: { type: "spki", format: "pem" },
+  }).privateKey;
+  const keyPath = join(work, "AuthKey_SMOKEKEY01.p8");
+  writeFileSync(keyPath, keyPem);
+
+  const esmJwt = await (async () => {
+    let captured;
+    const srv = createServer((req, res) => {
+      captured = req.headers.authorization;
+      res.writeHead(200, { "content-type": "application/json" });
+      res.end("{}");
+    });
+    await new Promise((r) => srv.listen(0, "127.0.0.1", r));
+    const c = client.createClient({ privateKeyPath: keyPath, baseUrl: `http://127.0.0.1:${srv.address().port}` });
+    await c.get({ url: "/p", security: [{ scheme: "bearer", type: "http" }] });
+    srv.close();
+    return captured;
+  })();
+  check("dist privateKeyPath (esm)", () => {
+    const jwt = esmJwt?.startsWith("Bearer eyJ") ? esmJwt.slice(7) : null;
+    if (!jwt) throw new Error(`no bearer token: ${esmJwt}`);
+    const kid = JSON.parse(Buffer.from(jwt.split(".")[0], "base64url").toString("utf8")).kid;
+    if (kid !== "SMOKEKEY01") throw new Error(`kid=${kid}`);
+    return "signed from .p8, kid inferred from filename";
+  });
+
+  writeFileSync(
+    join(work, "check-keyfile.cjs"),
+    `const { createClient } = require("appstore-connect-sdk/client");
+const http = require("node:http");
+(async () => {
+  let captured;
+  const srv = http.createServer((req, res) => { captured = req.headers.authorization; res.writeHead(200, { "content-type": "application/json" }); res.end("{}"); });
+  await new Promise((r) => srv.listen(0, "127.0.0.1", r));
+  const c = createClient({ privateKeyPath: process.argv[2], baseUrl: "http://127.0.0.1:" + srv.address().port });
+  await c.get({ url: "/p", security: [{ scheme: "bearer", type: "http" }] });
+  srv.close();
+  const jwt = captured && captured.startsWith("Bearer eyJ") ? captured.slice(7) : null;
+  if (!jwt) { console.error("no bearer: " + captured); process.exit(1); }
+  const kid = JSON.parse(Buffer.from(jwt.split(".")[0], "base64url").toString("utf8")).kid;
+  if (kid !== "SMOKEKEY01") { console.error("kid=" + kid); process.exit(1); }
+  process.stdout.write("ok");
+})().catch((e) => { console.error(e && e.message); process.exit(1); });
+`,
+  );
+  const cjsKeyOut = run("node", ["check-keyfile.cjs", keyPath], work);
+  check("dist privateKeyPath (cjs)", () => (cjsKeyOut === "ok" ? "require path works" : new Error(cjsKeyOut)));
 } finally {
   rmSync(work, { recursive: true, force: true });
   rmSync(tgz, { force: true });
