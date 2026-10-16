@@ -1,6 +1,6 @@
 {
   "name": "appstore-connect-sdk",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "App Store Connect API client for Node.js",
   "keywords": [
     "appstore connect",

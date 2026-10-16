@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/isaced/appstore-connect-sdk/compare/v2.3.0...v2.4.0) (2026-10-16)
+
+
+### Features
+
+* **openapi:** rule-chain patch engine + SERVICES & WinBack relationship rules ([#82](https://github.com/isaced/appstore-connect-sdk/issues/82)) ([28f6c33](https://github.com/isaced/appstore-connect-sdk/commit/28f6c337427a3714421660c83c84b9e6f6d98f10))
+* **openapi:** spec-patch layer fixing empty-enum params ([#81](https://github.com/isaced/appstore-connect-sdk/issues/81)) ([5357b53](https://github.com/isaced/appstore-connect-sdk/commit/5357b535da24e558e0bf84c7ca68d0d224403f0a))
+
 ## [2.3.0](https://github.com/isaced/appstore-connect-sdk/compare/v2.2.2...v2.3.0) (2026-10-16)
 
 
