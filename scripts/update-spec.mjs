@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Downloads the latest App Store Connect OpenAPI spec from Apple and, when the
-// version changed (or the local filename is stale), replaces the committed spec,
-// updates references and re-runs @hey-api/openapi-ts codegen.
+// version or content changed (or the local filename is stale), replaces the
+// committed spec, updates references and re-runs @hey-api/openapi-ts codegen.
 //
 // Usage: node scripts/update-spec.mjs
 // Exit 0 = success (no changes if already up to date), non-zero = failure.
@@ -24,7 +24,7 @@ function readLocalSpec() {
     throw new Error(`Expected exactly one committed spec file, found: ${files.join(", ")}`);
   }
   const content = readFileSync(join(root, files[0]), "utf8");
-  return { file: files[0], version: JSON.parse(content).info.version };
+  return { file: files[0], content, version: JSON.parse(content).info.version };
 }
 
 async function downloadRemoteSpec() {
@@ -57,6 +57,7 @@ async function downloadRemoteSpec() {
 
 // Replace a string in repo files; returns total replacement count.
 function replaceInFiles(from, to, files) {
+  if (from === to) return 0;
   let count = 0;
   for (const rel of files) {
     const abs = join(root, rel);
@@ -77,9 +78,17 @@ const expectedFile = `app_store_connect_api_${remote.version}_openapi.json`;
 console.log(`Local spec:  ${local.file} (version ${local.version})`);
 console.log(`Apple spec:  version ${remote.version}`);
 
-if (local.version === remote.version && local.file === expectedFile) {
+// Apple sometimes republishes the same spec version with different content.
+const versionChanged = local.version !== remote.version;
+const contentChanged = local.content !== remote.text;
+
+if (!versionChanged && !contentChanged && local.file === expectedFile) {
   console.log("Up to date, nothing to do.");
   process.exit(0);
+}
+
+if (contentChanged && !versionChanged) {
+  console.log("Same version but spec content changed; refreshing spec and regenerating.");
 }
 
 // Install the new spec under the versioned filename.
@@ -98,7 +107,7 @@ for (const candidate of [`**${local.version}**`, `**${shortVersion}**`]) {
   if (n > 0) console.log(`Updated version label ${candidate} -> **${remote.version}** in ${n} place(s).`);
 }
 
-if (local.version !== remote.version) {
+if (versionChanged || contentChanged) {
   // Codegen runs in scripts/openapi-gen with a pinned TypeScript 5 toolchain:
   // openapi-ts 0.99 crashes at import time against the repo's TypeScript 7.
   const toolDir = join(root, "scripts", "openapi-gen");

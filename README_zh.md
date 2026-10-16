@@ -276,7 +276,7 @@ import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 $ npm run update:spec
 ```
 
-它会下载 Apple 官方发布的规范 zip，替换仓库内的 `app_store_connect_api_<version>_openapi.json` 并同步更新相关引用；当规范版本变化时，自动重新运行 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 生成代码（codegen 使用 `scripts/openapi-gen` 中独立锁定的工具链，与仓库自身的 TypeScript 隔离）。如果你直接修改了已提交的规范文件，可用 `sh gen-openapi.sh` 在不下载的情况下重新生成。
+它会下载 Apple 官方发布的规范 zip，替换仓库内的 `app_store_connect_api_<version>_openapi.json` 并同步更新相关引用；当规范的版本或内容有变化时，自动重新运行 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 生成代码（codegen 使用 `scripts/openapi-gen` 中独立锁定的工具链，与仓库自身的 TypeScript 隔离）。如果你直接修改了已提交的规范文件，可用 `sh gen-openapi.sh` 在不下载的情况下重新生成。
 
 此外，定时的 GitHub Action（Spec Update）每小时检查一次 Apple 是否发布了新规范，如有更新会自动提交 Pull Request，包含同步后的规范和重新生成的代码。
 
