@@ -88,6 +88,31 @@ function fileBasename(path: string): string {
  * console.log(apps.data);
  * ```
  */
+/**
+ * Deno ≥2.9 validates `RequestInit.client` (its private `Deno.HttpClient`
+ * extension). The generated client spreads *all* request options into the
+ * Request init, so the sdk-level `client` routing convenience — inert for the
+ * runtime itself (routing happens in the generated sdk functions) — would
+ * collide and throw. Strip it at the client boundary; every other option is
+ * passed through untouched.
+ */
+export function withClientOptionGuard(inner: Client): Client {
+  return new Proxy(inner, {
+    get(target, prop, receiver) {
+      const value = Reflect.get(target, prop, receiver);
+      if (typeof value !== "function") return value;
+      return (...args: unknown[]) => {
+        const first = args[0];
+        if (first && typeof first === "object" && !(first instanceof Request) && "client" in first) {
+          const { client: _omitted, ...rest } = first as Record<string, unknown>;
+          args = [rest, ...args.slice(1)];
+        }
+        return (value as (...a: unknown[]) => unknown).apply(target, args);
+      };
+    },
+  });
+}
+
 export function createClient(config: AppStoreConnectConfig): Client {
   const baseUrl = config.baseUrl?.replace(/\/$/, "") || DEFAULT_BASE_URL;
 
@@ -121,8 +146,9 @@ export function createClient(config: AppStoreConnectConfig): Client {
   const retryFetch =
     config.retry === false ? undefined : createRetryFetch(globalThis.fetch, config.retry ?? {});
 
-  return createHeyApiClient(
-    createConfig({
+  return withClientOptionGuard(
+    createHeyApiClient(
+      createConfig({
       baseUrl,
       ...(retryFetch ? { fetch: retryFetch } : {}),
       auth: async () => {
@@ -145,7 +171,8 @@ export function createClient(config: AppStoreConnectConfig): Client {
         );
         return cache.getToken();
       },
-    })
+      })
+    ),
   );
 }
 

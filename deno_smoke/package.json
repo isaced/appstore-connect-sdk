@@ -1,0 +1,8 @@
+{
+  "name": "deno-smoke",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "appstore-connect-sdk": "file:../appstore-connect-sdk-2.4.0.tgz"
+  }
+}
