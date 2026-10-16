@@ -40,6 +40,13 @@ export interface AppStoreConnectConfig {
    * The base URL for the API (default https://api.appstoreconnect.apple.com).
    */
   baseUrl?: string;
+
+  /**
+   * Internal seam: override token generation (used by unit tests for
+   * deterministic single-flight assertions). Not part of the public API.
+   * @internal
+   */
+  _generateAuthToken?: typeof generateAuthToken;
 }
 
 const DEFAULT_EXPIRATION_DURATION_SECONDS = 60 * 20;
@@ -67,6 +74,7 @@ const DEFAULT_BASE_URL = "https://api.appstoreconnect.apple.com";
  */
 export function createClient(config: AppStoreConnectConfig): Client {
   const baseUrl = config.baseUrl?.replace(/\/$/, "") || DEFAULT_BASE_URL;
+  const generate = config._generateAuthToken ?? generateAuthToken;
 
   // Token caching state
   let cachedToken: string | null = null;
@@ -100,7 +108,7 @@ export function createClient(config: AppStoreConnectConfig): Client {
           }
 
           if (!inflight) {
-            inflight = generateAuthToken({
+            inflight = generate({
               apiKeyId: config.privateKeyId,
               issuerId: config.issuerId,
               privateKey: config.privateKey,
