@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.1](https://github.com/isaced/appstore-connect-sdk/compare/v2.4.0...v2.4.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* **client:** strip sdk-level client option before Request init ([#84](https://github.com/isaced/appstore-connect-sdk/issues/84)) ([8f0778c](https://github.com/isaced/appstore-connect-sdk/commit/8f0778cca8a4f554e713572a47342218b7812c37))
+
 ## [2.4.0](https://github.com/isaced/appstore-connect-sdk/compare/v2.3.0...v2.4.0) (2026-10-16)
 
 
