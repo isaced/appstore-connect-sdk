@@ -28,6 +28,15 @@ export interface AppStoreConnectConfig {
   privateKey?: string;
 
   /**
+   * Path to the `.p8` private key file (e.g. `private/AuthKey_ABCDEFGHIJ.p8`).
+   * Read lazily on first request via `node:fs/promises` (Node/Deno/Bun;
+   * browsers and edge runtimes should pass `privateKey` instead).
+   * When `privateKeyId` is omitted, it is inferred from the standard
+   * `AuthKey_<KEYID>.p8` filename.
+   */
+  privateKeyPath?: string;
+
+  /**
    * A bearer token can be provided directly, which will be used instead of generating a new token.
    */
   bearerToken?: string;
@@ -53,6 +62,11 @@ export interface AppStoreConnectConfig {
 
 const DEFAULT_EXPIRATION_DURATION_SECONDS = 60 * 20;
 const DEFAULT_BASE_URL = "https://api.appstoreconnect.apple.com";
+const AUTH_KEY_FILE_RE = /^AuthKey_([A-Za-z0-9]{10})\.p8$/i;
+
+function fileBasename(path: string): string {
+  return path.split(/[/\\]/).pop() ?? path;
+}
 
 /**
  * Create a configured App Store Connect API client.
@@ -76,7 +90,27 @@ const DEFAULT_BASE_URL = "https://api.appstoreconnect.apple.com";
  */
 export function createClient(config: AppStoreConnectConfig): Client {
   const baseUrl = config.baseUrl?.replace(/\/$/, "") || DEFAULT_BASE_URL;
+
+  let privateKeyId = config.privateKeyId;
+  if (!privateKeyId && config.privateKeyPath) {
+    privateKeyId = fileBasename(config.privateKeyPath).match(AUTH_KEY_FILE_RE)?.[1];
+  }
+  if (!config.bearerToken && !(privateKeyId && (config.privateKey || config.privateKeyPath))) {
+    throw new Error(
+      "createClient: provide `bearerToken`, or `privateKey`/`privateKeyPath` with `privateKeyId` (auto-inferred from AuthKey_<KEYID>.p8 filenames).",
+    );
+  }
+
   let cache: TokenCache | undefined;
+  let keyPromise: Promise<string> | undefined;
+  const resolvePrivateKey = (): Promise<string> => {
+    if (config.privateKey) return Promise.resolve(config.privateKey);
+    keyPromise ??= import("node:fs/promises").then((fs) =>
+      fs.readFile(config.privateKeyPath as string, "utf8"),
+    );
+    return keyPromise;
+  };
+
   const retryFetch =
     config.retry === false ? undefined : createRetryFetch(globalThis.fetch, config.retry ?? {});
 
@@ -89,23 +123,20 @@ export function createClient(config: AppStoreConnectConfig): Client {
           return config.bearerToken;
         }
 
-        if (config.privateKeyId && config.privateKey) {
-          const expirationDuration =
-            config.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS;
-          cache ??= new TokenCache(
-            () =>
-              generateAuthToken({
-                apiKeyId: config.privateKeyId!,
-                issuerId: config.issuerId,
-                privateKey: config.privateKey!,
-                expirationTime: Math.floor(Date.now() / 1000) + expirationDuration,
-              }),
-            { expirationDuration }
-          );
-          return cache.getToken();
-        }
-
-        throw new Error("No bearerToken or private key provided");
+        const privateKey = await resolvePrivateKey();
+        const expirationDuration =
+          config.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS;
+        cache ??= new TokenCache(
+          () =>
+            generateAuthToken({
+              apiKeyId: privateKeyId as string,
+              issuerId: config.issuerId,
+              privateKey,
+              expirationTime: Math.floor(Date.now() / 1000) + expirationDuration,
+            }),
+          { expirationDuration }
+        );
+        return cache.getToken();
       },
     })
   );

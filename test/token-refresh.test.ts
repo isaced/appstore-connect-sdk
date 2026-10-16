@@ -118,10 +118,8 @@ describe("createClient token integration (public surface)", () => {
     expect(await auth()).toBe("static-bearer");
   });
 
-  test("missing credentials reject instead of hanging", async () => {
-    const auth = authOf(createClient({}));
-    const rejection = auth().catch((e) => (e as Error).message);
-    expect(await rejection).toContain("No bearerToken or private key provided");
+  test("missing credentials fail fast at client creation", () => {
+    expect(() => createClient({})).toThrow(/bearerToken|privateKey/i);
   });
 
   test("concurrent requests on one client reuse a single signed token", async () => {

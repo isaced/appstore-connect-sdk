@@ -8,7 +8,7 @@ English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/mai
 
 The `appstore-connect-sdk` module includes the following features:
 
-- **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
+- **JWT Authentication** - Configure with your API Key (inline PEM or `.p8` file path with key-ID inference) and let the SDK handle JWT token signing
 - **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry); concurrent requests hitting an expiry share a single token generation
 - **Pagination Helpers** - `paginate`, `paginateItems`, and `paginateToArray` follow `links.next` automatically with typed results
 - **Rate-Limit Aware** - Typed access to the `X-Rate-Limit` header, with automatic retry of 429 responses on idempotent requests
@@ -49,7 +49,6 @@ The SDK supports both **Team API Keys** and **Individual API Keys**:
 - **Individual API Keys**: Used by individual developers, `issuerId` is not required
 
 After downloading your private key, open the `.p8` file containing the private key in a text editor. It should look like this:
-
 ```
 -----BEGIN PRIVATE KEY-----
 AIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgKEn1VBakCdHIEcdS
@@ -79,6 +78,19 @@ const client = createClient({
 });
 ```
 
+**Using the `.p8` file directly (recommended):**
+
+Instead of embedding multi-line PEM content in code or environment variables (a classic `.env` formatting pitfall), point at the downloaded key file. The key is read lazily on first request, and when `privateKeyId` is omitted it is inferred from Apple's standard `AuthKey_<KEYID>.p8` filename:
+
+```typescript
+const client = createClient({
+  issuerId: "<YOUR ISSUER ID>",
+  privateKeyPath: "./private/AuthKey_ABCDEFGHIJ.p8", // privateKeyId inferred: ABCDEFGHIJ
+});
+```
+
+(`privateKeyPath` uses `node:fs` under the hood — Node/Deno/Bun; pass `privateKey` in browser/edge runtimes.)
+
 For more information on how JWT works with the App Store Connect API, check out Apple's authentication guides:
 
 - [Creating API Keys for App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api)
@@ -90,13 +102,15 @@ For more information on how JWT works with the App Store Connect API, check out 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
 | `issuerId` | `string` | For Team keys | Your issuer ID from App Store Connect |
-| `privateKeyId` | `string` | Yes* | The ID of your private key |
+| `privateKeyId` | `string` | Yes* | The ID of your private key (auto-inferred from an `AuthKey_<KEYID>.p8` filename when using `privateKeyPath`) |
 | `privateKey` | `string` | Yes* | The private key content in PEM format |
+| `privateKeyPath` | `string` | Yes* | Path to the `.p8` private key file, read lazily on first request |
 | `bearerToken` | `string` | No | Provide your own JWT token instead of having the SDK generate one |
 | `expirationDuration` | `number` | No | Token expiration in seconds (default: 1200 = 20 minutes, max: 20 minutes) |
 | `baseUrl` | `string` | No | Override the API base URL (default: `https://api.appstoreconnect.apple.com`) |
+| `retry` | `object \| false` | No | 429 retry policy (see [Rate limiting & retries](#rate-limiting--retries)); `false` disables |
 
-*Required unless `bearerToken` is provided.
+*Required unless `bearerToken` is provided: either `privateKey` or `privateKeyPath` must be set, together with `privateKeyId` (or an `AuthKey_<KEYID>.p8` filename to infer it from).
 
 #### 3. Make API calls
 
