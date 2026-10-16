@@ -89,9 +89,10 @@ export async function* paginate<F extends PagedCollectionFn>(
 ): AsyncGenerator<PageData<F>, void, undefined> {
   const client: Client | undefined = options?.client ?? defaultClient;
   let current = await fn(options);
+  let lastUrl: string | undefined;
 
   for (;;) {
-    const page = unwrap(current) as PageData<F> | undefined;
+    const page = unwrap(current, lastUrl) as PageData<F> | undefined;
     if (!page) return;
     yield page;
 
@@ -111,7 +112,14 @@ export async function* paginate<F extends PagedCollectionFn>(
         { url: next, body: { reason: "base_url_mismatch" } },
       );
     }
-    current = (await client!.get({ url: next.slice(baseUrl.length) || "/" })) as Awaited<ReturnType<F>>;
+    lastUrl = next.slice(baseUrl.length) || "/";
+    // `security` must be passed explicitly: the client only attaches the
+    // Authorization header when the request declares it, and raw
+    // client.get() calls don't inherit it from the generated endpoints.
+    current = (await client!.get({
+      url: lastUrl,
+      security: [{ scheme: "bearer", type: "http" }],
+    })) as Awaited<ReturnType<F>>;
   }
 }
 

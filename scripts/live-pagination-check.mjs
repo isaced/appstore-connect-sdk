@@ -29,6 +29,8 @@ function assert(cond, msg) {
   console.log(`PASS: ${msg}`);
 }
 
+async function main() {
+
 // 1. Multi-page iteration over a real paged collection (small pages force >1 page
 // when the account has enough data; single-page collections still validate links).
 const pages = [];
@@ -64,4 +66,12 @@ const { error } = await appsGetCollection({ client, query: { limit: 1 } });
 assert(error === undefined, "no lingering agreement/auth errors on live requests");
 
 console.log("\nLIVE PAGINATION CHECK PASSED");
-void PaginationError;
+}
+
+main().catch((e) => {
+  console.error(`LIVE CHECK FAILED: ${e?.name}: ${e?.message}`);
+  if (e?.status !== undefined) console.error(`status: ${e.status}`);
+  if (e?.body !== undefined) console.error(`body: ${JSON.stringify(e.body, null, 1)?.slice(0, 500)}`);
+  if (e instanceof Error && !("status" in e)) console.error(e.stack);
+  process.exit(1);
+});

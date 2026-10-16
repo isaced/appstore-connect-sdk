@@ -38,14 +38,17 @@ function pagePayload(pathname: string, params: URLSearchParams, origin: string) 
 let server: ReturnType<typeof Bun.serve>;
 let origin: string;
 let hits: string[];
+let auths: (string | null)[];
 
 beforeAll(() => {
   hits = [];
+  auths = [];
   server = Bun.serve({
     port: 0,
     fetch(req) {
       const url = new URL(req.url);
       hits.push(url.pathname + url.search);
+      auths.push(req.headers.get("authorization"));
 
       if (url.pathname === "/v1/apps") {
         return Response.json(pagePayload(url.pathname, url.searchParams, origin));
@@ -88,7 +91,9 @@ afterAll(() => {
 });
 
 function collectionFn(client: Client, path = "/v1/apps") {
-  return (options?: Record<string, unknown>) => client.get({ url: path, ...options });
+  // mirrors the generated endpoints, which declare bearer security per request
+  return (options?: Record<string, unknown>) =>
+    client.get({ url: path, security: [{ scheme: "bearer", type: "http" }], ...options });
 }
 
 async function drain<T>(it: AsyncGenerator<T>): Promise<T[]> {
@@ -112,6 +117,8 @@ describe("paginate", () => {
       "/v1/apps?limit=2&cursor=2",
       "/v1/apps?limit=2&cursor=4",
     ]);
+    // regression: raw client.get() follow-ups must still send Authorization
+    expect(auths.every((a) => a === "Bearer t")).toBe(true);
   });
 
   test("stops immediately when there is no links.next", async () => {
