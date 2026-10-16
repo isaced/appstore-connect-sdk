@@ -1,5 +1,5 @@
-// Type-level verification for the paginate helpers. Checked by tsc via
-// `npx tsc -p tsconfig.typecheck.json`; not executed by bun test.
+// Type-level verification for the paginate helpers. Checked via
+// `bun check -p tsconfig.typecheck.json`; not executed by bun test.
 import { createClient } from "../src/client";
 import { appsGetCollection } from "../src/openapi/sdk.gen";
 import type { App, AppsResponse } from "../src/openapi/types.gen";
