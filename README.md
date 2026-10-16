@@ -1,28 +1,17 @@
-# appstore-connect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
+# appstore-connect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk) [![downloads](https://img.shields.io/npm/dm/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk) [![Test](https://github.com/isaced/appstore-connect-sdk/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/isaced/appstore-connect-sdk/actions/workflows/test.yml) [![license](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 The `appstore-connect-sdk` is a Node.js module written in TypeScript that provides a convenient way for developers to interact with the [App Store Connect API](https://developer.apple.com/app-store-connect/api/). The module is built using [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) and provides support for all APIs based on the OpenAPI specification.
 
 English | [简体中文](https://github.com/isaced/appstore-connect-sdk/blob/main/README_zh.md)
 
-## Kickstart information on the API
-
-- [Automate your workflow with the App Store Connect API](https://developer.apple.com/app-store-connect/api/)
-- [App Store Connect API Official Documentation](https://developer.apple.com/documentation/appstoreconnectapi)
-- [WWDC 2018 303 - Automating App Store Connect](https://developer.apple.com/videos/play/wwdc2018/303/) (Video)
-
 ## Included in this SDK
 
 The `appstore-connect-sdk` module includes the following features:
 
-- [x] **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
-- [x] **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry)
-- [x] **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.5** spec, generated from Apple's official OpenAPI description
-- [x] **Cross-Platform** - Compatible with both Node.js and **Deno** environments
-
-## Examples
-
-- [Deno Example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example)
-- [Node Example](https://github.com/isaced/appstore-connect-sdk/tree/main/node_example)
+- **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
+- **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry); concurrent requests hitting an expiry share a single token generation
+- **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.5** spec, generated from Apple's official OpenAPI description
+- **Cross-Platform** - Compatible with both Node.js and **Deno** environments
 
 ## Installation
 
@@ -31,6 +20,12 @@ npm install appstore-connect-sdk
 ```
 
 Requires Node.js **20+**.
+
+You can also install unreleased changes directly from git (the SDK auto-builds on install via `prepare`):
+
+```bash
+npm install isaced/appstore-connect-sdk#main
+```
 
 ## Usage
 
@@ -167,6 +162,65 @@ const app = await appsGetInstance({ client, path: { id: "app-id" } });
 const builds = await buildsGetCollection({ client, query: { "filter[app]": "app-id" } });
 ```
 
+### Error handling
+
+By default, API functions **do not throw** on non-2xx responses. They resolve to `{ data, error, response }`, where `error` carries Apple's JSON:API error body:
+
+```typescript
+const { data, error, response } = await appsGetCollection({ client });
+
+if (error) {
+  // e.g. { errors: [{ status: "401", code: "NOT_AUTHORIZED", title: "Unauthorized" }] }
+  console.error(error.errors);
+} else {
+  console.log(data!.data);
+}
+```
+
+Prefer exceptions? Pass `throwOnError: true` to make a call throw instead:
+
+```typescript
+const res = await appsGetCollection({ client, throwOnError: true }); // throws on non-2xx
+```
+
+### Pagination
+
+App Store Connect uses cursor-based pagination. Request a page size with `limit`, then follow `links.next`:
+
+```typescript
+import type { AppsResponse } from "appstore-connect-sdk/sdk";
+
+const first = await appsGetCollection({ client, query: { limit: 200 } });
+const apps = [...first.data?.data ?? []];
+let nextUrl = first.data?.links?.next;
+
+while (nextUrl) {
+  // `links.next` is an absolute URL; convert it back to a path the client understands
+  const next = new URL(nextUrl);
+  const res = await client.get({ url: next.pathname + next.search });
+  const page = res.data as AppsResponse;
+  apps.push(...page.data);
+  nextUrl = page.links?.next;
+}
+```
+
+> Note: don't pass the absolute `links.next` URL directly as `url` — it is resolved against the client's `baseUrl` and produces an invalid request.
+
+### Runtime schema validation (Zod)
+
+Opt-in Zod schemas are available from the `/zod` entry and match the generated API types:
+
+```typescript
+import { zAppsResponse } from "appstore-connect-sdk/zod";
+
+const res = await appsGetCollection({ client });
+if (res.data) {
+  const apps = zAppsResponse.parse(res.data); // throws ZodError if the payload doesn't match the spec
+}
+```
+
+> Warning: importing `/zod` initializes all ~3,700 generated schemas (~300 MiB heap). Import it only where you actually validate payloads.
+
 ### Advanced Usage
 
 For advanced use cases, you can use the client directly for custom requests:
@@ -233,6 +287,23 @@ The `appstore-connect-sdk` module is compatible with Deno via `npm:` specifiers.
 > Note: publication to JSR (`jsr:@isaced/appstore-connect-sdk`) is not live yet, so the subpath entries (`/sdk`, `/client`, …) are currently npm-only; Deno users should import the root entry for now.
 
 We are committed to ensuring that the `appstore-connect-sdk` module remains fully compatible with both Node.js and Deno, and we will continue to work on improving its compatibility with Deno as the Deno runtime evolves.
+
+## Examples
+
+Runnable examples live in the repository:
+
+- [Node Example](https://github.com/isaced/appstore-connect-sdk/tree/main/node_example)
+- [Deno Example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example)
+
+## Kickstart information on the API
+
+- [Automate your workflow with the App Store Connect API](https://developer.apple.com/app-store-connect/api/)
+- [App Store Connect API Official Documentation](https://developer.apple.com/documentation/appstoreconnectapi)
+- [WWDC 2018 303 - Automating App Store Connect](https://developer.apple.com/videos/play/wwdc2018/303/) (Video)
+
+## Contributing
+
+Contributions of any kind are welcome! See [CONTRIBUTING.md](https://github.com/isaced/appstore-connect-sdk/blob/main/CONTRIBUTING.md) for development setup, testing, and the release process.
 
 ## License
 
