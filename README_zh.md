@@ -345,7 +345,7 @@ $ npm run update:spec
 
 `appstore-connect-sdk` 已经可以通过 `npm:` 说明符在 Deno 中使用，示例见 [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example)。
 
-> 注意：JSR（`jsr:@isaced/appstore-connect-sdk`）发布尚未接通，子路径入口（`/sdk`、`/client` 等）目前仅 npm 可用；Deno 用户暂时请导入根入口。
+> 注意：本包刻意只发布到 npm，不支持 JSR（`jsr:@isaced/appstore-connect-sdk`）。hey-api 生成的源码不满足 JSR 的 NodeNext 类型检查与显式导出类型（slow types）要求，除非额外维护一层源码补丁；而 Deno 2 的 `npm:` 说明符已提供全部能力——包括所有子路径入口（`npm:appstore-connect-sdk/sdk`、`/client`、`/zod` 等，已在 Deno 2.9 验证）。
 
 我们致力于确保 `appstore-connect-sdk` 模块能够完全兼容 Node.js 和 Deno，我们将继续努力提高其与 Deno 的兼容性，随着 Deno 运行时的发展而不断改进。
 

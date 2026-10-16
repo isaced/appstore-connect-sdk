@@ -37,7 +37,7 @@ Releases are driven by two commands. Version decisions happen locally; the actua
    npm run release -- --release-as 2.2.0   # or omit --release-as to derive from commits (feat → minor, fix → patch)
    ```
 
-   This bumps `package.json`, `package-lock.json` and `jsr.json` together, updates `CHANGELOG.md`, commits `chore(release): 2.2.0` and tags `v2.2.0`. Nothing is pushed yet — inspect/revert locally if needed (`git reset --hard HEAD~1 && git tag -d v2.2.0`).
+   This bumps `package.json` and `package-lock.json` together, updates `CHANGELOG.md`, commits `chore(release): 2.2.0` and tags `v2.2.0`. Nothing is pushed yet — inspect/revert locally if needed (`git reset --hard HEAD~1 && git tag -d v2.2.0`).
 
 2. Push the branch and tag — **this triggers publication**:
 
