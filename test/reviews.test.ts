@@ -17,8 +17,8 @@ describeLive("Reviews API", () => {
 
   beforeAll(() => {
     client = createClient({
-      // if use individual key, don't provide issuerId
-      // issuerId: process.env.ISSUER_ID,
+      // Team keys need issuerId; individual keys must omit it.
+      ...(process.env.ISSUER_ID ? { issuerId: process.env.ISSUER_ID } : {}),
       privateKeyId: process.env.PRIVATE_KEY_ID,
       privateKey: process.env.PRIVATE_KEY,
     });
