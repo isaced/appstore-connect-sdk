@@ -44648,7 +44648,7 @@ export const zAppCustomProductPageLocalizationsSearchKeywordsGetToManyRelatedPat
 export const zAppCustomProductPageLocalizationsSearchKeywordsGetToManyRelatedQuery = z.object({
     'filter[platform]': z.array(z.string()).optional(),
     'filter[locale]': z.array(z.string()).optional(),
-    'fields[appKeywords]': z.array(z.unknown()).optional(),
+    'fields[appKeywords]': z.array(z.string()).optional(),
     limit: z.int().lte(200).optional()
 });
 
@@ -44706,7 +44706,7 @@ export const zAppCustomProductPageVersionsAppCustomProductPageLocalizationsGetTo
         'appStoreVersionExperimentTreatmentLocalization',
         'appPreviews'
     ])).optional(),
-    'fields[appKeywords]': z.array(z.unknown()).optional(),
+    'fields[appKeywords]': z.array(z.string()).optional(),
     'fields[appAssetLibraryPlacements]': z.array(z.enum([
         'mediaType',
         'placementType',
@@ -46963,7 +46963,7 @@ export const zAppStoreVersionLocalizationsSearchKeywordsGetToManyRelatedPath = z
 export const zAppStoreVersionLocalizationsSearchKeywordsGetToManyRelatedQuery = z.object({
     'filter[platform]': z.array(z.string()).optional(),
     'filter[locale]': z.array(z.string()).optional(),
-    'fields[appKeywords]': z.array(z.unknown()).optional(),
+    'fields[appKeywords]': z.array(z.string()).optional(),
     limit: z.int().lte(200).optional()
 });
 
@@ -47472,7 +47472,7 @@ export const zAppStoreVersionsAppStoreVersionLocalizationsGetToManyRelatedQuery 
         'appStoreVersionExperimentTreatmentLocalization',
         'appPreviews'
     ])).optional(),
-    'fields[appKeywords]': z.array(z.unknown()).optional(),
+    'fields[appKeywords]': z.array(z.string()).optional(),
     'fields[appAssetLibraryPlacements]': z.array(z.enum([
         'mediaType',
         'placementType',
@@ -51639,7 +51639,7 @@ export const zAppsSearchKeywordsGetToManyRelatedPath = z.object({
 export const zAppsSearchKeywordsGetToManyRelatedQuery = z.object({
     'filter[platform]': z.array(z.string()).optional(),
     'filter[locale]': z.array(z.string()).optional(),
-    'fields[appKeywords]': z.array(z.unknown()).optional(),
+    'fields[appKeywords]': z.array(z.string()).optional(),
     limit: z.int().lte(200).optional()
 });
 
