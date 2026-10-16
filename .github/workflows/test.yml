@@ -21,6 +21,6 @@ jobs:
           bun-version: 'latest'
       - run: npm ci
       - run: npm run build
-      - run: bun test ./test/client.test.ts
+      - run: bun test ./test/client.test.ts ./test/individual-keys.test.ts
       - name: Publish artifact smoke test
         run: node scripts/smoke-test.mjs 
