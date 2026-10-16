@@ -8,3 +8,4 @@ export type * from "./openapi/types.gen";
 export type { Options } from "./openapi/sdk.gen";
 export { createClient, type AppStoreConnectConfig, type Client } from "./client";
 export * from "./paginate";
+export { parseRateLimit, getRateLimit, type RateLimit, type RetryOptions, type RetryInfo } from "./client";

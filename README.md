@@ -11,6 +11,7 @@ The `appstore-connect-sdk` module includes the following features:
 - **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
 - **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry); concurrent requests hitting an expiry share a single token generation
 - **Pagination Helpers** - `paginate`, `paginateItems`, and `paginateToArray` follow `links.next` automatically with typed results
+- **Rate-Limit Aware** - Typed access to the `X-Rate-Limit` header, with automatic retry of 429 responses on idempotent requests
 - **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.5.1** spec, generated from Apple's official OpenAPI description
 - **Cross-Platform** - Compatible with both Node.js and **Deno** environments
 
@@ -215,6 +216,40 @@ Unlike the plain endpoint functions (which resolve to `{ data, error }`), the pa
 For hard cancellation, pass a wrapping `fetch` in the options (e.g. one built around an `AbortSignal`) — `fetch` and `headers` are forwarded to every follow-up request; the generated client itself doesn't take a per-request `signal`.
 
 </details>
+
+### Rate limiting & retries
+
+App Store Connect returns quota info on every response (`X-Rate-Limit: user-hour-lim:3600;user-hour-rem:3593;`) and answers `429` when throttled. Read the quota from any call:
+
+```typescript
+import { getRateLimit } from "appstore-connect-sdk/client";
+
+const { data, error, response } = await appsGetCollection({ client });
+const [userHour] = getRateLimit(response);
+// { dimension: "user-hour", limit: 3600, remaining: 3592 }
+```
+
+`createClient` retries throttled responses automatically — by default only idempotent methods (`GET`/`HEAD`) on `429`, up to 3 retries, honoring the server's `Retry-After` (capped at 60s) with exponential backoff + jitter otherwise:
+
+```typescript
+const client = createClient({
+  /* credentials */
+  retry: {
+    maxRetries: 5,
+    statusCodes: [429, 503],     // opt in to retryable 5xx
+    onRetry: ({ attempt, status, delayMs, method, url }) =>
+      console.warn(`retry #${attempt} after ${status} in ${Math.round(delayMs)}ms`),
+  },
+  // retry: false                 // disable entirely
+});
+```
+
+Notes:
+
+- Retrying happens at the fetch layer, so generated endpoints, raw `client.get()`, and `paginate*()` follow-ups all share the same policy
+- When retries are exhausted the last response is returned as-is (`{ data, error, response }`); nothing throws
+- Writing requests (`POST`/`PATCH`/`DELETE`) are never retried by default — the API has no idempotency keys
+- Passing a per-request `options.fetch` replaces the SDK's retry wrapper for that request
 
 ### Runtime schema validation (Zod)
 
