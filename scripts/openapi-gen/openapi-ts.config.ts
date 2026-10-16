@@ -1,9 +1,9 @@
 import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
-  input: "./app_store_connect_api_4.5_openapi.json",
+  input: "../../app_store_connect_api_4.5.1_openapi.json",
   output: {
-    path: "src/openapi",
+    path: "../../src/openapi",
   },
   plugins: [
     "@hey-api/typescript",

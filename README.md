@@ -10,7 +10,7 @@ The `appstore-connect-sdk` module includes the following features:
 
 - **JWT Authentication** - Configure with your API Key and let the SDK handle JWT token signing
 - **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry); concurrent requests hitting an expiry share a single token generation
-- **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.5** spec, generated from Apple's official OpenAPI description
+- **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.5.1** spec, generated from Apple's official OpenAPI description
 - **Cross-Platform** - Compatible with both Node.js and **Deno** environments
 
 ## Installation
@@ -272,13 +272,15 @@ If you use a namespace import, switching is a one-line change (the `sdk` entry a
 
 ## Updating OpenAPI generated code
 
-To update the OpenAPI-generated code, run the following command:
+To fetch the latest OpenAPI specification from Apple and regenerate the SDK code, run:
 
 ```bash
-$ sh gen-openapi.sh
+$ npm run update:spec
 ```
 
-This will generate TypeScript code through [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) based on the OpenAPI specification file (`app_store_connect_api_4.5_openapi.json`) officially released by Apple.
+This downloads Apple's official spec zip, replaces the committed `app_store_connect_api_<version>_openapi.json`, updates references to it, and re-runs the [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) codegen whenever the spec version or content changes. The codegen runs from a pinned toolchain in `scripts/openapi-gen` (isolated from the repo's TypeScript). If you edited the committed spec file directly, regenerate without downloading via `sh gen-openapi.sh`.
+
+In addition, a scheduled GitHub Action (Spec Update) checks for a new Apple spec once a day and automatically opens a pull request with the synced spec and regenerated code when a new version is available.
 
 ## Deno Compatibility
 

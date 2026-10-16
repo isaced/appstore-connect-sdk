@@ -1,0 +1,96 @@
+name: Spec Update
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: spec-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 'latest'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync OpenAPI spec
+        run: node scripts/update-spec.mjs
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve spec version
+        if: steps.diff.outputs.changed == 'true'
+        id: spec
+        run: |
+          file=$(ls app_store_connect_api_*_openapi.json)
+          version=$(node -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).info.version)' "$file")
+          case "$version" in
+            [0-9]*.[0-9]*) ;;
+            *) echo "Unexpected spec version: $version"; exit 1 ;;
+          esac
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Verify build and tests
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          npm run build
+          bun test ./test
+          node scripts/smoke-test.mjs
+
+      - name: Check for existing branch
+        if: steps.diff.outputs.changed == 'true'
+        id: dedupe
+        env:
+          SPEC_VERSION: ${{ steps.spec.outputs.version }}
+        run: |
+          if git ls-remote --exit-code origin "refs/heads/spec-update-$SPEC_VERSION" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true' && steps.dedupe.outputs.exists != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SPEC_VERSION: ${{ steps.spec.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch --create "spec-update-$SPEC_VERSION"
+          git add --all
+          git commit -m "chore(openapi): sync Apple spec to $SPEC_VERSION"
+          git push -u origin "spec-update-$SPEC_VERSION"
+          cat > pr-body.md <<'EOF'
+          Automated spec sync from Apple's OpenAPI specification zip.
+
+          - Spec downloaded and installed as `app_store_connect_api_@VERSION@_openapi.json`
+          - Generated code refreshed via `@hey-api/openapi-ts`
+          - Build and tests verified in this workflow run before opening the PR
+
+          > Note: pushed with `GITHUB_TOKEN`, so the Test workflow does not re-run on this PR (GitHub limitation for bot pushes); validation was done inline above.
+          EOF
+          sed -i "s/@VERSION@/$SPEC_VERSION/g" pr-body.md
+          gh pr create \
+            --title "chore(openapi): sync Apple spec to $SPEC_VERSION" \
+            --body-file pr-body.md
