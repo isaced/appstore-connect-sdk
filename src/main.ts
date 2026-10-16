@@ -8,3 +8,6 @@ export { createClient, type AppStoreConnectConfig, type Client } from "./client"
 // generated schemas (~500 MiB RSS). Use `appstore-connect-sdk/client` and
 // `appstore-connect-sdk/sdk` when possible for a lightweight import.
 export * from "./openapi";
+
+// Pagination helpers (paginate, paginateItems, paginateToArray) and error types.
+export * from "./paginate";
