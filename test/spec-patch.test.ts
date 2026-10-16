@@ -1,4 +1,6 @@
 import { describe, test, expect } from "bun:test";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { applySpecPatches, RULES } from "../scripts/apply-spec-patches.mjs";
 
 function fixtureSpec() {
@@ -180,5 +182,29 @@ describe("winbackofferprice-relationships", () => {
     expect(b.components.schemas.WinBackOfferPriceInlineCreate.properties.relationships.required).toEqual([
       "territory",
     ]);
+  });
+});
+
+describe("committed Apple spec regression tripwire", () => {
+  // Pinned against the exact committed spec: if a future spec-sync changes the
+  // defect shape (counts move, targets vanish), this fails loudly and forces a
+  // human review of every rule's continued validity before updating the numbers.
+  test("current spec triggers the known rule hits", () => {
+    const root = join(import.meta.dir, "..");
+    const specFile = readdirSync(root).find((f) => /^app_store_connect_api_.+_openapi\.json$/.test(f));
+    expect(specFile).toBeDefined();
+    const spec = JSON.parse(readFileSync(join(root, specFile!), "utf8"));
+
+    const { report } = applySpecPatches(spec);
+    expect(report.map((r) => r.hits)).toEqual([5, 1, 1]); // empty enums | SERVICES | relationships
+    expect(report.every((r) => r.changed)).toBe(true);
+
+    // patched output must contain the fixes end to end
+    const patched = applySpecPatches(spec).spec;
+    expect(patched.components.schemas.BundleIdPlatform.enum).toContain("SERVICES");
+    expect(patched.components.schemas.WinBackOfferPriceInlineCreate.properties.relationships.required).toEqual([
+      "territory",
+    ]);
+    expect(JSON.stringify(patched).includes('"enum":[]')).toBe(false);
   });
 });
