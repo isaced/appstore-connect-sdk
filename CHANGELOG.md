@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/isaced/appstore-connect-sdk/compare/v2.2.2...v2.3.0) (2026-10-16)
+
+
+### Features
+
+* **client:** privateKeyPath + AuthKey filename inference, fail-fast config ([#78](https://github.com/isaced/appstore-connect-sdk/issues/78)) ([a1ec5ef](https://github.com/isaced/appstore-connect-sdk/commit/a1ec5ef84c262c5dea26d91aefb1293bed0bac64))
+* **client:** X-Rate-Limit accessors + automatic 429 retry ([#77](https://github.com/isaced/appstore-connect-sdk/issues/77)) ([0be5e4e](https://github.com/isaced/appstore-connect-sdk/commit/0be5e4e520d63a3e3a47096cb7138e53fa151d8e))
+* **sdk:** add paginate / paginateItems / paginateToArray helpers ([#76](https://github.com/isaced/appstore-connect-sdk/issues/76)) ([1d9e311](https://github.com/isaced/appstore-connect-sdk/commit/1d9e311db1950f28c8c663379a5b49a9fd87e6c1))
+
+
+### Bug Fixes
+
+* **client:** single-flight concurrent token refresh (TDD) ([#71](https://github.com/isaced/appstore-connect-sdk/issues/71)) ([542d75a](https://github.com/isaced/appstore-connect-sdk/commit/542d75a4c435c8432c2e692c9e628cafb701721d))
+
 ### [2.2.2](https://github.com/isaced/appstore-connect-sdk/compare/v2.2.1...v2.2.2) (2026-10-16)
 
 
