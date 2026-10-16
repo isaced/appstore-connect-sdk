@@ -51,6 +51,7 @@
     "test": "bun test",
     "build": "rm -rf ./dist && node build.js && npm run build:types && npm run copy:package.cjs.json",
     "build:types": "npx tsc --emitDeclarationOnly --declaration",
+    "prepare": "npm run build",
     "copy:package.cjs.json": "cp ./package.cjs.json ./dist/cjs/package.json && cp ./package.cjs.json ./dist/types/package.json",
     "release": "standard-version"
   },
