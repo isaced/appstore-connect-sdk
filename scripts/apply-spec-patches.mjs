@@ -60,11 +60,12 @@ export function applySpecPatches(spec) {
 // ---------------------------------------------------------------------------
 
 if (process.argv[1] && process.argv[1].endsWith("apply-spec-patches.mjs")) {
-  const specFile = readdirSync(root).find((f) => /^app_store_connect_api_.+_openapi\.json$/.test(f));
-  if (!specFile) {
-    console.error("No committed spec file found at repo root.");
+  const specFiles = readdirSync(root).filter((f) => /^app_store_connect_api_.+_openapi\.json$/.test(f));
+  if (specFiles.length !== 1) {
+    console.error(`Expected exactly one committed spec file, found: ${specFiles.join(", ") || "none"}`);
     process.exit(1);
   }
+  const specFile = specFiles[0];
   const { spec: patched, report } = applySpecPatches(JSON.parse(readFileSync(join(root, specFile), "utf8")));
   writeFileSync(join(root, "scripts", "openapi-gen", "spec.generated.json"), JSON.stringify(patched, null, 2) + "\n");
 
