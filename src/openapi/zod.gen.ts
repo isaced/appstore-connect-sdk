@@ -4835,7 +4835,21 @@ export const zWebhookPingCreateRequest = z.object({
 
 export const zWinBackOfferPriceInlineCreate = z.object({
     type: z.enum(['winBackOfferPrices']),
-    id: z.string().optional()
+    id: z.string().optional(),
+    relationships: z.object({
+        territory: z.object({
+            data: z.object({
+                type: z.enum(['territories']),
+                id: z.string()
+            })
+        }),
+        subscriptionPricePoint: z.object({
+            data: z.object({
+                type: z.enum(['subscriptionPricePoints']),
+                id: z.string()
+            })
+        }).optional()
+    }).optional()
 });
 
 export const zAppClipDefaultExperienceReleaseWithAppStoreVersionLinkageRequest = z.object({
@@ -14651,7 +14665,8 @@ export const zBuildUploadState = z.enum([
 export const zBundleIdPlatform = z.enum([
     'IOS',
     'MAC_OS',
-    'UNIVERSAL'
+    'UNIVERSAL',
+    'SERVICES'
 ]);
 
 /**
