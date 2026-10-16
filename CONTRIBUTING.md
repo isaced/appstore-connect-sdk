@@ -23,7 +23,7 @@ To develop appstore-connect-sdk locally:
 
 1. Clone the repository.
 2. Install the necessary dependencies using `npm install`.
-3. Run the tests using `npm test`.
+3. Run the tests using `npm test`. Live suites (`events`, `reviews`, `schemas`) require App Store Connect credentials in a root `.env` (`PRIVATE_KEY`, `PRIVATE_KEY_ID`, `ISSUER_ID`) — **without them those tests skip automatically**, so a plain clone still gets a green run.
 4. Make your changes and run the tests again to ensure that everything still works.
 5. Submit a pull request following the process outlined above.
 

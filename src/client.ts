@@ -4,6 +4,7 @@ import {
   type Client,
 } from "./openapi/client";
 import { generateAuthToken } from "./auth";
+import { TokenCache } from "./token-cache";
 
 /**
  * Options for creating an App Store Connect API client.
@@ -67,13 +68,7 @@ const DEFAULT_BASE_URL = "https://api.appstoreconnect.apple.com";
  */
 export function createClient(config: AppStoreConnectConfig): Client {
   const baseUrl = config.baseUrl?.replace(/\/$/, "") || DEFAULT_BASE_URL;
-
-  // Token caching state
-  let cachedToken: string | null = null;
-  let tokenGeneratedAt = 0;
-  // Single-flight: concurrent auth() calls share one in-flight generation
-  // instead of each signing their own JWT at expiry.
-  let inflight: Promise<string> | null = null;
+  let cache: TokenCache | undefined;
 
   return createHeyApiClient(
     createConfig({
@@ -86,37 +81,17 @@ export function createClient(config: AppStoreConnectConfig): Client {
         if (config.privateKeyId && config.privateKey) {
           const expirationDuration =
             config.expirationDuration ?? DEFAULT_EXPIRATION_DURATION_SECONDS;
-          const expirationDurationMs = expirationDuration * 1000;
-          const tokenAge = tokenGeneratedAt ? Date.now() - tokenGeneratedAt : 0;
-
-          // Refresh if: no token, expired, or will expire within 2 minutes
-          const shouldRefresh =
-            !cachedToken ||
-            tokenAge > expirationDurationMs ||
-            tokenAge > expirationDurationMs - 2 * 60 * 1000;
-
-          if (!shouldRefresh && cachedToken) {
-            return cachedToken;
-          }
-
-          if (!inflight) {
-            inflight = generateAuthToken({
-              apiKeyId: config.privateKeyId,
-              issuerId: config.issuerId,
-              privateKey: config.privateKey,
-              expirationTime: Math.floor(Date.now() / 1000) + expirationDuration,
-            })
-              .then((token) => {
-                cachedToken = token;
-                tokenGeneratedAt = Date.now();
-                return token;
-              })
-              .finally(() => {
-                inflight = null;
-              });
-          }
-
-          return inflight;
+          cache ??= new TokenCache(
+            () =>
+              generateAuthToken({
+                apiKeyId: config.privateKeyId!,
+                issuerId: config.issuerId,
+                privateKey: config.privateKey!,
+                expirationTime: Math.floor(Date.now() / 1000) + expirationDuration,
+              }),
+            { expirationDuration }
+          );
+          return cache.getToken();
         }
 
         throw new Error("No bearerToken or private key provided");

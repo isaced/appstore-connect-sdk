@@ -9,7 +9,13 @@ import { zAppsResponse, zApp } from "../src/zod";
 import { z } from "zod";
 import { describe, beforeAll, test, expect } from "bun:test";
 
-describe("Schema Validation", () => {
+const hasCredentials = Boolean(process.env.PRIVATE_KEY && process.env.PRIVATE_KEY_ID);
+// Live suites need real App Store Connect credentials; without them bun:test's
+// skipIf is unavailable (not exported in 1.4.3), so alias describe explicitly.
+const describeLive = hasCredentials ? describe : describe.skip;
+
+
+describeLive("Schema Validation", () => {
   let client: Client;
 
   beforeAll(() => {
@@ -19,7 +25,7 @@ describe("Schema Validation", () => {
     });
   });
 
-  describe("Zod Schema Structure", () => {
+  describeLive("Zod Schema Structure", () => {
     test("zAppsResponse should be a valid Zod schema", () => {
       expect(zAppsResponse).toBeDefined();
       expect(zAppsResponse instanceof z.ZodType).toBe(true);
@@ -97,7 +103,7 @@ describe("Schema Validation", () => {
     });
   });
 
-  describe("TypeScript Type Validation", () => {
+  describeLive("TypeScript Type Validation", () => {
     test("should properly type AppsResponse from API", async () => {
       const res = await appsGetCollection({ client });
 
@@ -152,7 +158,7 @@ describe("Schema Validation", () => {
     });
   });
 
-  describe("API Response Structure", () => {
+  describeLive("API Response Structure", () => {
     test("API response should have expected structure", async () => {
       const res = await appsGetCollection({ client });
 
@@ -185,7 +191,7 @@ describe("Schema Validation", () => {
     });
   });
 
-  describe("Schema Type Inference", () => {
+  describeLive("Schema Type Inference", () => {
     test("zApp infers correct TypeScript type", () => {
       // This is a compile-time check
       type InferredApp = z.infer<typeof zApp>;
