@@ -7,7 +7,7 @@
 // Exit 0 = success (no changes if already up to date), non-zero = failure.
 
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -69,7 +69,9 @@ function replaceInFiles(from, to, files) {
   return count;
 }
 
-const REF_FILES = ["scripts/openapi-gen/openapi-ts.config.ts", "README.md", "README_zh.md"];
+// The codegen config consumes the derived spec.generated.json (no versioned
+// filename to track); READMEs may still mention the committed spec name.
+const REF_FILES = ["README.md", "README_zh.md"];
 
 const local = readLocalSpec();
 const remote = await downloadRemoteSpec();
@@ -108,15 +110,10 @@ for (const candidate of [`**${local.version}**`, `**${shortVersion}**`]) {
 }
 
 if (versionChanged || contentChanged) {
-  // Codegen runs in scripts/openapi-gen with a pinned TypeScript 5 toolchain:
-  // openapi-ts 0.99 crashes at import time against the repo's TypeScript 7.
-  const toolDir = join(root, "scripts", "openapi-gen");
-  if (!existsSync(join(toolDir, "node_modules"))) {
-    console.log("Installing codegen toolchain: npm install (scripts/openapi-gen)");
-    execFileSync("npm", ["install", "--no-audit", "--no-fund"], { cwd: toolDir, stdio: "inherit" });
-  }
-  console.log("Running codegen: openapi-ts");
-  execFileSync(join(toolDir, "node_modules", ".bin", "openapi-ts"), [], { cwd: toolDir, stdio: "inherit" });
+  // Same pipeline as local regeneration: apply spec patches, then run the
+  // pinned openapi-ts toolchain in scripts/openapi-gen.
+  console.log("Running codegen: sh gen-openapi.sh");
+  execFileSync("sh", [join(root, "gen-openapi.sh")], { cwd: root, stdio: "inherit" });
 } else {
   console.log("Version unchanged, codegen skipped.");
 }

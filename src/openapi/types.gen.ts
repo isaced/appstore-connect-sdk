@@ -61274,7 +61274,7 @@ export type AppCustomProductPageLocalizationsSearchKeywordsGetToManyRelatedData 
         /**
          * the fields to include for returned resources of type appKeywords
          */
-        'fields[appKeywords]'?: Array<never>;
+        'fields[appKeywords]'?: Array<string>;
         /**
          * maximum resources per page
          */
@@ -61400,7 +61400,7 @@ export type AppCustomProductPageVersionsAppCustomProductPageLocalizationsGetToMa
         /**
          * the fields to include for returned resources of type appKeywords
          */
-        'fields[appKeywords]'?: Array<never>;
+        'fields[appKeywords]'?: Array<string>;
         /**
          * the fields to include for returned resources of type appAssetLibraryPlacements
          */
@@ -65765,7 +65765,7 @@ export type AppStoreVersionLocalizationsSearchKeywordsGetToManyRelatedData = {
         /**
          * the fields to include for returned resources of type appKeywords
          */
-        'fields[appKeywords]'?: Array<never>;
+        'fields[appKeywords]'?: Array<string>;
         /**
          * maximum resources per page
          */
@@ -66551,7 +66551,7 @@ export type AppStoreVersionsAppStoreVersionLocalizationsGetToManyRelatedData = {
         /**
          * the fields to include for returned resources of type appKeywords
          */
-        'fields[appKeywords]'?: Array<never>;
+        'fields[appKeywords]'?: Array<string>;
         /**
          * the fields to include for returned resources of type appAssetLibraryPlacements
          */
@@ -72364,7 +72364,7 @@ export type AppsSearchKeywordsGetToManyRelatedData = {
         /**
          * the fields to include for returned resources of type appKeywords
          */
-        'fields[appKeywords]'?: Array<never>;
+        'fields[appKeywords]'?: Array<string>;
         /**
          * maximum resources per page
          */

@@ -338,7 +338,7 @@ To fetch the latest OpenAPI specification from Apple and regenerate the SDK code
 $ npm run update:spec
 ```
 
-This downloads Apple's official spec zip, replaces the committed `app_store_connect_api_<version>_openapi.json`, updates references to it, and re-runs the [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) codegen whenever the spec version or content changes. The codegen runs from a pinned toolchain in `scripts/openapi-gen` (isolated from the repo's TypeScript). If you edited the committed spec file directly, regenerate without downloading via `sh gen-openapi.sh`.
+This downloads Apple's official spec zip, replaces the committed `app_store_connect_api_<version>_openapi.json`, updates references to it, and re-runs the [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) codegen whenever the spec version or content changes. The committed spec stays byte-identical to Apple's download; known upstream defects are fixed declaratively by `scripts/apply-spec-patches.mjs` (named rules with per-run hit reports, e.g. `remove-empty-enums` for Apple's empty `enum: []` params) which writes the derived `scripts/openapi-gen/spec.generated.json` the generator actually reads. If you edited the committed spec file directly, regenerate without downloading via `sh gen-openapi.sh`.
 
 In addition, a scheduled GitHub Action (Spec Update) checks for a new Apple spec once a day and automatically opens a pull request with the synced spec and regenerated code when a new version is available.
 
