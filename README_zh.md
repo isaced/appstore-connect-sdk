@@ -6,7 +6,7 @@
 
 ## 这个 SDK 包含的功能特性
 
-- **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
+- **JWT 身份验证** - 配置您的 API 密钥（内联 PEM 或 `.p8` 文件路径并自动推断密钥 ID），SDK 将自动处理 JWT 令牌签名
 - **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新；并发请求命中同一过期时刻时共享单次令牌生成（single-flight）
 - **分页辅助函数** - `paginate`、`paginateItems`、`paginateToArray` 自动跟随 `links.next`，返回值保持类型推导
 - **限流感知** - 类型化读取 `X-Rate-Limit` 响应头，幂等请求遇 429 自动重试
@@ -77,6 +77,19 @@ const client = createClient({
 });
 ```
 
+**直接使用 `.p8` 文件（推荐）：**
+
+免去把多行 PEM 塞进代码或环境变量（`.env` 的经典格式坑），直接指向下载的密钥文件。密钥在首次请求时懒加载读取；省略 `privateKeyId` 时，会从 Apple 标准的 `AuthKey_<KEYID>.p8` 文件名自动推断：
+
+```typescript
+const client = createClient({
+  issuerId: "<YOUR ISSUER ID>",
+  privateKeyPath: "./private/AuthKey_ABCDEFGHIJ.p8", // 自动推断 privateKeyId: ABCDEFGHIJ
+});
+```
+
+（`privateKeyPath` 底层使用 `node:fs`，适用于 Node/Deno/Bun；浏览器或 edge 运行时请传 `privateKey`。）
+
 有关如何在 App Store Connect API 中通过 JWT 认证的更多信息，请查看 Apple 的身份验证指南:
 
 - [Creating API Keys for App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api)
@@ -88,13 +101,15 @@ const client = createClient({
 | 选项 | 类型 | 必需 | 描述 |
 |------|------|------|------|
 | `issuerId` | `string` | 团队密钥必需 | 来自 App Store Connect 的 issuer ID |
-| `privateKeyId` | `string` | 是* | 您的私钥 ID |
+| `privateKeyId` | `string` | 是* | 私钥 ID（使用 `privateKeyPath` 且文件名为 `AuthKey_<KEYID>.p8` 时自动推断） |
 | `privateKey` | `string` | 是* | PEM 格式的私钥内容 |
+| `privateKeyPath` | `string` | 是* | `.p8` 私钥文件路径，首次请求时懒加载读取 |
 | `bearerToken` | `string` | 否 | 直接提供您自己的 JWT 令牌，无需 SDK 生成 |
 | `expirationDuration` | `number` | 否 | 令牌过期时间（秒），默认：1200 = 20 分钟，最大：20 分钟 |
 | `baseUrl` | `string` | 否 | 覆盖 API 基础 URL（默认：`https://api.appstoreconnect.apple.com`） |
+| `retry` | `object \| false` | 否 | 429 重试策略（见「限流与重试」），传 `false` 关闭 |
 
-*除非提供了 `bearerToken`，否则必需。
+*除非提供 `bearerToken`，否则必需：`privateKey` 与 `privateKeyPath` 二选一，且需给出 `privateKeyId`（或可由 `AuthKey_<KEYID>.p8` 文件名推断）。
 
 #### 3. 调用 API
 

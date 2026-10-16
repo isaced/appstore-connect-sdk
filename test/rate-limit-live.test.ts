@@ -1,18 +1,22 @@
 // Live check of the X-Rate-Limit header shape (no request spam: we only
 // observe the header the API already returns on every response).
-import { describe, test, expect } from "bun:test";
+import { describe, test, expect, beforeAll } from "bun:test";
 import { createClient, getRateLimit, parseRateLimit } from "../src/client";
+import type { Client } from "../src/openapi/client";
 import { territoriesGetCollection } from "../src/openapi/sdk.gen";
 
 const hasCredentials = Boolean(process.env.PRIVATE_KEY && process.env.PRIVATE_KEY_ID);
 
-const client = createClient({
-  privateKeyId: process.env.PRIVATE_KEY_ID,
-  issuerId: process.env.ISSUER_ID,
-  privateKey: process.env.PRIVATE_KEY,
-});
+let client: Client;
 
 describe.skipIf(!hasCredentials)("rate limit against the live API", () => {
+  beforeAll(() => {
+    client = createClient({
+      privateKeyId: process.env.PRIVATE_KEY_ID,
+      issuerId: process.env.ISSUER_ID,
+      privateKey: process.env.PRIVATE_KEY,
+    });
+  });
   test(
     "every response carries a parseable user-hour dimension",
     async () => {

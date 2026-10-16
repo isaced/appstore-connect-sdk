@@ -1,22 +1,26 @@
 // Live verification of the pagination helpers against the real App Store
 // Connect API. Skipped automatically when no credentials are present (CI).
 // Run locally with a populated .env:  bun test ./test/paginate-live.test.ts
-import { describe, test, expect } from "bun:test";
+import { describe, test, expect, beforeAll } from "bun:test";
 import { createClient } from "../src/client";
+import type { Client } from "../src/openapi/client";
 import { appsGetCollection, territoriesGetCollection } from "../src/openapi/sdk.gen";
 import { paginate, paginateItems, paginateToArray, PaginationLimitError } from "../src/paginate";
 
 const hasCredentials = Boolean(process.env.PRIVATE_KEY && process.env.PRIVATE_KEY_ID);
 
-const client = createClient({
-  privateKeyId: process.env.PRIVATE_KEY_ID,
-  issuerId: process.env.ISSUER_ID,
-  privateKey: process.env.PRIVATE_KEY,
-});
+let client: Client;
 
 // Territories is a public collection (~175 items) present on every account,
 // so multi-page flows are deterministic regardless of the account's apps.
 describe.skipIf(!hasCredentials)("paginate against the live API", () => {
+  beforeAll(() => {
+    client = createClient({
+      privateKeyId: process.env.PRIVATE_KEY_ID,
+      issuerId: process.env.ISSUER_ID,
+      privateKey: process.env.PRIVATE_KEY,
+    });
+  });
   test(
     "follows links.next across pages with working auth",
     async () => {
