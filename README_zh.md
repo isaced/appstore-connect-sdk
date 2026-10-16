@@ -210,6 +210,8 @@ const apps = await paginateToArray(appsGetCollection, { client, maxItems: 5000 }
 
 `links.next` 是绝对 URL，而生成客户端按 `baseUrl + path` 解析 `url`——直接传入绝对 URL 会产生非法请求。辅助函数会校验每个 `links.next` 以客户端 `baseUrl` 为前缀，去掉前缀后通过 `client.get({ url: "/v1/...?cursor=..." })` 重新请求，`links.next` 不存在时结束。
 
+如需强制取消，可在参数中传入包装过的 `fetch`（例如基于 `AbortSignal` 构造）——`fetch` 与 `headers` 会透传给每一个跟随请求；生成客户端本身不支持逐请求的 `signal`。
+
 </details>
 
 ### Zod 运行时校验

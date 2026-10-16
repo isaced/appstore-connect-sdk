@@ -22,5 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: bun test ./test
+      - name: Typecheck (incl. pagination inference tests)
+        run: npx tsc -p tsconfig.typecheck.json
       - name: Publish artifact smoke test
         run: node scripts/smoke-test.mjs 

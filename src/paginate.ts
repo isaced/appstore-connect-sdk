@@ -116,10 +116,17 @@ export async function* paginate<F extends PagedCollectionFn>(
     // `security` must be passed explicitly: the client only attaches the
     // Authorization header when the request declares it, and raw
     // client.get() calls don't inherit it from the generated endpoints.
+    // `fetch`/`headers` are forwarded from the caller's options so follow-up
+    // pages behave like the first page (also enables abort via a wrapping fetch).
+    const passthrough = options as
+      | { fetch?: typeof globalThis.fetch; headers?: Record<string, unknown> | HeadersInit }
+      | undefined;
     current = (await client!.get({
       url: lastUrl,
       security: [{ scheme: "bearer", type: "http" }],
-    })) as Awaited<ReturnType<F>>;
+      ...(passthrough?.fetch !== undefined ? { fetch: passthrough.fetch } : {}),
+      ...(passthrough?.headers !== undefined ? { headers: passthrough.headers } : {}),
+    } as Parameters<Client["get"]>[0])) as Awaited<ReturnType<F>>;
   }
 }
 

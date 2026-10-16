@@ -39,16 +39,19 @@ let server: ReturnType<typeof Bun.serve>;
 let origin: string;
 let hits: string[];
 let auths: (string | null)[];
+let traces: (string | null)[];
 
 beforeAll(() => {
   hits = [];
   auths = [];
+  traces = [];
   server = Bun.serve({
     port: 0,
     fetch(req) {
       const url = new URL(req.url);
       hits.push(url.pathname + url.search);
       auths.push(req.headers.get("authorization"));
+      traces.push(req.headers.get("x-trace"));
 
       if (url.pathname === "/v1/apps") {
         return Response.json(pagePayload(url.pathname, url.searchParams, origin));
@@ -183,6 +186,29 @@ describe("paginate", () => {
     }
     expect(caught).toBeInstanceOf(PaginationError);
     expect(String((caught as PaginationError).message)).toInclude("does not match");
+  });
+
+  test("forwards fetch and headers options to follow-up requests", async () => {
+    const client = createClient({ bearerToken: "t", baseUrl: origin });
+    hits = [];
+    traces = [];
+    let fetchCalls = 0;
+    const countingFetch: typeof fetch = (input, init) => {
+      fetchCalls += 1;
+      return fetch(input, init);
+    };
+    const pages = await drain(
+      paginate(collectionFn(client), {
+        client,
+        query: { limit: 4 },
+        fetch: countingFetch,
+        headers: { "x-trace": "paginate-test" },
+      }),
+    );
+    expect(pages.length).toBe(2); // 5 items at limit 4
+    expect(fetchCalls).toBe(2); // custom fetch used on first page AND follow-ups
+    expect(traces).toHaveLength(2);
+    expect(traces.every((t) => t === "paginate-test")).toBe(true);
   });
 
   test("supports baseUrl with a path prefix (proxied API)", async () => {

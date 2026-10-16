@@ -212,6 +212,8 @@ Unlike the plain endpoint functions (which resolve to `{ data, error }`), the pa
 
 `links.next` is an absolute URL, while the generated client resolves `url` as `baseUrl + path` — passing the absolute URL directly produces an invalid request. The helpers validate that each `links.next` starts with the client's `baseUrl`, strip the prefix, and re-request the remainder via `client.get({ url: "/v1/...?cursor=..." })`, stopping when `links.next` is absent.
 
+For hard cancellation, pass a wrapping `fetch` in the options (e.g. one built around an `AbortSignal`) — `fetch` and `headers` are forwarded to every follow-up request; the generated client itself doesn't take a per-request `signal`.
+
 </details>
 
 ### Runtime schema validation (Zod)
