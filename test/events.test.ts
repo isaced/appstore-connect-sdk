@@ -1,7 +1,13 @@
 import { createClient, appsGetCollection, type Client } from "../src/sdk";
 import { describe, beforeAll, test, expect } from "bun:test";
 
-describe("AppStoreConnectAPI", () => {
+const hasCredentials = Boolean(process.env.PRIVATE_KEY && process.env.PRIVATE_KEY_ID);
+// Live suites need real App Store Connect credentials; without them bun:test's
+// skipIf is unavailable (not exported in 1.4.3), so alias describe explicitly.
+const describeLive = hasCredentials ? describe : describe.skip;
+
+
+describeLive("AppStoreConnectAPI", () => {
   let client: Client;
 
   beforeAll(() => {
@@ -21,7 +27,7 @@ describe("AppStoreConnectAPI", () => {
   });
 });
 
-describe("with base path override", () => {
+describeLive("with base path override", () => {
   let client: Client;
 
   beforeAll(() => {
