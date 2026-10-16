@@ -1,26 +1,15 @@
-# appstore-connect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk)
+# appstore-connect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk) [![downloads](https://img.shields.io/npm/dm/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk) [![Test](https://github.com/isaced/appstore-connect-sdk/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/isaced/appstore-connect-sdk/actions/workflows/test.yml) [![license](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 `appstore-connect-sdk` 是一个 Node.js 模块，使用 TypeScript 编写，为开发人员提供了一个方便的与 [App Store Connect API](https://developer.apple.com/app-store-connect/api/) 进行交互。该模块基于 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 工具构建，并支持所有基于 OpenAPI 规范的 API。
 
 简体中文 | [English](https://github.com/isaced/appstore-connect-sdk/blob/main/README.md)
 
-## 先了解一下 App Store Connect API
-
-- [Automate your workflow with the App Store Connect API](https://developer.apple.com/app-store-connect/api/)
-- [App Store Connect API Official Documentation](https://developer.apple.com/documentation/appstoreconnectapi)
-- [WWDC 2018 303 - Automating App Store Connect](https://developer.apple.com/videos/play/wwdc2018/303/) (Video)
-
 ## 这个 SDK 包含的功能特性
 
-- [x] **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
-- [x] **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新
-- [x] **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.5** 版 App Store Connect API 端点
-- [x] **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
-
-## 示例
-
-- [Deno 示例](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example)
-- [Node 示例](https://github.com/isaced/appstore-connect-sdk/tree/main/node_example)
+- **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
+- **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新；并发请求命中同一过期时刻时共享单次令牌生成（single-flight）
+- **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.5** 版 App Store Connect API 端点
+- **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
 
 ## 安装
 
@@ -29,6 +18,12 @@ npm install appstore-connect-sdk
 ```
 
 需要 Node.js **20+**。
+
+也可以直接从 git 安装未发布的改动（SDK 通过 `prepare` 脚本在安装时自动构建）：
+
+```bash
+npm install isaced/appstore-connect-sdk#main
+```
 
 ## 使用
 
@@ -165,6 +160,65 @@ const app = await appsGetInstance({ client, path: { id: "app-id" } });
 const builds = await buildsGetCollection({ client, query: { "filter[app]": "app-id" } });
 ```
 
+### 错误处理
+
+默认情况下，API 函数在非 2xx 响应时**不会抛出异常**，而是返回 `{ data, error, response }`，其中 `error` 携带 Apple 的 JSON:API 错误体：
+
+```typescript
+const { data, error, response } = await appsGetCollection({ client });
+
+if (error) {
+  // 例如 { errors: [{ status: "401", code: "NOT_AUTHORIZED", title: "Unauthorized" }] }
+  console.error(error.errors);
+} else {
+  console.log(data!.data);
+}
+```
+
+更习惯异常写法？传入 `throwOnError: true` 让调用直接抛出：
+
+```typescript
+const res = await appsGetCollection({ client, throwOnError: true }); // 非 2xx 时抛出
+```
+
+### 分页
+
+App Store Connect 采用游标分页。通过 `limit` 指定页大小，然后跟随 `links.next`：
+
+```typescript
+import type { AppsResponse } from "appstore-connect-sdk/sdk";
+
+const first = await appsGetCollection({ client, query: { limit: 200 } });
+const apps = [...first.data?.data ?? []];
+let nextUrl = first.data?.links?.next;
+
+while (nextUrl) {
+  // `links.next` 是绝对 URL；转换回客户端可识别的路径
+  const next = new URL(nextUrl);
+  const res = await client.get({ url: next.pathname + next.search });
+  const page = res.data as AppsResponse;
+  apps.push(...page.data);
+  nextUrl = page.links?.next;
+}
+```
+
+> 注意：不要把绝对 URL `links.next` 直接作为 `url` 传入——它会相对于客户端的 `baseUrl` 拼接，产生非法请求。
+
+### Zod 运行时校验
+
+`/zod` 入口提供与生成 API 类型一致的 Zod schema，按需引入：
+
+```typescript
+import { zAppsResponse } from "appstore-connect-sdk/zod";
+
+const res = await appsGetCollection({ client });
+if (res.data) {
+  const apps = zAppsResponse.parse(res.data); // payload 不符合规范时抛出 ZodError
+}
+```
+
+> 警告：导入 `/zod` 会初始化全部约 3,700 个生成 schema（约 300 MiB 堆内存）。只在真正需要校验的地方导入。
+
 ### 高级用法
 
 对于高级用例，您可以直接使用客户端进行自定义请求：
@@ -231,6 +285,23 @@ $ sh gen-openapi.sh
 > 注意：JSR（`jsr:@isaced/appstore-connect-sdk`）发布尚未接通，子路径入口（`/sdk`、`/client` 等）目前仅 npm 可用；Deno 用户暂时请导入根入口。
 
 我们致力于确保 `appstore-connect-sdk` 模块能够完全兼容 Node.js 和 Deno，我们将继续努力提高其与 Deno 的兼容性，随着 Deno 运行时的发展而不断改进。
+
+## 示例
+
+仓库内提供可直接运行的示例：
+
+- [Node 示例](https://github.com/isaced/appstore-connect-sdk/tree/main/node_example)
+- [Deno 示例](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example)
+
+## 先了解一下 App Store Connect API
+
+- [Automate your workflow with the App Store Connect API](https://developer.apple.com/app-store-connect/api/)
+- [App Store Connect API Official Documentation](https://developer.apple.com/documentation/appstoreconnectapi)
+- [WWDC 2018 303 - Automating App Store Connect](https://developer.apple.com/videos/play/wwdc2018/303/) (Video)
+
+## 贡献
+
+欢迎任何形式的贡献！开发环境搭建、测试与发布流程见 [CONTRIBUTING.md](https://github.com/isaced/appstore-connect-sdk/blob/main/CONTRIBUTING.md)。
 
 ## 许可证
 
