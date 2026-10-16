@@ -32,4 +32,13 @@ jobs:
       - name: Typecheck (incl. pagination inference tests)
         run: bun check -p tsconfig.typecheck.json
       - name: Publish artifact smoke test
-        run: node scripts/smoke-test.mjs 
+        run: node scripts/smoke-test.mjs
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Deno runtime smoke (packed dist, local mock API)
+        run: |
+          TGZ=$(npm pack --silent | tail -1)
+          cd deno_smoke
+          npm install --no-audit --no-fund "../$TGZ" >/dev/null
+          deno run --allow-net --allow-read smoke.ts 
