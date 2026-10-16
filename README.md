@@ -248,7 +248,7 @@ Notes:
 
 - Retrying happens at the fetch layer, so generated endpoints, raw `client.get()`, and `paginate*()` follow-ups all share the same policy
 - When retries are exhausted the last response is returned as-is (`{ data, error, response }`); nothing throws
-- Writing requests (`POST`/`PATCH`/`DELETE`) are never retried by default — the API has no idempotency keys
+- Writing requests (`POST`/`PATCH`/`DELETE`) are never retried — the API has no idempotency keys, and requests carrying a body can't be replayed even when listed in `methods`
 - Passing a per-request `options.fetch` replaces the SDK's retry wrapper for that request
 
 ### Runtime schema validation (Zod)

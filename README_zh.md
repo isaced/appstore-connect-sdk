@@ -246,7 +246,7 @@ const client = createClient({
 
 - 重试发生在 fetch 层，生成端点、裸 `client.get()` 与 `paginate*()` 跟随请求共享同一策略
 - 重试耗尽后原样返回最后一个响应（`{ data, error, response }`），不会抛错
-- 写请求（`POST`/`PATCH`）永不默认重试——上游 API 没有幂等键
+- 写请求（`POST`/`PATCH`）永不重试——上游 API 没有幂等键，且带 body 的请求无法重放，即使写进 `methods` 也会被硬性排除
 - 调用时传入逐请求的 `options.fetch` 会取代 SDK 的重试包装
 
 ### Zod 运行时校验

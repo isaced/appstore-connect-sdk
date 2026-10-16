@@ -17,7 +17,11 @@ export interface RetryOptions {
   maxRetries?: number;
   /** Status codes to retry. Default `[429]`; add 500/502/503 etc. to opt in. */
   statusCodes?: number[];
-  /** Methods eligible for retry — keep it idempotent-only (no idempotency keys exist upstream). Default `["GET", "HEAD"]`. */
+  /**
+   * Methods eligible for retry. Default `["GET", "HEAD"]`.
+   * Requests carrying a body are never retried regardless of this setting —
+   * the API has no idempotency keys and consumed body streams can't be replayed.
+   */
   methods?: string[];
   /** Give up instead of sleeping when `Retry-After` exceeds this many ms. Default 60_000. */
   maxRetryAfterMs?: number;
@@ -56,12 +60,18 @@ export function createRetryFetch(
       init?.method ?? (input instanceof Request ? input.method : "GET");
     const url = input instanceof Request ? input.url : String(input);
     const retryableMethod = methods.has(method.toUpperCase());
+    // A consumed Request body cannot be replayed; pre-cloning every request
+    // would double-buffer upload bodies, so body-carrying requests are never
+    // retried regardless of `methods`.
+    const hasBody =
+      input instanceof Request ? input.body !== null : init?.body != null;
+    const replayable = !hasBody;
 
     let attempt = 0;
     for (;;) {
       const response = await baseFetch(input as RequestInfo, init);
 
-      if (!retryableMethod || !statusCodes.has(response.status) || attempt >= maxRetries) {
+      if (!retryableMethod || !replayable || !statusCodes.has(response.status) || attempt >= maxRetries) {
         return response;
       }
 

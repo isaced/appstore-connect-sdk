@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll, beforeEach } from "bun:test";
 import { createClient } from "../src/client";
+import { paginate } from "../src/paginate";
 import type { RetryInfo } from "../src/retry";
 
 // ---------------------------------------------------------------------------
@@ -165,6 +166,119 @@ describe("createClient retry (fetch layer)", () => {
       expect(res.data).toMatchObject({ ok: true });
     } finally {
       delete serverPaths["/flaky-503"];
+    }
+  });
+
+  test("non-numeric Retry-After (HTTP date) falls back to exponential backoff", async () => {
+    serverPaths["/retry-after-date"] = (n) =>
+      n === 1
+        ? new Response(null, { status: 429, headers: { "retry-after": "Wed, 21 Oct 2015 07:28:00 GMT" } })
+        : Response.json({ ok: true, attempts: n });
+    try {
+      const client = createClient({ bearerToken: "t", baseUrl: origin, retry: FAST_RETRY });
+      const started = Date.now();
+      const res = await client.get({ url: "/retry-after-date", security: [{ scheme: "bearer", type: "http" }] });
+      expect(res.data).toMatchObject({ ok: true });
+      expect(Date.now() - started).toBeLessThan(900); // not parsed as seconds, not slept on
+      expect(counts["/retry-after-date"]).toBe(2);
+    } finally {
+      delete serverPaths["/retry-after-date"];
+    }
+  });
+
+  test('Retry-After: 0 retries immediately', async () => {
+    serverPaths["/retry-zero"] = (n) =>
+      n === 1 ? new Response(null, { status: 429, headers: { "retry-after": "0" } }) : Response.json({ ok: true });
+    try {
+      const client = createClient({ bearerToken: "t", baseUrl: origin, retry: FAST_RETRY });
+      const res = await client.get({ url: "/retry-zero", security: [{ scheme: "bearer", type: "http" }] });
+      expect(res.data).toMatchObject({ ok: true });
+      expect(counts["/retry-zero"]).toBe(2);
+    } finally {
+      delete serverPaths["/retry-zero"];
+    }
+  });
+
+  test("default maxRetries is 3 (4 total hits on persistent 429)", async () => {
+    const client = createClient({ bearerToken: "t", baseUrl: origin, retry: FAST_RETRY });
+    const res = await client.get({ url: "/always-429", security: [{ scheme: "bearer", type: "http" }] });
+    expect(res.response.status).toBe(429);
+    expect(counts["/always-429"]).toBe(4);
+  });
+
+  test("maxBackoffMs caps exponential delays", async () => {
+    const seen: RetryInfo[] = [];
+    const client = createClient({
+      bearerToken: "t",
+      baseUrl: origin,
+      retry: { baseDelayMs: 100, maxBackoffMs: 20, maxRetries: 3, onRetry: (i) => seen.push(i) },
+    });
+    await client.get({ url: "/always-429", security: [{ scheme: "bearer", type: "http" }] });
+    // worst-case jitter is +20% of the cap
+    expect(seen.every((i) => i.delayMs <= 20 * 1.2 + 0.001)).toBe(true);
+  });
+
+  test("requests with a body are never retried even when methods opt in", async () => {
+    const client = createClient({
+      bearerToken: "t",
+      baseUrl: origin,
+      retry: { ...FAST_RETRY, methods: ["GET", "HEAD", "POST"] },
+    });
+    const res = await client.post({
+      url: "/echo-post",
+      security: [{ scheme: "bearer", type: "http" }],
+      body: { hello: "world" },
+    });
+    expect(res.response.status).toBe(429);
+    expect(counts["/echo-post"]).toBe(1); // body not replayable: hard guard beats `methods`
+  });
+
+  test("throwOnError still retries first, then throws the final 429", async () => {
+    const client = createClient({
+      bearerToken: "t",
+      baseUrl: origin,
+      retry: { ...FAST_RETRY, maxRetries: 1 },
+    });
+    let thrown: unknown;
+    try {
+      await client.get({
+        url: "/always-429",
+        security: [{ scheme: "bearer", type: "http" }],
+        throwOnError: true,
+      });
+    } catch (e) {
+      thrown = e;
+    }
+    expect(thrown).toBeDefined();
+    expect(counts["/always-429"]).toBe(2); // retried once before throwing
+  });
+});
+
+describe("retry + paginate integration", () => {
+  test("follow-up pages are retried under the same policy", async () => {
+    const client = createClient({ bearerToken: "t", baseUrl: origin, retry: FAST_RETRY });
+    serverPaths["/pg-1"] = () =>
+      Response.json({
+        data: [{ id: "a" }, { id: "b" }],
+        links: { self: `${origin}/pg-1`, next: `${origin}/pg-2` },
+      });
+    serverPaths["/pg-2"] = (n) =>
+      n === 1
+        ? new Response(null, { status: 429 })
+        : Response.json({ data: [{ id: "c" }], links: { self: `${origin}/pg-2` } });
+
+    try {
+      const fn = (options?: Record<string, unknown>) =>
+        client.get({ url: "/pg-1", security: [{ scheme: "bearer", type: "http" }], ...options });
+      const ids: string[] = [];
+      for await (const page of paginate(fn, { client })) {
+        for (const item of page.data as { id: string }[]) ids.push(item.id);
+      }
+      expect(ids).toEqual(["a", "b", "c"]);
+      expect(counts["/pg-2"]).toBe(2); // the follow-up 429 was retried transparently
+    } finally {
+      delete serverPaths["/pg-1"];
+      delete serverPaths["/pg-2"];
     }
   });
 });
