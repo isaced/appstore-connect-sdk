@@ -11,3 +11,6 @@ export * from "./openapi";
 
 // Pagination helpers (paginate, paginateItems, paginateToArray) and error types.
 export * from "./paginate";
+
+// Rate-limit header accessors and retry policy types.
+export { parseRateLimit, getRateLimit, type RateLimit, type RetryOptions, type RetryInfo } from "./client";

@@ -5,6 +5,7 @@ import {
 } from "./openapi/client";
 import { generateAuthToken } from "./auth";
 import { TokenCache } from "./token-cache";
+import { createRetryFetch, type RetryOptions } from "./retry";
 
 /**
  * Options for creating an App Store Connect API client.
@@ -41,6 +42,13 @@ export interface AppStoreConnectConfig {
    * The base URL for the API (default https://api.appstoreconnect.apple.com).
    */
   baseUrl?: string;
+
+  /**
+   * Retry policy for rate-limited (429) responses on idempotent requests.
+   * Enabled by default (GET/HEAD, up to 3 retries, honors `Retry-After`).
+   * Pass `false` to disable, or an object to tune.
+   */
+  retry?: RetryOptions | false;
 }
 
 const DEFAULT_EXPIRATION_DURATION_SECONDS = 60 * 20;
@@ -69,10 +77,13 @@ const DEFAULT_BASE_URL = "https://api.appstoreconnect.apple.com";
 export function createClient(config: AppStoreConnectConfig): Client {
   const baseUrl = config.baseUrl?.replace(/\/$/, "") || DEFAULT_BASE_URL;
   let cache: TokenCache | undefined;
+  const retryFetch =
+    config.retry === false ? undefined : createRetryFetch(globalThis.fetch, config.retry ?? {});
 
   return createHeyApiClient(
     createConfig({
       baseUrl,
+      ...(retryFetch ? { fetch: retryFetch } : {}),
       auth: async () => {
         if (config.bearerToken) {
           return config.bearerToken;
@@ -102,3 +113,7 @@ export function createClient(config: AppStoreConnectConfig): Client {
 
 // Re-export Client type
 export type { Client };
+
+// Rate-limit header accessors and retry policy types.
+export { parseRateLimit, getRateLimit, type RateLimit } from "./rate-limit";
+export type { RetryOptions, RetryInfo } from "./retry";

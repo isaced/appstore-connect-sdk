@@ -9,6 +9,7 @@
 - **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
 - **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新；并发请求命中同一过期时刻时共享单次令牌生成（single-flight）
 - **分页辅助函数** - `paginate`、`paginateItems`、`paginateToArray` 自动跟随 `links.next`，返回值保持类型推导
+- **限流感知** - 类型化读取 `X-Rate-Limit` 响应头，幂等请求遇 429 自动重试
 - **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.5.1** 版 App Store Connect API 端点
 - **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
 
@@ -213,6 +214,41 @@ const apps = await paginateToArray(appsGetCollection, { client, maxItems: 5000 }
 如需强制取消，可在参数中传入包装过的 `fetch`（例如基于 `AbortSignal` 构造）——`fetch` 与 `headers` 会透传给每一个跟随请求；生成客户端本身不支持逐请求的 `signal`。
 
 </details>
+
+### 限流与重试
+
+App Store Connect 每个响应都携带配额信息（`X-Rate-Limit: user-hour-lim:3600;user-hour-rem:3593;`），被限流时返回 `429`。任何调用都可以直接读取配额：
+
+```typescript
+import { getRateLimit } from "appstore-connect-sdk/client";
+
+const { data, error, response } = await appsGetCollection({ client });
+const [userHour] = getRateLimit(response);
+// { dimension: "user-hour", limit: 3600, remaining: 3592 }
+```
+
+`createClient` 会自动重试被限流的响应——默认仅对幂等方法（`GET`/`HEAD`）的 `429` 重试，最多 3 次，优先遵循服务端的 `Retry-After`（上限 60 秒），否则使用指数退避 + 抖动：
+
+```typescript
+const client = createClient({
+  /* credentials */
+  retry: {
+    maxRetries: 5,
+    statusCodes: [429, 503],     // 按需加入可重试的 5xx
+    onRetry: ({ attempt, status, delayMs, method, url }) =>
+      console.warn(`第 ${attempt} 次重试：${status}，等待 ${Math.round(delayMs)}ms`),
+  },
+  // retry: false                 // 完全关闭
+});
+```
+
+说明：
+
+- 重试发生在 fetch 层，生成端点、裸 `client.get()` 与 `paginate*()` 跟随请求共享同一策略
+- 重试耗尽后原样返回最后一个响应（`{ data, error, response }`），不会抛错
+- App Store Connect 的 429 会把 `Retry-After` 设为本小时窗口的剩余秒数（实测约 1700 秒），超过默认 60 秒上限——因此默认行为是返回被限流的响应而不是长时间阻塞；想等窗口重置就调大 `maxRetryAfterMs`
+- 写请求（`POST`/`PATCH`）永不重试——上游 API 没有幂等键，且带 body 的请求无法重放，即使写进 `methods` 也会被硬性排除
+- 调用时传入逐请求的 `options.fetch` 会取代 SDK 的重试包装
 
 ### Zod 运行时校验
 
