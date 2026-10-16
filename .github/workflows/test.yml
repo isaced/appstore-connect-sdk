@@ -20,6 +20,13 @@ jobs:
         with:
           bun-version: 'latest'
       - run: npm ci
+      - name: Generated code freshness (committed spec + rules → src/openapi)
+        run: |
+          sh gen-openapi.sh
+          git diff --exit-code src/openapi || {
+            echo "::error::src/openapi does not match the committed spec + patch rules. Run 'sh gen-openapi.sh' and commit the result."
+            exit 1
+          }
       - run: npm run build
       - run: bun test ./test
       - name: Typecheck (incl. pagination inference tests)
