@@ -346,7 +346,7 @@ In addition, a scheduled GitHub Action (Spec Update) checks for a new Apple spec
 
 The `appstore-connect-sdk` module is compatible with Deno via `npm:` specifiers. An example can be found in the [deno_example](https://github.com/isaced/appstore-connect-sdk/tree/main/deno_example).
 
-> Note: publication to JSR (`jsr:@isaced/appstore-connect-sdk`) is not live yet, so the subpath entries (`/sdk`, `/client`, …) are currently npm-only; Deno users should import the root entry for now.
+> Note: this package is published to npm only, by design — JSR (`jsr:@isaced/appstore-connect-sdk`) is intentionally not offered. The hey-api-generated sources don't satisfy JSR's NodeNext type-checking and explicit-type ("slow types") requirements without a source-patching layer, while Deno 2 `npm:` specifiers already deliver the full feature set — including every subpath entry (`npm:appstore-connect-sdk/sdk`, `/client`, `/zod`, …), verified on Deno 2.9.
 
 We are committed to ensuring that the `appstore-connect-sdk` module remains fully compatible with both Node.js and Deno, and we will continue to work on improving its compatibility with Deno as the Deno runtime evolves.
 
