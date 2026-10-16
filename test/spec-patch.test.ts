@@ -1,7 +1,29 @@
 import { describe, test, expect } from "bun:test";
-import { readFileSync, readdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { applySpecPatches, RULES } from "../scripts/apply-spec-patches.mjs";
+
+const CLI = join(import.meta.dir, "..", "scripts", "apply-spec-patches.mjs");
+
+function runCli(rootDir: string) {
+  try {
+    return { code: 0, out: execFileSync(process.execPath, [CLI, rootDir], { encoding: "utf8" }) };
+  } catch (e) {
+    const err = e as { status?: number; stdout?: string; stderr?: string };
+    return { code: err.status ?? 1, out: `${err.stdout ?? ""}${err.stderr ?? ""}` };
+  }
+}
+
+function makeTempRoot(specs: Record<string, unknown>) {
+  const dir = mkdtempSync(join(tmpdir(), "spec-patch-cli-"));
+  mkdirSync(join(dir, "scripts", "openapi-gen"), { recursive: true });
+  for (const [name, content] of Object.entries(specs)) {
+    writeFileSync(join(dir, name), JSON.stringify(content));
+  }
+  return dir;
+}
 
 function fixtureSpec() {
   return {
@@ -160,12 +182,20 @@ describe("winbackofferprice-relationships", () => {
     expect(spec.components.schemas.WinBackOfferPriceInlineCreate.required).toEqual(["type"]);
   });
 
-  test("already-present relationships is matched but not rewritten", () => {
+  test("hollow placeholder relationships counts as unsatisfied and gets replaced", () => {
     const spec = fixtureSpec();
     spec.components.schemas.WinBackOfferPriceInlineCreate.properties.relationships = { type: "object" };
+    const { spec: out, report } = applySpecPatches(spec);
+    expect(report.find((r) => r.id === "winbackofferprice-relationships")).toMatchObject({ hits: 1, changed: true });
+    expect(out.components.schemas.WinBackOfferPriceInlineCreate.properties.relationships.properties.territory).toBeDefined();
+  });
+
+  test("complete relationships is matched but not rewritten", () => {
+    const spec = fixtureSpec();
+    const full = applySpecPatches(spec).spec.components.schemas.WinBackOfferPriceInlineCreate.properties.relationships;
+    spec.components.schemas.WinBackOfferPriceInlineCreate.properties.relationships = full;
     const { report } = applySpecPatches(spec);
     expect(report.find((r) => r.id === "winbackofferprice-relationships")).toMatchObject({ hits: 1, changed: false });
-    expect(report.find((r) => r.id === "winbackofferprice-relationships").changed).toBe(false);
   });
 
   test("absent schema reports zero hits", () => {
@@ -196,8 +226,10 @@ describe("committed Apple spec regression tripwire", () => {
     const spec = JSON.parse(readFileSync(join(root, specFile!), "utf8"));
 
     const { report } = applySpecPatches(spec);
-    expect(report.map((r) => r.hits)).toEqual([5, 1, 1]); // empty enums | SERVICES | relationships
-    expect(report.every((r) => r.changed)).toBe(true);
+    const hits = Object.fromEntries(report.map((r) => [r.id, r]));
+    expect(hits["remove-empty-enums"]).toMatchObject({ hits: 5, changed: true });
+    expect(hits["bundleidplatform-services"]).toMatchObject({ hits: 1, changed: true });
+    expect(hits["winbackofferprice-relationships"]).toMatchObject({ hits: 1, changed: true });
 
     // patched output must contain the fixes end to end
     const patched = applySpecPatches(spec).spec;
@@ -206,5 +238,65 @@ describe("committed Apple spec regression tripwire", () => {
       "territory",
     ]);
     expect(JSON.stringify(patched).includes('"enum":[]')).toBe(false);
+  });
+});
+
+describe("apply-spec-patches CLI", () => {
+  test("happy path: writes derived spec and reports patched verdicts", () => {
+    const dir = makeTempRoot({ "app_store_connect_api_1.0_openapi.json": fixtureSpec() });
+    try {
+      const { code, out } = runCli(dir);
+      expect(code).toBe(0);
+      expect(out).toInclude("remove-empty-enums: 2 hit(s), patched");
+      expect(out).toInclude("bundleidplatform-services: 1 hit(s), patched");
+      expect(out).toInclude("winbackofferprice-relationships: 1 hit(s), patched");
+      const generated = JSON.parse(readFileSync(join(dir, "scripts", "openapi-gen", "spec.generated.json"), "utf8"));
+      expect(generated.components.schemas.BundleIdPlatform.enum).toContain("SERVICES");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("fixed-upstream spec reports the retirement verdict", () => {
+    const spec = applySpecPatches(fixtureSpec()).spec;
+    const dir = makeTempRoot({ "app_store_connect_api_1.1_openapi.json": spec });
+    try {
+      const { code, out } = runCli(dir);
+      expect(code).toBe(0);
+      expect(out).toInclude("already satisfied — consider retiring");
+      expect(out).not.toInclude(", patched");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("zero-hit targets report 'no match' without failing the run", () => {
+    const dir = makeTempRoot({ "app_store_connect_api_1.0_openapi.json": { paths: {} } });
+    try {
+      const { code, out } = runCli(dir);
+      expect(code).toBe(0);
+      expect(out).toInclude("no match — target may have moved; verify");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("exactly one committed spec file is enforced", () => {
+    const none = makeTempRoot({});
+    const dup = makeTempRoot({
+      "app_store_connect_api_1.0_openapi.json": fixtureSpec(),
+      "app_store_connect_api_1.1_openapi.json": fixtureSpec(),
+    });
+    try {
+      const a = runCli(none);
+      expect(a.code).toBe(1);
+      expect(a.out).toInclude("found: none");
+      const b = runCli(dup);
+      expect(b.code).toBe(1);
+      expect(b.out).toInclude("app_store_connect_api_1.0_openapi.json, app_store_connect_api_1.1_openapi.json");
+    } finally {
+      rmSync(none, { recursive: true, force: true });
+      rmSync(dup, { recursive: true, force: true });
+    }
   });
 });

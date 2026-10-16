@@ -16,9 +16,7 @@
 // Usage: node scripts/apply-spec-patches.mjs   (invoked by gen-openapi.sh)
 
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-
-const root = new URL("..", import.meta.url).pathname.replace(/\/$/, "");
+import { join, resolve } from "node:path";
 
 const WINBACK_RELATIONSHIPS = {
   type: "object",
@@ -100,7 +98,11 @@ export const RULES = [
     apply(spec) {
       const schema = spec.components?.schemas?.WinBackOfferPriceInlineCreate;
       if (!schema?.properties) return { spec, hits: 0, changed: false };
-      if (schema.properties.relationships) return { spec, hits: 1, changed: false };
+      // "Satisfied" requires the required territory linkage; a hollow placeholder
+      // (e.g. relationships: {type: object}) is treated as unsatisfied and replaced.
+      const rel = schema.properties.relationships;
+      const satisfied = rel && typeof rel === "object" && rel.properties?.territory;
+      if (satisfied) return { spec, hits: 1, changed: false };
       schema.properties = { ...schema.properties, relationships: structuredClone(WINBACK_RELATIONSHIPS) };
       return { spec, hits: 1, changed: true };
     },
@@ -134,6 +136,10 @@ export function applySpecPatches(spec) {
 // ---------------------------------------------------------------------------
 
 if (process.argv[1] && process.argv[1].endsWith("apply-spec-patches.mjs")) {
+  // Optional argv[2] overrides the repo root (test seam; normal use omits it).
+  const root = process.argv[2]
+    ? resolve(process.argv[2])
+    : new URL("..", import.meta.url).pathname.replace(/\/$/, "");
   const specFiles = readdirSync(root).filter((f) => /^app_store_connect_api_.+_openapi\.json$/.test(f));
   if (specFiles.length !== 1) {
     console.error(`Expected exactly one committed spec file, found: ${specFiles.join(", ") || "none"}`);
