@@ -246,6 +246,7 @@ const client = createClient({
 
 - 重试发生在 fetch 层，生成端点、裸 `client.get()` 与 `paginate*()` 跟随请求共享同一策略
 - 重试耗尽后原样返回最后一个响应（`{ data, error, response }`），不会抛错
+- App Store Connect 的 429 会把 `Retry-After` 设为本小时窗口的剩余秒数（实测约 1700 秒），超过默认 60 秒上限——因此默认行为是返回被限流的响应而不是长时间阻塞；想等窗口重置就调大 `maxRetryAfterMs`
 - 写请求（`POST`/`PATCH`）永不重试——上游 API 没有幂等键，且带 body 的请求无法重放，即使写进 `methods` 也会被硬性排除
 - 调用时传入逐请求的 `options.fetch` 会取代 SDK 的重试包装
 

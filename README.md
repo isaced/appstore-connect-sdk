@@ -248,6 +248,7 @@ Notes:
 
 - Retrying happens at the fetch layer, so generated endpoints, raw `client.get()`, and `paginate*()` follow-ups all share the same policy
 - When retries are exhausted the last response is returned as-is (`{ data, error, response }`); nothing throws
+- App Store Connect sets `Retry-After` on 429 to the seconds left in the hourly window (live-observed: ~1700s), which exceeds the default 60s cap — so by default the SDK returns the throttled response instead of blocking; raise `maxRetryAfterMs` if you'd rather wait it out
 - Writing requests (`POST`/`PATCH`/`DELETE`) are never retried — the API has no idempotency keys, and requests carrying a body can't be replayed even when listed in `methods`
 - Passing a per-request `options.fetch` replaces the SDK's retry wrapper for that request
 

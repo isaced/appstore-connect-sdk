@@ -23,7 +23,12 @@ export interface RetryOptions {
    * the API has no idempotency keys and consumed body streams can't be replayed.
    */
   methods?: string[];
-  /** Give up instead of sleeping when `Retry-After` exceeds this many ms. Default 60_000. */
+  /**
+   * Give up instead of sleeping when `Retry-After` exceeds this many ms.
+   * Default 60_000. Live-observed: Apple sets Retry-After to the seconds left
+   * in the hourly window (e.g. ~1700), so the default returns the throttled
+   * response instead of blocking; raise this to wait the window out.
+   */
   maxRetryAfterMs?: number;
   /** First exponential backoff step in ms (before jitter). Default 500. */
   baseDelayMs?: number;
