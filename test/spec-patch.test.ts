@@ -88,6 +88,36 @@ describe("applySpecPatches engine", () => {
       expect(typeof rule.apply).toBe("function");
     }
   });
+
+  test("empty documents and non-object roots never crash the chain", () => {
+    for (const input of [{}, { paths: [] }, [] as unknown as Record<string, never>, { components: "junk" }]) {
+      const { report } = applySpecPatches(input);
+      expect(report.length).toBe(RULES.length);
+    }
+  });
+
+  test("drop rule reaches enum:[] nested inside arrays of arrays", () => {
+    const { spec, report } = applySpecPatches({
+      paths: [
+        [
+          { oneOf: [{ schema: { type: "string", enum: [] } }] },
+        ],
+      ],
+    });
+    expect(report.find((r) => r.id === "remove-empty-enums").hits).toBe(1);
+    expect(spec.paths[0][0].oneOf[0].schema).toEqual({ type: "string" });
+  });
+
+  test("documented order coupling: an empty-enum BundleIdPlatform is removed first and then reports no match", () => {
+    // Pins the accepted semantics: we do NOT synthesize enum values Apple never
+    // listed; the removed-empty-enum form is intentionally invisible to SERVICES.
+    const { spec, report } = applySpecPatches({
+      components: { schemas: { BundleIdPlatform: { type: "string", enum: [] } } },
+    });
+    expect(report.find((r) => r.id === "remove-empty-enums")).toMatchObject({ hits: 1, changed: true });
+    expect(report.find((r) => r.id === "bundleidplatform-services")).toMatchObject({ hits: 0, changed: false });
+    expect(spec.components.schemas.BundleIdPlatform).toEqual({ type: "string" });
+  });
 });
 
 describe("bundleidplatform-services", () => {
@@ -141,5 +171,14 @@ describe("winbackofferprice-relationships", () => {
     delete spec.components.schemas.WinBackOfferPriceInlineCreate;
     const { report } = applySpecPatches(spec);
     expect(report.find((r) => r.id === "winbackofferprice-relationships")).toMatchObject({ hits: 0, changed: false });
+  });
+
+  test("injected subtree is cloned per run — no shared mutable module state", () => {
+    const a = applySpecPatches(fixtureSpec()).spec;
+    a.components.schemas.WinBackOfferPriceInlineCreate.properties.relationships.required.push("POISONED");
+    const b = applySpecPatches(fixtureSpec()).spec;
+    expect(b.components.schemas.WinBackOfferPriceInlineCreate.properties.relationships.required).toEqual([
+      "territory",
+    ]);
   });
 });

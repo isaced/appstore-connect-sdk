@@ -110,6 +110,13 @@ export const RULES = [
 /**
  * Apply all registered rules in order (input is not mutated).
  * Returns the patched spec and a per-rule report `{ id, description, hits, changed }`.
+ *
+ * Order semantics: rules observe earlier rules' output. `remove-empty-enums`
+ * running first means a defect that *becomes* invisible to a later ensure-rule
+ * (e.g. BundleIdPlatform declared with an empty enum) reports `no match` rather
+ * than `already satisfied` — accepted deliberately: synthesizing an enum the
+ * spec never listed would be inventing upstream data, not patching it.
+ * New rules must be order-safe against this or pin it with a test.
  */
 export function applySpecPatches(spec) {
   const report = [];
