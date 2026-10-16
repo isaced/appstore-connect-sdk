@@ -48,6 +48,9 @@ const DEFAULT_BASE_URL = "https://api.appstoreconnect.apple.com";
 /**
  * Create a configured App Store Connect API client.
  *
+ * Tokens are cached and refreshed automatically; concurrent requests hitting
+ * an expiry share a single token generation (single-flight).
+ *
  * Usage:
  * ```typescript
  * import { createClient, appsGetCollection } from 'appstore-connect-sdk/client';
