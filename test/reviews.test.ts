@@ -7,9 +7,9 @@ import type { Client, CustomerReviewsResponse } from "../src/sdk";
 import { describe, beforeAll, test, expect } from "bun:test";
 
 const hasCredentials = Boolean(process.env.PRIVATE_KEY && process.env.PRIVATE_KEY_ID);
-// Live suites need real App Store Connect credentials; without them bun:test's
-// skipIf is unavailable (not exported in 1.4.3), so alias describe explicitly.
-const describeLive = hasCredentials ? describe : describe.skip;
+// Live suites need real App Store Connect credentials; bun:test skips
+// the suite automatically in credential-less environments (CI).
+const describeLive = describe.skipIf(!hasCredentials);
 
 
 describeLive("Reviews API", () => {
