@@ -18389,6 +18389,20 @@ export type WinBackOfferPrice = {
 export type WinBackOfferPriceInlineCreate = {
     type: 'winBackOfferPrices';
     id?: string;
+    relationships?: {
+        territory: {
+            data: {
+                type: 'territories';
+                id: string;
+            };
+        };
+        subscriptionPricePoint?: {
+            data: {
+                type: 'subscriptionPricePoints';
+                id: string;
+            };
+        };
+    };
 };
 
 /**
@@ -22269,7 +22283,7 @@ export type BuildBundleType = 'APP' | 'APP_CLIP' | 'WATCH_APP';
 
 export type BuildUploadState = 'AWAITING_UPLOAD' | 'PROCESSING' | 'FAILED' | 'COMPLETE';
 
-export type BundleIdPlatform = 'IOS' | 'MAC_OS' | 'UNIVERSAL';
+export type BundleIdPlatform = 'IOS' | 'MAC_OS' | 'UNIVERSAL' | 'SERVICES';
 
 export type CapabilityOption = {
     key?: 'XCODE_5' | 'XCODE_6' | 'COMPLETE_PROTECTION' | 'PROTECTED_UNLESS_OPEN' | 'PROTECTED_UNTIL_FIRST_USER_AUTH' | 'PRIMARY_APP_CONSENT';

@@ -63239,6 +63239,66 @@ export const WinBackOfferPriceInlineCreateSchema = {
         },
         id: {
             type: 'string'
+        },
+        relationships: {
+            type: 'object',
+            required: [
+                'territory'
+            ],
+            properties: {
+                territory: {
+                    type: 'object',
+                    required: [
+                        'data'
+                    ],
+                    properties: {
+                        data: {
+                            type: 'object',
+                            required: [
+                                'type',
+                                'id'
+                            ],
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'territories'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            }
+                        }
+                    }
+                },
+                subscriptionPricePoint: {
+                    type: 'object',
+                    required: [
+                        'data'
+                    ],
+                    properties: {
+                        data: {
+                            type: 'object',
+                            required: [
+                                'type',
+                                'id'
+                            ],
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'subscriptionPricePoints'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     required: [
@@ -77898,7 +77958,8 @@ export const BundleIdPlatformSchema = {
     enum: [
         'IOS',
         'MAC_OS',
-        'UNIVERSAL'
+        'UNIVERSAL',
+        'SERVICES'
     ]
 } as const;
 
