@@ -1,0 +1,9 @@
+{
+  "name": "openapi-gen",
+  "private": true,
+  "description": "Isolated toolchain for regenerating src/openapi (openapi-ts 0.99 is incompatible with the repo's TypeScript 7).",
+  "dependencies": {
+    "@hey-api/openapi-ts": "0.99.0",
+    "typescript": "5.9.3"
+  }
+}

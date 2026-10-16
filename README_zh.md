@@ -8,7 +8,7 @@
 
 - **JWT 身份验证** - 配置您的 API 密钥，SDK 将自动处理 JWT 令牌签名
 - **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新；并发请求命中同一过期时刻时共享单次令牌生成（single-flight）
-- **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.5** 版 App Store Connect API 端点
+- **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.5.1** 版 App Store Connect API 端点
 - **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
 
 ## 安装
@@ -270,13 +270,15 @@ import { createClient, appsGetCollection } from "appstore-connect-sdk/sdk";
 
 ## 更新 OpenAPI 生成的代码
 
-要更新 OpenAPI 生成的代码，请运行以下命令：
+要从 Apple 拉取最新的 OpenAPI 规范并重新生成 SDK 代码，运行：
 
 ```bash
-$ sh gen-openapi.sh
+$ npm run update:spec
 ```
 
-这将基于由 Apple 官方发布的 OpenAPI 规范文件 (`app_store_connect_api_4.5_openapi.json`)，通过 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 生成 TypeScript 代码。
+它会下载 Apple 官方发布的规范 zip，替换仓库内的 `app_store_connect_api_<version>_openapi.json` 并同步更新相关引用；当规范版本变化时，自动重新运行 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) 生成代码（codegen 使用 `scripts/openapi-gen` 中独立锁定的工具链，与仓库自身的 TypeScript 隔离）。如果你直接修改了已提交的规范文件，可用 `sh gen-openapi.sh` 在不下载的情况下重新生成。
+
+此外，定时的 GitHub Action（Spec Update）每小时检查一次 Apple 是否发布了新规范，如有更新会自动提交 Pull Request，包含同步后的规范和重新生成的代码。
 
 ## Deno 兼容性
 
