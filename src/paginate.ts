@@ -87,7 +87,7 @@ export async function* paginate<F extends PagedCollectionFn>(
   fn: F,
   options?: FnOptions<F>,
 ): AsyncGenerator<PageData<F>, void, undefined> {
-  const client: Client | undefined = options?.client ?? defaultClient;
+  const client: Client = options?.client ?? defaultClient;
   let current = await fn(options);
   let lastUrl: string | undefined;
 
@@ -99,7 +99,7 @@ export async function* paginate<F extends PagedCollectionFn>(
     const next = (page as { links?: PagedDocumentLinks }).links?.next;
     if (!next) return;
 
-    const { baseUrl } = client!.getConfig();
+    const { baseUrl } = client.getConfig();
     if (!baseUrl) {
       throw new PaginationError("Cannot follow links.next: client has no baseUrl.", { url: next });
     }
@@ -121,7 +121,7 @@ export async function* paginate<F extends PagedCollectionFn>(
     const passthrough = options as
       | { fetch?: typeof globalThis.fetch; headers?: Record<string, unknown> | HeadersInit }
       | undefined;
-    current = (await client!.get({
+    current = (await client.get({
       url: lastUrl,
       security: [{ scheme: "bearer", type: "http" }],
       ...(passthrough?.fetch !== undefined ? { fetch: passthrough.fetch } : {}),
