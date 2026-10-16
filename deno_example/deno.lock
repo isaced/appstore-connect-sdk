@@ -2,7 +2,8 @@
   "version": "5",
   "specifiers": {
     "jsr:@std/dotenv@*": "0.225.5",
-    "npm:appstore-connect-sdk@2": "2.0.0"
+    "npm:appstore-connect-sdk@2.2.2": "2.2.2",
+    "npm:appstore-connect-sdk@^2.4.1": "2.4.1"
   },
   "jsr": {
     "@std/dotenv@0.225.5": {
@@ -10,13 +11,21 @@
     }
   },
   "npm": {
-    "appstore-connect-sdk@2.0.0": {
-      "integrity": "sha512-6qVeV0p7jp1ZNiCsh+buS0HbqLSDVj/c2jnG3bC6h3tlX0M0UMo/NWAA4UfI0UgNaSLE7RFM1BWPliEg+UgYMA==",
+    "appstore-connect-sdk@2.2.2": {
+      "integrity": "sha512-EzjEN0tqgbGF+TBhF/YbK704UYvwWLC/ZflWh0WH6J6xzCYGVCS/rq0IyL+ZPbjo9FPD3I0BURADUsS8dk2VbQ==",
       "dependencies": [
         "jose",
         "zod"
       ],
-      "tarball": "https://registry.npmmirror.com/appstore-connect-sdk/-/appstore-connect-sdk-2.0.0.tgz"
+      "tarball": "https://registry.npmmirror.com/appstore-connect-sdk/-/appstore-connect-sdk-2.2.2.tgz"
+    },
+    "appstore-connect-sdk@2.4.1": {
+      "integrity": "sha512-3bEuehd5hEI0ThzKV28xWMtqdbREjD4a3iimOeAZ/h8TI/IObZvcXPbake+q2gxRDbtu+bnc/+frM/PD53wO4A==",
+      "dependencies": [
+        "jose",
+        "zod"
+      ],
+      "tarball": "https://registry.npmmirror.com/appstore-connect-sdk/-/appstore-connect-sdk-2.4.1.tgz"
     },
     "jose@6.1.3": {
       "integrity": "sha512-0TpaTfihd4QMNwrz/ob2Bp7X04yuxJkjRGi4aKmOqwhov54i6u79oCv7T+C7lo70MKH6BesI3vscD1yb/yzKXQ==",
@@ -29,7 +38,7 @@
   },
   "workspace": {
     "dependencies": [
-      "npm:appstore-connect-sdk@2"
+      "npm:appstore-connect-sdk@^2.4.1"
     ]
   }
 }
