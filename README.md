@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./media/hero.svg" alt="appstore-connect-sdk hero banner" width="100%">
+</p>
+
 # appstore-connect-sdk [![@latest](https://img.shields.io/npm/v/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk) [![downloads](https://img.shields.io/npm/dm/appstore-connect-sdk.svg)](https://www.npmjs.com/package/appstore-connect-sdk) [![Test](https://github.com/isaced/appstore-connect-sdk/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/isaced/appstore-connect-sdk/actions/workflows/test.yml) [![license](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 The `appstore-connect-sdk` is a Node.js module written in TypeScript that provides a convenient way for developers to interact with the [App Store Connect API](https://developer.apple.com/app-store-connect/api/). The module is built using [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) and provides support for all APIs based on the OpenAPI specification.

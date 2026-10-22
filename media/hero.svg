@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400" role="img" aria-label="appstore-connect-sdk — Type-safe TypeScript client for the App Store Connect API">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="0.55" stop-color="#0d1428"/>
+      <stop offset="1" stop-color="#111a33"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0a84ff"/>
+      <stop offset="0.5" stop-color="#5e5ce6"/>
+      <stop offset="1" stop-color="#bf5af2"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#cfd6e6"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#0a84ff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#0a84ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#bf5af2" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#bf5af2" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" fill-opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="400" fill="url(#bg)"/>
+  <rect width="1280" height="400" fill="url(#dots)"/>
+  <ellipse cx="180" cy="60" rx="360" ry="240" fill="url(#glowA)"/>
+  <ellipse cx="1120" cy="380" rx="380" ry="260" fill="url(#glowB)"/>
+
+  <rect x="0" y="0" width="1280" height="4" fill="url(#accent)"/>
+
+  <g font-family="'SF Pro Display', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <text x="64" y="118" font-size="52" font-weight="700" fill="url(#title)">appstore-connect-sdk</text>
+    <rect x="64" y="138" width="72" height="6" rx="3" fill="url(#accent)"/>
+    <text x="64" y="186" font-size="24" fill="#9aa4ba">Type-safe client for the App Store Connect API</text>
+    <text x="64" y="218" font-size="18" fill="#6b7690">Built with TypeScript &#183; Generated from Apple's official OpenAPI spec</text>
+
+    <g font-size="15" font-weight="600">
+      <g>
+        <rect x="64" y="256" width="150" height="36" rx="18" fill="#141c33" stroke="#2a3554"/>
+        <text x="139" y="279" fill="#8ab8ff" text-anchor="middle">JWT auto-sign</text>
+      </g>
+      <g>
+        <rect x="226" y="256" width="170" height="36" rx="18" fill="#141c33" stroke="#2a3554"/>
+        <text x="311" y="279" fill="#8ab8ff" text-anchor="middle">Smart pagination</text>
+      </g>
+      <g>
+        <rect x="408" y="256" width="160" height="36" rx="18" fill="#141c33" stroke="#2a3554"/>
+        <text x="488" y="279" fill="#8ab8ff" text-anchor="middle">Rate-limit aware</text>
+      </g>
+      <g>
+        <rect x="580" y="256" width="180" height="36" rx="18" fill="#141c33" stroke="#2a3554"/>
+        <text x="670" y="279" fill="#8ab8ff" text-anchor="middle">~1,000 endpoints</text>
+      </g>
+    </g>
+
+    <g font-size="14" fill="#525d75">
+      <text x="64" y="340">npm install appstore-connect-sdk</text>
+      <text x="64" y="364">Node.js 20+ &#183; Deno &#183; MIT</text>
+    </g>
+  </g>
+
+  <g>
+    <rect x="772" y="72" width="444" height="256" rx="14" fill="#0e1526" stroke="#26304c"/>
+    <path d="M772 86a14 14 0 0 1 14-14h416a14 14 0 0 1 14 14v24H772Z" fill="#141c33"/>
+    <circle cx="796" cy="91" r="6" fill="#ff5f57"/>
+    <circle cx="816" cy="91" r="6" fill="#febc2e"/>
+    <circle cx="836" cy="91" r="6" fill="#28c840"/>
+    <text x="994" y="96" font-size="13" fill="#6b7690" text-anchor="middle" font-family="'SF Mono', Menlo, Consolas, monospace">usage.ts</text>
+  </g>
+  <g font-family="'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14">
+    <text x="796" y="140"><tspan fill="#c792ea">import</tspan><tspan fill="#d6dbe8">&#160;{&#160;</tspan><tspan fill="#82aaff">createClient</tspan><tspan fill="#d6dbe8">,</tspan></text>
+    <text x="796" y="162"><tspan fill="#d6dbe8">&#160;&#160;</tspan><tspan fill="#82aaff">appsGetList</tspan><tspan fill="#d6dbe8">&#160;}&#160;</tspan><tspan fill="#c792ea">from</tspan><tspan fill="#d6dbe8">&#160;</tspan><tspan fill="#c3e88d">"appstore-connect-sdk/sdk"</tspan><tspan fill="#d6dbe8">;</tspan></text>
+    <text x="796" y="200"><tspan fill="#c792ea">const</tspan><tspan fill="#d6dbe8">&#160;client&#160;=&#160;</tspan><tspan fill="#c792ea">await</tspan><tspan fill="#d6dbe8">&#160;</tspan><tspan fill="#82aaff">createClient</tspan><tspan fill="#d6dbe8">({</tspan></text>
+    <text x="796" y="222"><tspan fill="#d6dbe8">&#160;&#160;keyId,&#160;issuerId,&#160;privateKey:&#160;</tspan><tspan fill="#c3e88d">"..."</tspan><tspan fill="#d6dbe8">,</tspan></text>
+    <text x="796" y="244"><tspan fill="#d6dbe8">});</tspan></text>
+    <text x="796" y="282"><tspan fill="#c792ea">const</tspan><tspan fill="#d6dbe8">&#160;apps&#160;=&#160;</tspan><tspan fill="#c792ea">await</tspan><tspan fill="#d6dbe8">&#160;</tspan><tspan fill="#82aaff">appsGetList</tspan><tspan fill="#d6dbe8">(client);</tspan></text>
+    <text x="796" y="304"><tspan fill="#5c6784">//&#160;auth&#160;&amp;&#160;retries&#160;handled&#160;for&#160;you</tspan></text>
+  </g>
+</svg>
