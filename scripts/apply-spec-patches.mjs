@@ -140,7 +140,7 @@ if (process.argv[1] && process.argv[1].endsWith("apply-spec-patches.mjs")) {
   const root = process.argv[2]
     ? resolve(process.argv[2])
     : new URL("..", import.meta.url).pathname.replace(/\/$/, "");
-  const specFiles = readdirSync(root).filter((f) => /^app_store_connect_api_.+_openapi\.json$/.test(f));
+  const specFiles = readdirSync(root).filter((f) => /^app_store_connect_api_.+_openapi\.json$/.test(f)).sort();
   if (specFiles.length !== 1) {
     console.error(`Expected exactly one committed spec file, found: ${specFiles.join(", ") || "none"}`);
     process.exit(1);
