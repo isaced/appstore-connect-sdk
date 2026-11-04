@@ -10,7 +10,7 @@
 - **智能令牌管理** - 令牌自动生成、缓存，并在过期前（2 分钟内）自动刷新；并发请求命中同一过期时刻时共享单次令牌生成（single-flight）
 - **分页辅助函数** - `paginate`、`paginateItems`、`paginateToArray` 自动跟随 `links.next`，返回值保持类型推导
 - **限流感知** - 类型化读取 `X-Rate-Limit` 响应头，幂等请求遇 429 自动重试
-- **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.5.1** 版 App Store Connect API 端点
+- **完整 API 覆盖** - 基于 Apple 官方 OpenAPI 描述生成的约 1,000 个 **4.6** 版 App Store Connect API 端点
 - **跨平台支持** - 兼容 Node.js 和 **Deno** 环境
 
 ## 安装

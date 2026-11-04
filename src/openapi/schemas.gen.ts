@@ -3383,6 +3383,29 @@ export const AppAssetLibraryPlacementCommonRelationshipsSchema = {
                     ]
                 }
             }
+        },
+        retentionMessageVersion: {
+            type: 'object',
+            properties: {
+                data: {
+                    type: 'object',
+                    properties: {
+                        type: {
+                            type: 'string',
+                            enum: [
+                                'retentionMessageVersions'
+                            ]
+                        },
+                        id: {
+                            type: 'string'
+                        }
+                    },
+                    required: [
+                        'id',
+                        'type'
+                    ]
+                }
+            }
         }
     }
 } as const;
@@ -3537,6 +3560,9 @@ export const AppAssetLibraryPlacementsResponseSchema = {
                     },
                     {
                         $ref: '#/components/schemas/AppStoreVersionLocalization'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionMessageVersion'
                     }
                 ],
                 discriminator: {
@@ -3545,6 +3571,7 @@ export const AppAssetLibraryPlacementsResponseSchema = {
                         appStoreVersionLocalizations: '#/components/schemas/AppStoreVersionLocalization',
                         appAssetLibraryImages: '#/components/schemas/AppAssetLibraryImage',
                         appCustomProductPageLocalizations: '#/components/schemas/AppCustomProductPageLocalization',
+                        retentionMessageVersions: '#/components/schemas/RetentionMessageVersion',
                         appStoreVersionExperimentTreatmentLocalizations: '#/components/schemas/AppStoreVersionExperimentTreatmentLocalization',
                         appAssetLibraryVideos: '#/components/schemas/AppAssetLibraryVideo',
                         appEventLocalizations: '#/components/schemas/AppEventLocalization'
@@ -3593,6 +3620,9 @@ export const AppAssetLibraryPlacementResponseSchema = {
                     },
                     {
                         $ref: '#/components/schemas/AppStoreVersionLocalization'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionMessageVersion'
                     }
                 ],
                 discriminator: {
@@ -3601,6 +3631,7 @@ export const AppAssetLibraryPlacementResponseSchema = {
                         appStoreVersionLocalizations: '#/components/schemas/AppStoreVersionLocalization',
                         appAssetLibraryImages: '#/components/schemas/AppAssetLibraryImage',
                         appCustomProductPageLocalizations: '#/components/schemas/AppCustomProductPageLocalization',
+                        retentionMessageVersions: '#/components/schemas/RetentionMessageVersion',
                         appStoreVersionExperimentTreatmentLocalizations: '#/components/schemas/AppStoreVersionExperimentTreatmentLocalization',
                         appAssetLibraryVideos: '#/components/schemas/AppAssetLibraryVideo',
                         appEventLocalizations: '#/components/schemas/AppEventLocalization'
@@ -3784,6 +3815,29 @@ export const AppAssetLibraryPlacementCreateRequestSchema = {
                                     ]
                                 }
                             }
+                        },
+                        retentionMessageVersion: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'object',
+                                    properties: {
+                                        type: {
+                                            type: 'string',
+                                            enum: [
+                                                'retentionMessageVersions'
+                                            ]
+                                        },
+                                        id: {
+                                            type: 'string'
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'type'
+                                    ]
+                                }
+                            }
                         }
                     }
                 }
@@ -3869,6 +3923,28 @@ export const AppAssetLibraryPlacementCreateRequestSchema = {
                             required: [
                                 'image',
                                 'appStoreVersionExperimentTreatmentLocalization'
+                            ]
+                        }
+                    },
+                    required: [
+                        'relationships',
+                        'attributes'
+                    ]
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        attributes: {
+                            type: 'object',
+                            required: [
+                                'placementType'
+                            ]
+                        },
+                        relationships: {
+                            type: 'object',
+                            required: [
+                                'image',
+                                'retentionMessageVersion'
                             ]
                         }
                     },
@@ -18393,6 +18469,38 @@ export const AppSchema = {
                         }
                     }
                 },
+                retentionMessages: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        meta: {
+                            $ref: '#/components/schemas/PagingInformation'
+                        },
+                        data: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    type: {
+                                        type: 'string',
+                                        enum: [
+                                            'retentionMessages'
+                                        ]
+                                    },
+                                    id: {
+                                        type: 'string'
+                                    }
+                                },
+                                required: [
+                                    'id',
+                                    'type'
+                                ]
+                            }
+                        }
+                    }
+                },
                 gameCenterEnabledVersions: {
                     type: 'object',
                     properties: {
@@ -18903,6 +19011,9 @@ export const AppsResponseSchema = {
                         $ref: '#/components/schemas/PromotedPurchase'
                     },
                     {
+                        $ref: '#/components/schemas/RetentionMessage'
+                    },
+                    {
                         $ref: '#/components/schemas/ReviewSubmission'
                     },
                     {
@@ -18915,29 +19026,30 @@ export const AppsResponseSchema = {
                 discriminator: {
                     propertyName: 'type',
                     mapping: {
-                        betaGroups: '#/components/schemas/BetaGroup',
                         appEvents: '#/components/schemas/AppEvent',
                         appEncryptionDeclarations: '#/components/schemas/AppEncryptionDeclaration',
-                        reviewSubmissions: '#/components/schemas/ReviewSubmission',
                         subscriptionGracePeriods: '#/components/schemas/SubscriptionGracePeriod',
                         appInfos: '#/components/schemas/AppInfo',
                         preReleaseVersions: '#/components/schemas/PrereleaseVersion',
-                        appStoreVersionExperiments: '#/components/schemas/AppStoreVersionExperimentV2',
                         appCustomProductPages: '#/components/schemas/AppCustomProductPage',
+                        retentionMessages: '#/components/schemas/RetentionMessage',
                         inAppPurchases: '#/components/schemas/InAppPurchase',
                         appClips: '#/components/schemas/AppClip',
-                        betaAppReviewDetails: '#/components/schemas/BetaAppReviewDetail',
-                        buildIcons: '#/components/schemas/BuildIcon',
                         ciProducts: '#/components/schemas/CiProduct',
                         gameCenterDetails: '#/components/schemas/GameCenterDetail',
-                        promotedPurchases: '#/components/schemas/PromotedPurchase',
-                        androidToIosAppMappingDetails: '#/components/schemas/AndroidToIosAppMappingDetail',
-                        gameCenterEnabledVersions: '#/components/schemas/GameCenterEnabledVersion',
-                        subscriptionGroups: '#/components/schemas/SubscriptionGroup',
                         appStoreVersions: '#/components/schemas/AppStoreVersion',
                         builds: '#/components/schemas/Build',
                         betaAppLocalizations: '#/components/schemas/BetaAppLocalization',
                         betaLicenseAgreements: '#/components/schemas/BetaLicenseAgreement',
+                        betaGroups: '#/components/schemas/BetaGroup',
+                        reviewSubmissions: '#/components/schemas/ReviewSubmission',
+                        appStoreVersionExperiments: '#/components/schemas/AppStoreVersionExperimentV2',
+                        betaAppReviewDetails: '#/components/schemas/BetaAppReviewDetail',
+                        buildIcons: '#/components/schemas/BuildIcon',
+                        promotedPurchases: '#/components/schemas/PromotedPurchase',
+                        androidToIosAppMappingDetails: '#/components/schemas/AndroidToIosAppMappingDetail',
+                        gameCenterEnabledVersions: '#/components/schemas/GameCenterEnabledVersion',
+                        subscriptionGroups: '#/components/schemas/SubscriptionGroup',
                         endUserLicenseAgreements: '#/components/schemas/EndUserLicenseAgreement'
                     }
                 }
@@ -19031,6 +19143,9 @@ export const AppResponseSchema = {
                         $ref: '#/components/schemas/PromotedPurchase'
                     },
                     {
+                        $ref: '#/components/schemas/RetentionMessage'
+                    },
+                    {
                         $ref: '#/components/schemas/ReviewSubmission'
                     },
                     {
@@ -19043,29 +19158,30 @@ export const AppResponseSchema = {
                 discriminator: {
                     propertyName: 'type',
                     mapping: {
-                        betaGroups: '#/components/schemas/BetaGroup',
                         appEvents: '#/components/schemas/AppEvent',
                         appEncryptionDeclarations: '#/components/schemas/AppEncryptionDeclaration',
-                        reviewSubmissions: '#/components/schemas/ReviewSubmission',
                         subscriptionGracePeriods: '#/components/schemas/SubscriptionGracePeriod',
                         appInfos: '#/components/schemas/AppInfo',
                         preReleaseVersions: '#/components/schemas/PrereleaseVersion',
-                        appStoreVersionExperiments: '#/components/schemas/AppStoreVersionExperimentV2',
                         appCustomProductPages: '#/components/schemas/AppCustomProductPage',
+                        retentionMessages: '#/components/schemas/RetentionMessage',
                         inAppPurchases: '#/components/schemas/InAppPurchase',
                         appClips: '#/components/schemas/AppClip',
-                        betaAppReviewDetails: '#/components/schemas/BetaAppReviewDetail',
-                        buildIcons: '#/components/schemas/BuildIcon',
                         ciProducts: '#/components/schemas/CiProduct',
                         gameCenterDetails: '#/components/schemas/GameCenterDetail',
-                        promotedPurchases: '#/components/schemas/PromotedPurchase',
-                        androidToIosAppMappingDetails: '#/components/schemas/AndroidToIosAppMappingDetail',
-                        gameCenterEnabledVersions: '#/components/schemas/GameCenterEnabledVersion',
-                        subscriptionGroups: '#/components/schemas/SubscriptionGroup',
                         appStoreVersions: '#/components/schemas/AppStoreVersion',
                         builds: '#/components/schemas/Build',
                         betaAppLocalizations: '#/components/schemas/BetaAppLocalization',
                         betaLicenseAgreements: '#/components/schemas/BetaLicenseAgreement',
+                        betaGroups: '#/components/schemas/BetaGroup',
+                        reviewSubmissions: '#/components/schemas/ReviewSubmission',
+                        appStoreVersionExperiments: '#/components/schemas/AppStoreVersionExperimentV2',
+                        betaAppReviewDetails: '#/components/schemas/BetaAppReviewDetail',
+                        buildIcons: '#/components/schemas/BuildIcon',
+                        promotedPurchases: '#/components/schemas/PromotedPurchase',
+                        androidToIosAppMappingDetails: '#/components/schemas/AndroidToIosAppMappingDetail',
+                        gameCenterEnabledVersions: '#/components/schemas/GameCenterEnabledVersion',
+                        subscriptionGroups: '#/components/schemas/SubscriptionGroup',
                         endUserLicenseAgreements: '#/components/schemas/EndUserLicenseAgreement'
                     }
                 }
@@ -51946,6 +52062,1294 @@ export const PromotedPurchaseUpdateRequestSchema = {
     ]
 } as const;
 
+export const RetentionMessageLocalizationSchema = {
+    type: 'object',
+    title: 'RetentionMessageLocalization',
+    properties: {
+        type: {
+            type: 'string',
+            enum: [
+                'retentionMessageLocalizations'
+            ]
+        },
+        id: {
+            type: 'string'
+        },
+        attributes: {
+            type: 'object',
+            properties: {
+                locale: {
+                    type: 'string'
+                },
+                header: {
+                    type: 'string'
+                },
+                body: {
+                    type: 'string'
+                }
+            }
+        },
+        relationships: {
+            type: 'object',
+            properties: {
+                retentionMessageVersion: {
+                    type: 'object',
+                    properties: {
+                        data: {
+                            type: 'object',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'retentionMessageVersions'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            },
+                            required: [
+                                'id',
+                                'type'
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/ResourceLinks'
+        }
+    },
+    required: [
+        'id',
+        'type'
+    ]
+} as const;
+
+export const RetentionMessageLocalizationsResponseSchema = {
+    type: 'object',
+    title: 'RetentionMessageLocalizationsResponse',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/RetentionMessageLocalization'
+            }
+        },
+        included: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/RetentionMessageVersion'
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageLocalizationResponseSchema = {
+    type: 'object',
+    title: 'RetentionMessageLocalizationResponse',
+    properties: {
+        data: {
+            $ref: '#/components/schemas/RetentionMessageLocalization'
+        },
+        included: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/RetentionMessageVersion'
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/DocumentLinks'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageLocalizationCreateRequestSchema = {
+    type: 'object',
+    title: 'RetentionMessageLocalizationCreateRequest',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'retentionMessageLocalizations'
+                    ]
+                },
+                attributes: {
+                    type: 'object',
+                    properties: {
+                        locale: {
+                            type: 'string'
+                        },
+                        header: {
+                            type: 'string',
+                            nullable: true
+                        },
+                        body: {
+                            type: 'string',
+                            nullable: true
+                        }
+                    },
+                    required: [
+                        'locale'
+                    ]
+                },
+                relationships: {
+                    type: 'object',
+                    properties: {
+                        retentionMessageVersion: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'object',
+                                    properties: {
+                                        type: {
+                                            type: 'string',
+                                            enum: [
+                                                'retentionMessageVersions'
+                                            ]
+                                        },
+                                        id: {
+                                            type: 'string'
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'type'
+                                    ]
+                                }
+                            },
+                            required: [
+                                'data'
+                            ]
+                        }
+                    },
+                    required: [
+                        'retentionMessageVersion'
+                    ]
+                }
+            },
+            required: [
+                'relationships',
+                'attributes',
+                'type'
+            ]
+        }
+    },
+    required: [
+        'data'
+    ]
+} as const;
+
+export const RetentionMessageLocalizationUpdateRequestSchema = {
+    type: 'object',
+    title: 'RetentionMessageLocalizationUpdateRequest',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'retentionMessageLocalizations'
+                    ]
+                },
+                id: {
+                    type: 'string'
+                },
+                attributes: {
+                    type: 'object',
+                    properties: {
+                        header: {
+                            type: 'string',
+                            nullable: true
+                        },
+                        body: {
+                            type: 'string',
+                            nullable: true
+                        }
+                    }
+                }
+            },
+            required: [
+                'id',
+                'type'
+            ]
+        }
+    },
+    required: [
+        'data'
+    ]
+} as const;
+
+export const RetentionMessageVersionSchema = {
+    type: 'object',
+    title: 'RetentionMessageVersion',
+    properties: {
+        type: {
+            type: 'string',
+            enum: [
+                'retentionMessageVersions'
+            ]
+        },
+        id: {
+            type: 'string'
+        },
+        attributes: {
+            type: 'object',
+            properties: {
+                state: {
+                    type: 'string',
+                    enum: [
+                        'PREPARE_FOR_SUBMISSION',
+                        'READY_FOR_REVIEW',
+                        'WAITING_FOR_REVIEW',
+                        'IN_REVIEW',
+                        'DEVELOPER_REJECTED',
+                        'REJECTED',
+                        'ACCEPTED',
+                        'APPROVED'
+                    ]
+                }
+            }
+        },
+        relationships: {
+            type: 'object',
+            properties: {
+                retentionMessage: {
+                    type: 'object',
+                    properties: {
+                        data: {
+                            type: 'object',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'retentionMessages'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            },
+                            required: [
+                                'id',
+                                'type'
+                            ]
+                        }
+                    }
+                },
+                localizations: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        meta: {
+                            $ref: '#/components/schemas/PagingInformation'
+                        },
+                        data: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    type: {
+                                        type: 'string',
+                                        enum: [
+                                            'retentionMessageLocalizations'
+                                        ]
+                                    },
+                                    id: {
+                                        type: 'string'
+                                    }
+                                },
+                                required: [
+                                    'id',
+                                    'type'
+                                ]
+                            }
+                        }
+                    }
+                },
+                placement: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'appAssetLibraryPlacements'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            },
+                            required: [
+                                'id',
+                                'type'
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/ResourceLinks'
+        }
+    },
+    required: [
+        'id',
+        'type'
+    ]
+} as const;
+
+export const RetentionMessageVersionsResponseSchema = {
+    type: 'object',
+    title: 'RetentionMessageVersionsResponse',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/RetentionMessageVersion'
+            }
+        },
+        included: {
+            type: 'array',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/AppAssetLibraryPlacement'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionMessageLocalization'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionMessage'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        retentionMessageLocalizations: '#/components/schemas/RetentionMessageLocalization',
+                        appAssetLibraryPlacements: '#/components/schemas/AppAssetLibraryPlacement',
+                        retentionMessages: '#/components/schemas/RetentionMessage'
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageVersionResponseSchema = {
+    type: 'object',
+    title: 'RetentionMessageVersionResponse',
+    properties: {
+        data: {
+            $ref: '#/components/schemas/RetentionMessageVersion'
+        },
+        included: {
+            type: 'array',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/AppAssetLibraryPlacement'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionMessageLocalization'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionMessage'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        retentionMessageLocalizations: '#/components/schemas/RetentionMessageLocalization',
+                        appAssetLibraryPlacements: '#/components/schemas/AppAssetLibraryPlacement',
+                        retentionMessages: '#/components/schemas/RetentionMessage'
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/DocumentLinks'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageVersionCreateRequestSchema = {
+    type: 'object',
+    title: 'RetentionMessageVersionCreateRequest',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'retentionMessageVersions'
+                    ]
+                },
+                relationships: {
+                    type: 'object',
+                    properties: {
+                        retentionMessage: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'object',
+                                    properties: {
+                                        type: {
+                                            type: 'string',
+                                            enum: [
+                                                'retentionMessages'
+                                            ]
+                                        },
+                                        id: {
+                                            type: 'string'
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'type'
+                                    ]
+                                }
+                            },
+                            required: [
+                                'data'
+                            ]
+                        },
+                        placement: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'object',
+                                    properties: {
+                                        type: {
+                                            type: 'string',
+                                            enum: [
+                                                'appAssetLibraryPlacements'
+                                            ]
+                                        },
+                                        id: {
+                                            type: 'string'
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'type'
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    required: [
+                        'retentionMessage'
+                    ]
+                }
+            },
+            required: [
+                'relationships',
+                'type'
+            ]
+        }
+    },
+    required: [
+        'data'
+    ]
+} as const;
+
+export const RetentionMessageSchema = {
+    type: 'object',
+    title: 'RetentionMessage',
+    properties: {
+        type: {
+            type: 'string',
+            enum: [
+                'retentionMessages'
+            ]
+        },
+        id: {
+            type: 'string'
+        },
+        attributes: {
+            type: 'object',
+            properties: {
+                referenceName: {
+                    type: 'string'
+                }
+            }
+        },
+        relationships: {
+            type: 'object',
+            properties: {
+                versions: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        meta: {
+                            $ref: '#/components/schemas/PagingInformation'
+                        },
+                        data: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    type: {
+                                        type: 'string',
+                                        enum: [
+                                            'retentionMessageVersions'
+                                        ]
+                                    },
+                                    id: {
+                                        type: 'string'
+                                    }
+                                },
+                                required: [
+                                    'id',
+                                    'type'
+                                ]
+                            }
+                        }
+                    }
+                },
+                subscriptions: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        meta: {
+                            $ref: '#/components/schemas/PagingInformation'
+                        },
+                        data: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    type: {
+                                        type: 'string',
+                                        enum: [
+                                            'subscriptions'
+                                        ]
+                                    },
+                                    id: {
+                                        type: 'string'
+                                    }
+                                },
+                                required: [
+                                    'id',
+                                    'type'
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/ResourceLinks'
+        }
+    },
+    required: [
+        'id',
+        'type'
+    ]
+} as const;
+
+export const RetentionMessagesResponseSchema = {
+    type: 'object',
+    title: 'RetentionMessagesResponse',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/RetentionMessage'
+            }
+        },
+        included: {
+            type: 'array',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/RetentionMessageVersion'
+                    },
+                    {
+                        $ref: '#/components/schemas/Subscription'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        subscriptions: '#/components/schemas/Subscription',
+                        retentionMessageVersions: '#/components/schemas/RetentionMessageVersion'
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageResponseSchema = {
+    type: 'object',
+    title: 'RetentionMessageResponse',
+    properties: {
+        data: {
+            $ref: '#/components/schemas/RetentionMessage'
+        },
+        included: {
+            type: 'array',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/RetentionMessageVersion'
+                    },
+                    {
+                        $ref: '#/components/schemas/Subscription'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        subscriptions: '#/components/schemas/Subscription',
+                        retentionMessageVersions: '#/components/schemas/RetentionMessageVersion'
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/DocumentLinks'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageCreateRequestSchema = {
+    type: 'object',
+    title: 'RetentionMessageCreateRequest',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'retentionMessages'
+                    ]
+                },
+                attributes: {
+                    type: 'object',
+                    properties: {
+                        referenceName: {
+                            type: 'string'
+                        }
+                    },
+                    required: [
+                        'referenceName'
+                    ]
+                },
+                relationships: {
+                    type: 'object',
+                    properties: {
+                        app: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'object',
+                                    properties: {
+                                        type: {
+                                            type: 'string',
+                                            enum: [
+                                                'apps'
+                                            ]
+                                        },
+                                        id: {
+                                            type: 'string'
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'type'
+                                    ]
+                                }
+                            },
+                            required: [
+                                'data'
+                            ]
+                        }
+                    },
+                    required: [
+                        'app'
+                    ]
+                }
+            },
+            required: [
+                'relationships',
+                'attributes',
+                'type'
+            ]
+        }
+    },
+    required: [
+        'data'
+    ]
+} as const;
+
+export const RetentionOfferPriceSchema = {
+    type: 'object',
+    title: 'RetentionOfferPrice',
+    properties: {
+        type: {
+            type: 'string',
+            enum: [
+                'retentionOfferPrices'
+            ]
+        },
+        id: {
+            type: 'string'
+        },
+        relationships: {
+            type: 'object',
+            properties: {
+                territory: {
+                    type: 'object',
+                    properties: {
+                        data: {
+                            type: 'object',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'territories'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            },
+                            required: [
+                                'id',
+                                'type'
+                            ]
+                        }
+                    }
+                },
+                subscriptionPricePoint: {
+                    type: 'object',
+                    properties: {
+                        data: {
+                            type: 'object',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'subscriptionPricePoints'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            },
+                            required: [
+                                'id',
+                                'type'
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/ResourceLinks'
+        }
+    },
+    required: [
+        'id',
+        'type'
+    ]
+} as const;
+
+export const RetentionOfferPriceInlineCreateSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            type: 'string',
+            enum: [
+                'retentionOfferPrices'
+            ]
+        },
+        id: {
+            type: 'string'
+        }
+    },
+    required: [
+        'type'
+    ]
+} as const;
+
+export const RetentionOfferPricesResponseSchema = {
+    type: 'object',
+    title: 'RetentionOfferPricesResponse',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/RetentionOfferPrice'
+            }
+        },
+        included: {
+            type: 'array',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/SubscriptionPricePoint'
+                    },
+                    {
+                        $ref: '#/components/schemas/Territory'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        territories: '#/components/schemas/Territory',
+                        subscriptionPricePoints: '#/components/schemas/SubscriptionPricePoint'
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionOfferSchema = {
+    type: 'object',
+    title: 'RetentionOffer',
+    properties: {
+        type: {
+            type: 'string',
+            enum: [
+                'retentionOffers'
+            ]
+        },
+        id: {
+            type: 'string'
+        },
+        attributes: {
+            type: 'object',
+            properties: {
+                referenceName: {
+                    type: 'string'
+                },
+                offerId: {
+                    type: 'string'
+                },
+                duration: {
+                    $ref: '#/components/schemas/SubscriptionOfferDuration'
+                },
+                offerMode: {
+                    $ref: '#/components/schemas/SubscriptionOfferMode'
+                },
+                periodCount: {
+                    type: 'integer'
+                },
+                customerEligibilityPaidSubscriptionDurationInMonths: {
+                    type: 'integer'
+                },
+                customerEligibilityWaitBetweenOffersInMonths: {
+                    type: 'integer'
+                },
+                targetSubscriptionPlanType: {
+                    $ref: '#/components/schemas/SubscriptionPlanType'
+                }
+            }
+        },
+        relationships: {
+            type: 'object',
+            properties: {
+                subscription: {
+                    type: 'object',
+                    properties: {
+                        data: {
+                            type: 'object',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'subscriptions'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            },
+                            required: [
+                                'id',
+                                'type'
+                            ]
+                        }
+                    }
+                },
+                prices: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        meta: {
+                            $ref: '#/components/schemas/PagingInformation'
+                        },
+                        data: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    type: {
+                                        type: 'string',
+                                        enum: [
+                                            'retentionOfferPrices'
+                                        ]
+                                    },
+                                    id: {
+                                        type: 'string'
+                                    }
+                                },
+                                required: [
+                                    'id',
+                                    'type'
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/ResourceLinks'
+        }
+    },
+    required: [
+        'id',
+        'type'
+    ]
+} as const;
+
+export const RetentionOffersResponseSchema = {
+    type: 'object',
+    title: 'RetentionOffersResponse',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/RetentionOffer'
+            }
+        },
+        included: {
+            type: 'array',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/RetentionOfferPrice'
+                    },
+                    {
+                        $ref: '#/components/schemas/Subscription'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        subscriptions: '#/components/schemas/Subscription',
+                        retentionOfferPrices: '#/components/schemas/RetentionOfferPrice'
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionOfferResponseSchema = {
+    type: 'object',
+    title: 'RetentionOfferResponse',
+    properties: {
+        data: {
+            $ref: '#/components/schemas/RetentionOffer'
+        },
+        included: {
+            type: 'array',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/RetentionOfferPrice'
+                    },
+                    {
+                        $ref: '#/components/schemas/Subscription'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        subscriptions: '#/components/schemas/Subscription',
+                        retentionOfferPrices: '#/components/schemas/RetentionOfferPrice'
+                    }
+                }
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/DocumentLinks'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionOfferCreateRequestSchema = {
+    type: 'object',
+    title: 'RetentionOfferCreateRequest',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'retentionOffers'
+                    ]
+                },
+                attributes: {
+                    type: 'object',
+                    properties: {
+                        referenceName: {
+                            type: 'string'
+                        },
+                        offerId: {
+                            type: 'string'
+                        },
+                        duration: {
+                            $ref: '#/components/schemas/SubscriptionOfferDuration'
+                        },
+                        offerMode: {
+                            $ref: '#/components/schemas/SubscriptionOfferMode'
+                        },
+                        periodCount: {
+                            type: 'integer'
+                        },
+                        customerEligibilityPaidSubscriptionDurationInMonths: {
+                            type: 'integer'
+                        },
+                        customerEligibilityWaitBetweenOffersInMonths: {
+                            type: 'integer',
+                            nullable: true
+                        },
+                        targetSubscriptionPlanType: {
+                            nullable: true,
+                            $ref: '#/components/schemas/SubscriptionPlanType'
+                        }
+                    },
+                    required: [
+                        'duration',
+                        'periodCount',
+                        'offerId',
+                        'offerMode',
+                        'customerEligibilityPaidSubscriptionDurationInMonths',
+                        'referenceName'
+                    ]
+                },
+                relationships: {
+                    type: 'object',
+                    properties: {
+                        subscription: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'object',
+                                    properties: {
+                                        type: {
+                                            type: 'string',
+                                            enum: [
+                                                'subscriptions'
+                                            ]
+                                        },
+                                        id: {
+                                            type: 'string'
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'type'
+                                    ]
+                                }
+                            },
+                            required: [
+                                'data'
+                            ]
+                        },
+                        prices: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'array',
+                                    items: {
+                                        type: 'object',
+                                        properties: {
+                                            type: {
+                                                type: 'string',
+                                                enum: [
+                                                    'retentionOfferPrices'
+                                                ]
+                                            },
+                                            id: {
+                                                type: 'string'
+                                            }
+                                        },
+                                        required: [
+                                            'id',
+                                            'type'
+                                        ]
+                                    }
+                                }
+                            },
+                            required: [
+                                'data'
+                            ]
+                        }
+                    },
+                    required: [
+                        'subscription',
+                        'prices'
+                    ]
+                }
+            },
+            required: [
+                'relationships',
+                'attributes',
+                'type'
+            ]
+        },
+        included: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/RetentionOfferPriceInlineCreate'
+            }
+        }
+    },
+    required: [
+        'data'
+    ]
+} as const;
+
+export const RetentionOfferUpdateRequestSchema = {
+    type: 'object',
+    title: 'RetentionOfferUpdateRequest',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'retentionOffers'
+                    ]
+                },
+                id: {
+                    type: 'string'
+                },
+                attributes: {
+                    type: 'object',
+                    properties: {
+                        customerEligibilityPaidSubscriptionDurationInMonths: {
+                            type: 'integer',
+                            nullable: true
+                        },
+                        customerEligibilityWaitBetweenOffersInMonths: {
+                            type: 'integer',
+                            nullable: true
+                        }
+                    }
+                }
+            },
+            required: [
+                'id',
+                'type'
+            ]
+        }
+    },
+    required: [
+        'data'
+    ]
+} as const;
+
 export const ReviewSubmissionItemSchema = {
     type: 'object',
     title: 'ReviewSubmissionItem',
@@ -52344,6 +53748,29 @@ export const ReviewSubmissionItemSchema = {
                             ]
                         }
                     }
+                },
+                retentionMessageVersion: {
+                    type: 'object',
+                    properties: {
+                        data: {
+                            type: 'object',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'retentionMessageVersions'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            },
+                            required: [
+                                'id',
+                                'type'
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -52411,6 +53838,9 @@ export const ReviewSubmissionItemsResponseSchema = {
                         $ref: '#/components/schemas/InAppPurchaseVersion'
                     },
                     {
+                        $ref: '#/components/schemas/RetentionMessageVersion'
+                    },
+                    {
                         $ref: '#/components/schemas/SubscriptionGroupVersion'
                     },
                     {
@@ -52423,6 +53853,7 @@ export const ReviewSubmissionItemsResponseSchema = {
                         appAssetLibraryImages: '#/components/schemas/AppAssetLibraryImage',
                         appEvents: '#/components/schemas/AppEvent',
                         gameCenterAchievementVersions: '#/components/schemas/GameCenterAchievementVersionV2',
+                        retentionMessageVersions: '#/components/schemas/RetentionMessageVersion',
                         appStoreVersionExperiments: '#/components/schemas/AppStoreVersionExperiment',
                         gameCenterActivityVersions: '#/components/schemas/GameCenterActivityVersion',
                         inAppPurchaseVersions: '#/components/schemas/InAppPurchaseVersion',
@@ -52503,6 +53934,9 @@ export const ReviewSubmissionItemResponseSchema = {
                         $ref: '#/components/schemas/InAppPurchaseVersion'
                     },
                     {
+                        $ref: '#/components/schemas/RetentionMessageVersion'
+                    },
+                    {
                         $ref: '#/components/schemas/SubscriptionGroupVersion'
                     },
                     {
@@ -52515,6 +53949,7 @@ export const ReviewSubmissionItemResponseSchema = {
                         appAssetLibraryImages: '#/components/schemas/AppAssetLibraryImage',
                         appEvents: '#/components/schemas/AppEvent',
                         gameCenterAchievementVersions: '#/components/schemas/GameCenterAchievementVersionV2',
+                        retentionMessageVersions: '#/components/schemas/RetentionMessageVersion',
                         appStoreVersionExperiments: '#/components/schemas/AppStoreVersionExperiment',
                         gameCenterActivityVersions: '#/components/schemas/GameCenterActivityVersion',
                         inAppPurchaseVersions: '#/components/schemas/InAppPurchaseVersion',
@@ -52938,6 +54373,29 @@ export const ReviewSubmissionItemCreateRequestSchema = {
                                             type: 'string',
                                             enum: [
                                                 'subscriptionGroupVersions'
+                                            ]
+                                        },
+                                        id: {
+                                            type: 'string'
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'type'
+                                    ]
+                                }
+                            }
+                        },
+                        retentionMessageVersion: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'object',
+                                    properties: {
+                                        type: {
+                                            type: 'string',
+                                            enum: [
+                                                'retentionMessageVersions'
                                             ]
                                         },
                                         id: {
@@ -61149,6 +62607,96 @@ export const SubscriptionSchema = {
                             }
                         }
                     }
+                },
+                retentionOffers: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        meta: {
+                            $ref: '#/components/schemas/PagingInformation'
+                        },
+                        data: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    type: {
+                                        type: 'string',
+                                        enum: [
+                                            'retentionOffers'
+                                        ]
+                                    },
+                                    id: {
+                                        type: 'string'
+                                    }
+                                },
+                                required: [
+                                    'id',
+                                    'type'
+                                ]
+                            }
+                        }
+                    }
+                },
+                retentionMessage: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'retentionMessages'
+                                    ]
+                                },
+                                id: {
+                                    type: 'string'
+                                }
+                            },
+                            required: [
+                                'id',
+                                'type'
+                            ]
+                        }
+                    }
+                },
+                retentionMessageOffers: {
+                    type: 'object',
+                    properties: {
+                        links: {
+                            $ref: '#/components/schemas/RelationshipLinks'
+                        },
+                        meta: {
+                            $ref: '#/components/schemas/PagingInformation'
+                        },
+                        data: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    type: {
+                                        type: 'string',
+                                        enum: [
+                                            'retentionOffers'
+                                        ]
+                                    },
+                                    id: {
+                                        type: 'string'
+                                    }
+                                },
+                                required: [
+                                    'id',
+                                    'type'
+                                ]
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -61178,6 +62726,12 @@ export const SubscriptionsResponseSchema = {
                 oneOf: [
                     {
                         $ref: '#/components/schemas/PromotedPurchase'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionMessage'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionOffer'
                     },
                     {
                         $ref: '#/components/schemas/SubscriptionAppStoreReviewScreenshot'
@@ -61219,8 +62773,10 @@ export const SubscriptionsResponseSchema = {
                 discriminator: {
                     propertyName: 'type',
                     mapping: {
+                        retentionOffers: '#/components/schemas/RetentionOffer',
                         subscriptionAppStoreReviewScreenshots: '#/components/schemas/SubscriptionAppStoreReviewScreenshot',
                         winBackOffers: '#/components/schemas/WinBackOffer',
+                        retentionMessages: '#/components/schemas/RetentionMessage',
                         subscriptionOfferCodes: '#/components/schemas/SubscriptionOfferCode',
                         subscriptionPlanAvailabilities: '#/components/schemas/SubscriptionPlanAvailability',
                         subscriptionVersions: '#/components/schemas/SubscriptionVersion',
@@ -61264,6 +62820,12 @@ export const SubscriptionResponseSchema = {
                         $ref: '#/components/schemas/PromotedPurchase'
                     },
                     {
+                        $ref: '#/components/schemas/RetentionMessage'
+                    },
+                    {
+                        $ref: '#/components/schemas/RetentionOffer'
+                    },
+                    {
                         $ref: '#/components/schemas/SubscriptionAppStoreReviewScreenshot'
                     },
                     {
@@ -61303,8 +62865,10 @@ export const SubscriptionResponseSchema = {
                 discriminator: {
                     propertyName: 'type',
                     mapping: {
+                        retentionOffers: '#/components/schemas/RetentionOffer',
                         subscriptionAppStoreReviewScreenshots: '#/components/schemas/SubscriptionAppStoreReviewScreenshot',
                         winBackOffers: '#/components/schemas/WinBackOffer',
+                        retentionMessages: '#/components/schemas/RetentionMessage',
                         subscriptionOfferCodes: '#/components/schemas/SubscriptionOfferCode',
                         subscriptionPlanAvailabilities: '#/components/schemas/SubscriptionPlanAvailability',
                         subscriptionVersions: '#/components/schemas/SubscriptionVersion',
@@ -61565,6 +63129,55 @@ export const SubscriptionUpdateRequestSchema = {
                                                 type: 'string',
                                                 enum: [
                                                     'subscriptionPrices'
+                                                ]
+                                            },
+                                            id: {
+                                                type: 'string'
+                                            }
+                                        },
+                                        required: [
+                                            'id',
+                                            'type'
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        retentionMessage: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'object',
+                                    properties: {
+                                        type: {
+                                            type: 'string',
+                                            enum: [
+                                                'retentionMessages'
+                                            ]
+                                        },
+                                        id: {
+                                            type: 'string'
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'type'
+                                    ]
+                                }
+                            }
+                        },
+                        retentionMessageOffers: {
+                            type: 'object',
+                            properties: {
+                                data: {
+                                    type: 'array',
+                                    items: {
+                                        type: 'object',
+                                        properties: {
+                                            type: {
+                                                type: 'string',
+                                                enum: [
+                                                    'retentionOffers'
                                                 ]
                                             },
                                             id: {
@@ -68047,6 +69660,43 @@ export const AppPromotedPurchasesLinkagesRequestSchema = {
     },
     required: [
         'data'
+    ]
+} as const;
+
+export const AppRetentionMessagesLinkagesResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: [
+                            'retentionMessages'
+                        ]
+                    },
+                    id: {
+                        type: 'string'
+                    }
+                },
+                required: [
+                    'id',
+                    'type'
+                ]
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
     ]
 } as const;
 
@@ -74951,6 +76601,185 @@ export const ProfileDevicesLinkagesResponseSchema = {
     ]
 } as const;
 
+export const RetentionMessageVersionLocalizationsLinkagesResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: [
+                            'retentionMessageLocalizations'
+                        ]
+                    },
+                    id: {
+                        type: 'string'
+                    }
+                },
+                required: [
+                    'id',
+                    'type'
+                ]
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageVersionPlacementLinkageResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'appAssetLibraryPlacements'
+                    ]
+                },
+                id: {
+                    type: 'string'
+                }
+            },
+            required: [
+                'id',
+                'type'
+            ]
+        },
+        links: {
+            $ref: '#/components/schemas/DocumentLinks'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageSubscriptionsLinkagesResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: [
+                            'subscriptions'
+                        ]
+                    },
+                    id: {
+                        type: 'string'
+                    }
+                },
+                required: [
+                    'id',
+                    'type'
+                ]
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionMessageVersionsLinkagesResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: [
+                            'retentionMessageVersions'
+                        ]
+                    },
+                    id: {
+                        type: 'string'
+                    }
+                },
+                required: [
+                    'id',
+                    'type'
+                ]
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const RetentionOfferPricesLinkagesResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: [
+                            'retentionOfferPrices'
+                        ]
+                    },
+                    id: {
+                        type: 'string'
+                    }
+                },
+                required: [
+                    'id',
+                    'type'
+                ]
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
 export const ReviewSubmissionItemsLinkagesResponseSchema = {
     type: 'object',
     properties: {
@@ -76029,6 +77858,168 @@ export const SubscriptionPromotionalOffersLinkagesResponseSchema = {
                         type: 'string',
                         enum: [
                             'subscriptionPromotionalOffers'
+                        ]
+                    },
+                    id: {
+                        type: 'string'
+                    }
+                },
+                required: [
+                    'id',
+                    'type'
+                ]
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const SubscriptionRetentionMessageLinkageResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'retentionMessages'
+                    ]
+                },
+                id: {
+                    type: 'string'
+                }
+            },
+            required: [
+                'id',
+                'type'
+            ]
+        },
+        links: {
+            $ref: '#/components/schemas/DocumentLinks'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const SubscriptionRetentionMessageLinkageRequestSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'object',
+            properties: {
+                type: {
+                    type: 'string',
+                    enum: [
+                        'retentionMessages'
+                    ]
+                },
+                id: {
+                    type: 'string'
+                }
+            },
+            required: [
+                'id',
+                'type'
+            ]
+        }
+    },
+    required: [
+        'data'
+    ]
+} as const;
+
+export const SubscriptionRetentionMessageOffersLinkagesResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: [
+                            'retentionOffers'
+                        ]
+                    },
+                    id: {
+                        type: 'string'
+                    }
+                },
+                required: [
+                    'id',
+                    'type'
+                ]
+            }
+        },
+        links: {
+            $ref: '#/components/schemas/PagedDocumentLinks'
+        },
+        meta: {
+            $ref: '#/components/schemas/PagingInformation'
+        }
+    },
+    required: [
+        'data',
+        'links'
+    ]
+} as const;
+
+export const SubscriptionRetentionMessageOffersLinkagesRequestSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: [
+                            'retentionOffers'
+                        ]
+                    },
+                    id: {
+                        type: 'string'
+                    }
+                },
+                required: [
+                    'id',
+                    'type'
+                ]
+            }
+        }
+    },
+    required: [
+        'data'
+    ]
+} as const;
+
+export const SubscriptionRetentionOffersLinkagesResponseSchema = {
+    type: 'object',
+    properties: {
+        data: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: [
+                            'retentionOffers'
                         ]
                     },
                     id: {

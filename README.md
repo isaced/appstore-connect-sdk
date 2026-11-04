@@ -16,7 +16,7 @@ The `appstore-connect-sdk` module includes the following features:
 - **Smart Token Management** - Tokens are automatically generated, cached, and refreshed before expiration (within 2 minutes of expiry); concurrent requests hitting an expiry share a single token generation
 - **Pagination Helpers** - `paginate`, `paginateItems`, and `paginateToArray` follow `links.next` automatically with typed results
 - **Rate-Limit Aware** - Typed access to the `X-Rate-Limit` header, with automatic retry of 429 responses on idempotent requests
-- **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.5.1** spec, generated from Apple's official OpenAPI description
+- **Full API Coverage** - ~1,000 endpoints of the App Store Connect API **4.6** spec, generated from Apple's official OpenAPI description
 - **Cross-Platform** - Compatible with both Node.js and **Deno** environments
 
 ## Architecture
