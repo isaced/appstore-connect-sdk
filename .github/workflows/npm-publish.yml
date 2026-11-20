@@ -1,5 +1,4 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+# Publishes the package to npmjs (OIDC trusted publishing) when a version tag is pushed.
 
 name: Publish 
 
@@ -22,6 +21,18 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
+      - name: Verify tag matches package version
+        run: |
+          if [ "${{ github.ref_type }}" != "tag" ]; then
+            echo "::error::Publish must run from a version tag (got ref ${{ github.ref }}). Push a tag such as v2.5.0, or re-run this workflow from that tag."
+            exit 1
+          fi
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$PKG_VERSION" != "${{ github.ref_name }}" ]; then
+            echo "::error::Tag ${{ github.ref_name }} does not match package.json version $PKG_VERSION."
+            exit 1
+          fi
+          echo "Publishing $PKG_VERSION from tag ${{ github.ref_name }}."
       - run: npm ci
       - run: npm run build
       - name: Smoke test packed artifact

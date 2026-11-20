@@ -109,6 +109,28 @@ for (const candidate of [`**${local.version}**`, `**${shortVersion}**`]) {
   if (n > 0) console.log(`Updated version label ${candidate} -> **${remote.version}** in ${n} place(s).`);
 }
 
+// Plain (non-bold) labels, e.g. the README architecture diagram's
+// `Apple OpenAPI spec 4.5.1`, are not covered by the bold-label pass above.
+const plain = replaceInFiles(
+  `Apple OpenAPI spec ${local.version}`,
+  `Apple OpenAPI spec ${remote.version}`,
+  REF_FILES
+);
+if (plain > 0) console.log(`Updated plain version label -> ${remote.version} in ${plain} place(s).`);
+
+// Fail loudly if a reference file still mentions the old version: a missed
+// label goes stale silently otherwise (the README diagram did, in the 4.6.1
+// sync). Historical mentions must be reworded to not match this check.
+if (versionChanged) {
+  for (const rel of REF_FILES) {
+    if (readFileSync(join(root, rel), "utf8").includes(local.version)) {
+      throw new Error(
+        `${rel} still mentions old spec version ${local.version}; extend the replacement rules in update-spec.mjs or fix the file.`
+      );
+    }
+  }
+}
+
 if (versionChanged || contentChanged) {
   // Same pipeline as local regeneration: apply spec patches, then run the
   // pinned openapi-ts toolchain in scripts/openapi-gen.
