@@ -24,7 +24,7 @@ The `appstore-connect-sdk` module includes the following features:
 ```mermaid
 flowchart TB
     dev["Your application"]
-    spec["Apple OpenAPI spec 4.5.1"]
+    spec["Apple OpenAPI spec 4.6.1"]
 
     subgraph sdk["appstore-connect-sdk"]
         direction LR
