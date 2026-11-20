@@ -222,6 +222,12 @@ export const zAppAssetLibraryPlacementCommonRelationships = z.object({
             type: z.enum(['appStoreVersionExperimentTreatmentLocalizations']),
             id: z.string()
         }).optional()
+    }).optional(),
+    retentionMessageVersion: z.object({
+        data: z.object({
+            type: z.enum(['retentionMessageVersions']),
+            id: z.string()
+        }).optional()
     }).optional()
 });
 
@@ -3930,6 +3936,104 @@ export const zPromotedPurchaseUpdateRequest = z.object({
 });
 
 /**
+ * RetentionMessageLocalizationCreateRequest
+ */
+export const zRetentionMessageLocalizationCreateRequest = z.object({
+    data: z.object({
+        type: z.enum(['retentionMessageLocalizations']),
+        attributes: z.object({
+            locale: z.string(),
+            header: z.string().nullish(),
+            body: z.string().nullish()
+        }),
+        relationships: z.object({
+            retentionMessageVersion: z.object({
+                data: z.object({
+                    type: z.enum(['retentionMessageVersions']),
+                    id: z.string()
+                })
+            })
+        })
+    })
+});
+
+/**
+ * RetentionMessageLocalizationUpdateRequest
+ */
+export const zRetentionMessageLocalizationUpdateRequest = z.object({
+    data: z.object({
+        type: z.enum(['retentionMessageLocalizations']),
+        id: z.string(),
+        attributes: z.object({
+            header: z.string().nullish(),
+            body: z.string().nullish()
+        }).optional()
+    })
+});
+
+/**
+ * RetentionMessageVersionCreateRequest
+ */
+export const zRetentionMessageVersionCreateRequest = z.object({
+    data: z.object({
+        type: z.enum(['retentionMessageVersions']),
+        relationships: z.object({
+            retentionMessage: z.object({
+                data: z.object({
+                    type: z.enum(['retentionMessages']),
+                    id: z.string()
+                })
+            }),
+            placement: z.object({
+                data: z.object({
+                    type: z.enum(['appAssetLibraryPlacements']),
+                    id: z.string()
+                }).optional()
+            }).optional()
+        })
+    })
+});
+
+/**
+ * RetentionMessageCreateRequest
+ */
+export const zRetentionMessageCreateRequest = z.object({
+    data: z.object({
+        type: z.enum(['retentionMessages']),
+        attributes: z.object({
+            referenceName: z.string()
+        }),
+        relationships: z.object({
+            app: z.object({
+                data: z.object({
+                    type: z.enum(['apps']),
+                    id: z.string()
+                })
+            })
+        })
+    })
+});
+
+export const zRetentionOfferPriceInlineCreate = z.object({
+    type: z.enum(['retentionOfferPrices']),
+    id: z.string().optional()
+});
+
+/**
+ * RetentionOfferUpdateRequest
+ */
+export const zRetentionOfferUpdateRequest = z.object({
+    data: z.object({
+        type: z.enum(['retentionOffers']),
+        id: z.string(),
+        attributes: z.object({
+            customerEligibilityPaidSubscriptionDurationInMonths: z.int().nullish(),
+            customerEligibilityWaitBetweenOffersInMonths: z.int().nullish()
+        }).optional()
+    })
+});
+
+/**
  * ReviewSubmissionItemCreateRequest
  */
 export const zReviewSubmissionItemCreateRequest = z.object({
@@ -4035,6 +4139,12 @@ export const zReviewSubmissionItemCreateRequest = z.object({
             subscriptionGroupVersion: z.object({
                 data: z.object({
                     type: z.enum(['subscriptionGroupVersions']),
+                    id: z.string()
+                }).optional()
+            }).optional(),
+            retentionMessageVersion: z.object({
+                data: z.object({
+                    type: z.enum(['retentionMessageVersions']),
                     id: z.string()
                 }).optional()
             }).optional()
@@ -4568,6 +4678,22 @@ export const zSubscriptionPlanAvailabilityUpdateRequest = z.object({
 export const zSubscriptionPricePointInlineCreate = z.object({
     type: z.enum(['subscriptionPricePoints']),
     id: z.string().optional()
+});
+
+export const zSubscriptionPriceTierInlineCreate = z.object({
+    type: z.enum(['subscriptionPriceTiers']),
+    id: z.string().optional(),
+    attributes: z.object({
+        minQuantity: z.int().nullish()
+    }).optional(),
+    relationships: z.object({
+        subscriptionPricePoint: z.object({
+            data: z.object({
+                type: z.enum(['subscriptionPricePoints']),
+                id: z.string()
+            }).optional()
+        }).optional()
+    }).optional()
 });
 
 export const zSubscriptionPromotionalOfferPriceInlineCreate = z.object({
@@ -5273,6 +5399,20 @@ export const zSubscriptionIntroductoryOffersLinkagesRequest = z.object({
 export const zSubscriptionPricesLinkagesRequest = z.object({
     data: z.array(z.object({
         type: z.enum(['subscriptionPrices']),
+        id: z.string()
+    }))
+});
+
+export const zSubscriptionRetentionMessageLinkageRequest = z.object({
+    data: z.object({
+        type: z.enum(['retentionMessages']),
+        id: z.string()
+    })
+});
+
+export const zSubscriptionRetentionMessageOffersLinkagesRequest = z.object({
+    data: z.array(z.object({
+        type: z.enum(['retentionOffers']),
         id: z.string()
     }))
 });
@@ -6022,6 +6162,15 @@ export const zAppPreReleaseVersionsLinkagesResponse = z.object({
 export const zAppPromotedPurchasesLinkagesResponse = z.object({
     data: z.array(z.object({
         type: z.enum(['promotedPurchases']),
+        id: z.string()
+    })),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+export const zAppRetentionMessagesLinkagesResponse = z.object({
+    data: z.array(z.object({
+        type: z.enum(['retentionMessages']),
         id: z.string()
     })),
     links: zPagedDocumentLinks,
@@ -7003,6 +7152,42 @@ export const zProfileDevicesLinkagesResponse = z.object({
     meta: zPagingInformation.optional()
 });
 
+export const zRetentionMessageVersionLocalizationsLinkagesResponse = z.object({
+    data: z.array(z.object({
+        type: z.enum(['retentionMessageLocalizations']),
+        id: z.string()
+    })),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+export const zRetentionMessageSubscriptionsLinkagesResponse = z.object({
+    data: z.array(z.object({
+        type: z.enum(['subscriptions']),
+        id: z.string()
+    })),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+export const zRetentionMessageVersionsLinkagesResponse = z.object({
+    data: z.array(z.object({
+        type: z.enum(['retentionMessageVersions']),
+        id: z.string()
+    })),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+export const zRetentionOfferPricesLinkagesResponse = z.object({
+    data: z.array(z.object({
+        type: z.enum(['retentionOfferPrices']),
+        id: z.string()
+    })),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
 export const zReviewSubmissionItemsLinkagesResponse = z.object({
     data: z.array(z.object({
         type: z.enum(['reviewSubmissionItems']),
@@ -7132,6 +7317,15 @@ export const zSubscriptionPricePointEqualizationsLinkagesResponse = z.object({
     meta: zPagingInformation.optional()
 });
 
+export const zSubscriptionPriceAdditionalPriceTiersLinkagesResponse = z.object({
+    data: z.array(z.object({
+        type: z.enum(['subscriptionPriceTiers']),
+        id: z.string()
+    })),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
 export const zSubscriptionPromotionalOfferPricesLinkagesResponse = z.object({
     data: z.array(z.object({
         type: z.enum(['subscriptionPromotionalOfferPrices']),
@@ -7216,6 +7410,24 @@ export const zSubscriptionPricesLinkagesResponse = z.object({
 export const zSubscriptionPromotionalOffersLinkagesResponse = z.object({
     data: z.array(z.object({
         type: z.enum(['subscriptionPromotionalOffers']),
+        id: z.string()
+    })),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+export const zSubscriptionRetentionMessageOffersLinkagesResponse = z.object({
+    data: z.array(z.object({
+        type: z.enum(['retentionOffers']),
+        id: z.string()
+    })),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+export const zSubscriptionRetentionOffersLinkagesResponse = z.object({
+    data: z.array(z.object({
+        type: z.enum(['retentionOffers']),
         id: z.string()
     })),
     links: zPagedDocumentLinks,
@@ -8277,6 +8489,14 @@ export const zProfileBundleIdLinkageResponse = z.object({
     links: zDocumentLinks
 });
 
+export const zRetentionMessageVersionPlacementLinkageResponse = z.object({
+    data: z.object({
+        type: z.enum(['appAssetLibraryPlacements']),
+        id: z.string()
+    }),
+    links: zDocumentLinks
+});
+
 export const zSubscriptionOfferCodeOneTimeUseCodeValuesLinkageResponse = z.object({
     data: z.object({
         type: z.enum(['subscriptionOfferCodeOneTimeUseCodeValues']),
@@ -8304,6 +8524,14 @@ export const zSubscriptionAppStoreReviewScreenshotLinkageResponse = z.object({
 export const zSubscriptionPromotedPurchaseLinkageResponse = z.object({
     data: z.object({
         type: z.enum(['promotedPurchases']),
+        id: z.string()
+    }),
+    links: zDocumentLinks
+});
+
+export const zSubscriptionRetentionMessageLinkageResponse = z.object({
+    data: z.object({
+        type: z.enum(['retentionMessages']),
         id: z.string()
     }),
     links: zDocumentLinks
@@ -9761,6 +9989,51 @@ export const zPromotedPurchase = z.object({
 });
 
 /**
+ * RetentionMessageLocalization
+ */
+export const zRetentionMessageLocalization = z.object({
+    type: z.enum(['retentionMessageLocalizations']),
+    id: z.string(),
+    attributes: z.object({
+        locale: z.string().optional(),
+        header: z.string().optional(),
+        body: z.string().optional()
+    }).optional(),
+    relationships: z.object({
+        retentionMessageVersion: z.object({
+            data: z.object({
+                type: z.enum(['retentionMessageVersions']),
+                id: z.string()
+            }).optional()
+        }).optional()
+    }).optional(),
+    links: zResourceLinks.optional()
+});
+
+/**
+ * RetentionOfferPrice
+ */
+export const zRetentionOfferPrice = z.object({
+    type: z.enum(['retentionOfferPrices']),
+    id: z.string(),
+    relationships: z.object({
+        territory: z.object({
+            data: z.object({
+                type: z.enum(['territories']),
+                id: z.string()
+            }).optional()
+        }).optional(),
+        subscriptionPricePoint: z.object({
+            data: z.object({
+                type: z.enum(['subscriptionPricePoints']),
+                id: z.string()
+            }).optional()
+        }).optional()
+    }).optional(),
+    links: zResourceLinks.optional()
+});
+
+/**
  * ReviewSubmissionItem
  */
 export const zReviewSubmissionItem = z.object({
@@ -9869,6 +10142,12 @@ export const zReviewSubmissionItem = z.object({
         subscriptionGroupVersion: z.object({
             data: z.object({
                 type: z.enum(['subscriptionGroupVersions']),
+                id: z.string()
+            }).optional()
+        }).optional(),
+        retentionMessageVersion: z.object({
+            data: z.object({
+                type: z.enum(['retentionMessageVersions']),
                 id: z.string()
             }).optional()
         }).optional()
@@ -10086,6 +10365,54 @@ export const zSubscriptionOfferCodePrice = z.object({
                 id: z.string()
             }).optional()
         }).optional(),
+        subscriptionPricePoint: z.object({
+            data: z.object({
+                type: z.enum(['subscriptionPricePoints']),
+                id: z.string()
+            }).optional()
+        }).optional()
+    }).optional(),
+    links: zResourceLinks.optional()
+});
+
+/**
+ * SubscriptionPriceChangePreview
+ */
+export const zSubscriptionPriceChangePreview = z.object({
+    type: z.enum(['subscriptionPriceChangePreviews']),
+    id: z.string(),
+    attributes: z.object({
+        changeResults: z.array(z.object({
+            territoryId: z.string().optional(),
+            changeType: z.enum([
+                'INCREASE_PRESERVABLE',
+                'DECREASE_NOT_PRESERVABLE',
+                'MIXED_NOT_PRESERVABLE',
+                'NO_CHANGE'
+            ]).optional()
+        })).optional()
+    }).optional(),
+    links: zResourceLinks.optional()
+});
+
+/**
+ * SubscriptionPriceChangePreviewResponse
+ */
+export const zSubscriptionPriceChangePreviewResponse = z.object({
+    data: zSubscriptionPriceChangePreview,
+    links: zDocumentLinks
+});
+
+/**
+ * SubscriptionPriceTier
+ */
+export const zSubscriptionPriceTier = z.object({
+    type: z.enum(['subscriptionPriceTiers']),
+    id: z.string(),
+    attributes: z.object({
+        minQuantity: z.int().optional()
+    }).optional(),
+    relationships: z.object({
         subscriptionPricePoint: z.object({
             data: z.object({
                 type: z.enum(['subscriptionPricePoints']),
@@ -12552,6 +12879,99 @@ export const zPassTypeId = z.object({
 });
 
 /**
+ * RetentionMessageVersion
+ */
+export const zRetentionMessageVersion = z.object({
+    type: z.enum(['retentionMessageVersions']),
+    id: z.string(),
+    attributes: z.object({
+        state: z.enum([
+            'PREPARE_FOR_SUBMISSION',
+            'READY_FOR_REVIEW',
+            'WAITING_FOR_REVIEW',
+            'IN_REVIEW',
+            'DEVELOPER_REJECTED',
+            'REJECTED',
+            'ACCEPTED',
+            'APPROVED'
+        ]).optional()
+    }).optional(),
+    relationships: z.object({
+        retentionMessage: z.object({
+            data: z.object({
+                type: z.enum(['retentionMessages']),
+                id: z.string()
+            }).optional()
+        }).optional(),
+        localizations: z.object({
+            links: zRelationshipLinks.optional(),
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['retentionMessageLocalizations']),
+                id: z.string()
+            })).optional()
+        }).optional(),
+        placement: z.object({
+            links: zRelationshipLinks.optional(),
+            data: z.object({
+                type: z.enum(['appAssetLibraryPlacements']),
+                id: z.string()
+            }).optional()
+        }).optional()
+    }).optional(),
+    links: zResourceLinks.optional()
+});
+
+/**
+ * RetentionMessageLocalizationsResponse
+ */
+export const zRetentionMessageLocalizationsResponse = z.object({
+    data: z.array(zRetentionMessageLocalization),
+    included: z.array(zRetentionMessageVersion).optional(),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+/**
+ * RetentionMessageLocalizationResponse
+ */
+export const zRetentionMessageLocalizationResponse = z.object({
+    data: zRetentionMessageLocalization,
+    included: z.array(zRetentionMessageVersion).optional(),
+    links: zDocumentLinks
+});
+
+/**
+ * RetentionMessage
+ */
+export const zRetentionMessage = z.object({
+    type: z.enum(['retentionMessages']),
+    id: z.string(),
+    attributes: z.object({
+        referenceName: z.string().optional()
+    }).optional(),
+    relationships: z.object({
+        versions: z.object({
+            links: zRelationshipLinks.optional(),
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['retentionMessageVersions']),
+                id: z.string()
+            })).optional()
+        }).optional(),
+        subscriptions: z.object({
+            links: zRelationshipLinks.optional(),
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['subscriptions']),
+                id: z.string()
+            })).optional()
+        }).optional()
+    }).optional(),
+    links: zResourceLinks.optional()
+});
+
+/**
  * ScmRepository
  */
 export const zScmRepository = z.object({
@@ -12804,6 +13224,16 @@ export const zSubscriptionPricePoint = z.object({
 });
 
 /**
+ * RetentionOfferPricesResponse
+ */
+export const zRetentionOfferPricesResponse = z.object({
+    data: z.array(zRetentionOfferPrice),
+    included: z.array(z.union([zSubscriptionPricePoint, zTerritory])).optional(),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+/**
  * SubscriptionOfferCodePricesResponse
  */
 export const zSubscriptionOfferCodePricesResponse = z.object({
@@ -12830,6 +13260,16 @@ export const zSubscriptionPricePointResponse = z.object({
     data: zSubscriptionPricePoint,
     included: z.array(zTerritory).optional(),
     links: zDocumentLinks
+});
+
+/**
+ * SubscriptionPriceTiersResponse
+ */
+export const zSubscriptionPriceTiersResponse = z.object({
+    data: z.array(zSubscriptionPriceTier),
+    included: z.array(zSubscriptionPricePoint).optional(),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
 });
 
 /**
@@ -13056,9 +13496,51 @@ export const zSubscription = z.object({
                 type: z.enum(['subscriptionVersions']),
                 id: z.string()
             })).optional()
+        }).optional(),
+        retentionOffers: z.object({
+            links: zRelationshipLinks.optional(),
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['retentionOffers']),
+                id: z.string()
+            })).optional()
+        }).optional(),
+        retentionMessage: z.object({
+            links: zRelationshipLinks.optional(),
+            data: z.object({
+                type: z.enum(['retentionMessages']),
+                id: z.string()
+            }).optional()
+        }).optional(),
+        retentionMessageOffers: z.object({
+            links: zRelationshipLinks.optional(),
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['retentionOffers']),
+                id: z.string()
+            })).optional()
         }).optional()
     }).optional(),
     links: zResourceLinks.optional()
+});
+
+/**
+ * RetentionMessagesResponse
+ */
+export const zRetentionMessagesResponse = z.object({
+    data: z.array(zRetentionMessage),
+    included: z.array(z.union([zRetentionMessageVersion, zSubscription])).optional(),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+/**
+ * RetentionMessageResponse
+ */
+export const zRetentionMessageResponse = z.object({
+    data: zRetentionMessage,
+    included: z.array(z.union([zRetentionMessageVersion, zSubscription])).optional(),
+    links: zDocumentLinks
 });
 
 /**
@@ -13361,6 +13843,10 @@ export const zAppAssetLibraryPlacementCreateRequest = z.object({
         z.object({
             attributes: z.record(z.string(), z.unknown()),
             relationships: z.record(z.string(), z.unknown())
+        }),
+        z.object({
+            attributes: z.record(z.string(), z.unknown()),
+            relationships: z.record(z.string(), z.unknown())
         })
     ]), z.object({
         type: z.enum(['appAssetLibraryPlacements']),
@@ -13402,6 +13888,12 @@ export const zAppAssetLibraryPlacementCreateRequest = z.object({
             appStoreVersionExperimentTreatmentLocalization: z.object({
                 data: z.object({
                     type: z.enum(['appStoreVersionExperimentTreatmentLocalizations']),
+                    id: z.string()
+                }).optional()
+            }).optional(),
+            retentionMessageVersion: z.object({
+                data: z.object({
+                    type: z.enum(['retentionMessageVersions']),
                     id: z.string()
                 }).optional()
             }).optional()
@@ -17647,6 +18139,7 @@ export const zAgeRatingDeclaration = z.object({
             'INFREQUENT',
             'FREQUENT'
         ]).optional(),
+        datingAndRelationships: z.boolean().optional(),
         gambling: z.boolean().optional(),
         gamblingSimulated: z.enum([
             'NONE',
@@ -17696,6 +18189,7 @@ export const zAgeRatingDeclaration = z.object({
             'INFREQUENT',
             'FREQUENT'
         ]).optional(),
+        sharedLocation: z.boolean().optional(),
         socialMedia: z.boolean().optional(),
         socialMediaAgeRestricted: z.boolean().optional(),
         horrorOrFearThemes: z.enum([
@@ -17795,6 +18289,7 @@ export const zAgeRatingDeclarationUpdateRequest = z.object({
                 'INFREQUENT',
                 'FREQUENT'
             ]).optional(),
+            datingAndRelationships: z.boolean().nullish(),
             gambling: z.boolean().nullish(),
             gamblingSimulated: z.enum([
                 'NONE',
@@ -17844,6 +18339,7 @@ export const zAgeRatingDeclarationUpdateRequest = z.object({
                 'INFREQUENT',
                 'FREQUENT'
             ]).optional(),
+            sharedLocation: z.boolean().nullish(),
             socialMedia: z.boolean().nullish(),
             socialMediaAgeRestricted: z.boolean().nullish(),
             horrorOrFearThemes: z.enum([
@@ -19191,6 +19687,62 @@ export const zGameCenterMatchmakingRuleSetTestCreateRequest = z.object({
     included: z.array(z.union([zGameCenterMatchmakingTestPlayerPropertyInlineCreate, zGameCenterMatchmakingTestRequestInlineCreate])).optional()
 });
 
+export const zProposedSubscriptionPriceTier = z.object({
+    minQuantity: z.int(),
+    subscriptionPricePointId: z.string()
+});
+
+/**
+ * SubscriptionPriceChangePreviewCreateRequest
+ */
+export const zSubscriptionPriceChangePreviewCreateRequest = z.object({
+    data: z.object({
+        type: z.enum(['subscriptionPriceChangePreviews']),
+        attributes: z.object({
+            proposedChanges: z.array(z.object({
+                territoryId: z.string().optional(),
+                startDate: z.iso.date().optional(),
+                basePricePointId: z.string().optional(),
+                additionalPriceTiers: z.array(zProposedSubscriptionPriceTier).optional()
+            })).nullish()
+        }).optional(),
+        relationships: z.object({
+            subscription: z.object({
+                data: z.object({
+                    type: z.enum(['subscriptions']),
+                    id: z.string()
+                })
+            })
+        })
+    })
+});
+
+/**
+ * SubscriptionPriceTierEqualizationCreateRequest
+ */
+export const zSubscriptionPriceTierEqualizationCreateRequest = z.object({
+    data: z.object({
+        type: z.enum(['subscriptionPriceTierEqualizations']),
+        attributes: z.object({
+            additionalPriceTiers: z.array(zProposedSubscriptionPriceTier).nullish()
+        }).optional(),
+        relationships: z.object({
+            subscription: z.object({
+                data: z.object({
+                    type: z.enum(['subscriptions']),
+                    id: z.string()
+                })
+            }),
+            basePricePoint: z.object({
+                data: z.object({
+                    type: z.enum(['subscriptionPricePoints']),
+                    id: z.string()
+                })
+            })
+        })
+    })
+});
+
 export const zScmProviderType = z.object({
     kind: z.enum([
         'BITBUCKET_CLOUD',
@@ -19806,6 +20358,33 @@ export const zBuildUploadsResponse = z.object({
 export const zBuildUploadResponse = z.object({
     data: zBuildUpload,
     included: z.array(z.union([zBuildUploadFile, zBuild])).optional(),
+    links: zDocumentLinks
+});
+
+/**
+ * RetentionMessageVersionsResponse
+ */
+export const zRetentionMessageVersionsResponse = z.object({
+    data: z.array(zRetentionMessageVersion),
+    included: z.array(z.union([
+        zAppAssetLibraryPlacement,
+        zRetentionMessageLocalization,
+        zRetentionMessage
+    ])).optional(),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+/**
+ * RetentionMessageVersionResponse
+ */
+export const zRetentionMessageVersionResponse = z.object({
+    data: zRetentionMessageVersion,
+    included: z.array(z.union([
+        zAppAssetLibraryPlacement,
+        zRetentionMessageLocalization,
+        zRetentionMessage
+    ])).optional(),
     links: zDocumentLinks
 });
 
@@ -20869,6 +21448,42 @@ export const zSubscriptionCustomerEligibility = z.enum([
     'EXPIRED'
 ]);
 
+export const zSubscriptionEqualizedPriceTiersForTerritory = z.object({
+    territoryId: z.string().optional(),
+    basePricePointId: z.string().optional(),
+    additionalPriceTiers: z.array(zProposedSubscriptionPriceTier).optional()
+});
+
+/**
+ * SubscriptionPriceTierEqualization
+ */
+export const zSubscriptionPriceTierEqualization = z.object({
+    type: z.enum(['subscriptionPriceTierEqualizations']),
+    id: z.string(),
+    attributes: z.object({
+        equalizedPrices: z.array(zSubscriptionEqualizedPriceTiersForTerritory).optional()
+    }).optional(),
+    relationships: z.object({
+        priceTierPricePoints: z.object({
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['subscriptionPricePoints']),
+                id: z.string()
+            })).optional()
+        }).optional()
+    }).optional(),
+    links: zResourceLinks.optional()
+});
+
+/**
+ * SubscriptionPriceTierEqualizationResponse
+ */
+export const zSubscriptionPriceTierEqualizationResponse = z.object({
+    data: zSubscriptionPriceTierEqualization,
+    included: z.array(zSubscriptionPricePoint).optional(),
+    links: zDocumentLinks
+});
+
 export const zSubscriptionGracePeriodDuration = z.enum([
     'THREE_DAYS',
     'SIXTEEN_DAYS',
@@ -20934,6 +21549,94 @@ export const zSubscriptionOfferMode = z.enum([
 ]);
 
 export const zSubscriptionPlanType = z.enum(['MONTHLY', 'UPFRONT']);
+
+/**
+ * RetentionOffer
+ */
+export const zRetentionOffer = z.object({
+    type: z.enum(['retentionOffers']),
+    id: z.string(),
+    attributes: z.object({
+        referenceName: z.string().optional(),
+        offerId: z.string().optional(),
+        duration: zSubscriptionOfferDuration.optional(),
+        offerMode: zSubscriptionOfferMode.optional(),
+        periodCount: z.int().optional(),
+        customerEligibilityPaidSubscriptionDurationInMonths: z.int().optional(),
+        customerEligibilityWaitBetweenOffersInMonths: z.int().optional(),
+        targetSubscriptionPlanType: zSubscriptionPlanType.optional()
+    }).optional(),
+    relationships: z.object({
+        subscription: z.object({
+            data: z.object({
+                type: z.enum(['subscriptions']),
+                id: z.string()
+            }).optional()
+        }).optional(),
+        prices: z.object({
+            links: zRelationshipLinks.optional(),
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['retentionOfferPrices']),
+                id: z.string()
+            })).optional()
+        }).optional()
+    }).optional(),
+    links: zResourceLinks.optional()
+});
+
+/**
+ * RetentionOffersResponse
+ */
+export const zRetentionOffersResponse = z.object({
+    data: z.array(zRetentionOffer),
+    included: z.array(z.union([zRetentionOfferPrice, zSubscription])).optional(),
+    links: zPagedDocumentLinks,
+    meta: zPagingInformation.optional()
+});
+
+/**
+ * RetentionOfferResponse
+ */
+export const zRetentionOfferResponse = z.object({
+    data: zRetentionOffer,
+    included: z.array(z.union([zRetentionOfferPrice, zSubscription])).optional(),
+    links: zDocumentLinks
+});
+
+/**
+ * RetentionOfferCreateRequest
+ */
+export const zRetentionOfferCreateRequest = z.object({
+    data: z.object({
+        type: z.enum(['retentionOffers']),
+        attributes: z.object({
+            referenceName: z.string(),
+            offerId: z.string(),
+            duration: zSubscriptionOfferDuration,
+            offerMode: zSubscriptionOfferMode,
+            periodCount: z.int(),
+            customerEligibilityPaidSubscriptionDurationInMonths: z.int(),
+            customerEligibilityWaitBetweenOffersInMonths: z.int().nullish(),
+            targetSubscriptionPlanType: zSubscriptionPlanType.optional()
+        }),
+        relationships: z.object({
+            subscription: z.object({
+                data: z.object({
+                    type: z.enum(['subscriptions']),
+                    id: z.string()
+                })
+            }),
+            prices: z.object({
+                data: z.array(z.object({
+                    type: z.enum(['retentionOfferPrices']),
+                    id: z.string()
+                }))
+            })
+        })
+    }),
+    included: z.array(zRetentionOfferPriceInlineCreate).optional()
+});
 
 /**
  * SubscriptionIntroductoryOffer
@@ -21318,6 +22021,14 @@ export const zSubscriptionPrice = z.object({
                 type: z.enum(['subscriptionPricePoints']),
                 id: z.string()
             }).optional()
+        }).optional(),
+        additionalPriceTiers: z.object({
+            links: zRelationshipLinks.optional(),
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['subscriptionPriceTiers']),
+                id: z.string()
+            })).optional()
         }).optional()
     }).optional(),
     links: zResourceLinks.optional()
@@ -21349,6 +22060,12 @@ export const zSubscriptionPriceInlineCreate = z.object({
                 type: z.enum(['subscriptionPricePoints']),
                 id: z.string()
             }).optional()
+        }).optional(),
+        additionalPriceTiers: z.object({
+            data: z.array(z.object({
+                type: z.enum(['subscriptionPriceTiers']),
+                id: z.string()
+            })).optional()
         }).optional()
     }).optional()
 });
@@ -21358,7 +22075,11 @@ export const zSubscriptionPriceInlineCreate = z.object({
  */
 export const zSubscriptionPricesResponse = z.object({
     data: z.array(zSubscriptionPrice),
-    included: z.array(z.union([zSubscriptionPricePoint, zTerritory])).optional(),
+    included: z.array(z.union([
+        zSubscriptionPricePoint,
+        zSubscriptionPriceTier,
+        zTerritory
+    ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
 });
@@ -21368,7 +22089,11 @@ export const zSubscriptionPricesResponse = z.object({
  */
 export const zSubscriptionPriceResponse = z.object({
     data: zSubscriptionPrice,
-    included: z.array(z.union([zSubscriptionPricePoint, zTerritory])).optional(),
+    included: z.array(z.union([
+        zSubscriptionPricePoint,
+        zSubscriptionPriceTier,
+        zTerritory
+    ])).optional(),
     links: zDocumentLinks
 });
 
@@ -21401,9 +22126,16 @@ export const zSubscriptionPriceCreateRequest = z.object({
                     type: z.enum(['subscriptionPricePoints']),
                     id: z.string()
                 })
-            })
+            }),
+            additionalPriceTiers: z.object({
+                data: z.array(z.object({
+                    type: z.enum(['subscriptionPriceTiers']),
+                    id: z.string()
+                })).optional()
+            }).optional()
         })
-    })
+    }),
+    included: z.array(zSubscriptionPriceTierInlineCreate).optional()
 });
 
 /**
@@ -21562,10 +22294,23 @@ export const zSubscriptionUpdateRequest = z.object({
                     type: z.enum(['subscriptionPrices']),
                     id: z.string()
                 })).optional()
+            }).optional(),
+            retentionMessage: z.object({
+                data: z.object({
+                    type: z.enum(['retentionMessages']),
+                    id: z.string()
+                }).optional()
+            }).optional(),
+            retentionMessageOffers: z.object({
+                data: z.array(z.object({
+                    type: z.enum(['retentionOffers']),
+                    id: z.string()
+                })).optional()
             }).optional()
         }).optional()
     }),
     included: z.array(z.union([
+        zSubscriptionPriceTierInlineCreate,
         zSubscriptionPromotionalOfferInlineCreate,
         zSubscriptionPriceInlineCreate,
         zSubscriptionIntroductoryOfferInlineCreate
@@ -21684,7 +22429,8 @@ export const zApp = z.object({
         subscriptionStatusUrlForSandbox: z.url().optional(),
         subscriptionStatusUrlVersionForSandbox: zSubscriptionStatusUrlVersion.optional(),
         contentRightsDeclaration: z.enum(['DOES_NOT_USE_THIRD_PARTY_CONTENT', 'USES_THIRD_PARTY_CONTENT']).optional(),
-        streamlinedPurchasingEnabled: z.boolean().optional()
+        streamlinedPurchasingEnabled: z.boolean().optional(),
+        groupPurchaseInvitationMode: z.enum(['APPLE_HOSTED', 'DEVELOPER_HOSTED']).optional()
     }).optional(),
     relationships: z.object({
         accessibilityDeclarations: z.object({
@@ -21816,6 +22562,14 @@ export const zApp = z.object({
             meta: zPagingInformation.optional(),
             data: z.array(z.object({
                 type: z.enum(['subscriptionGroups']),
+                id: z.string()
+            })).optional()
+        }).optional(),
+        retentionMessages: z.object({
+            links: zRelationshipLinks.optional(),
+            meta: zPagingInformation.optional(),
+            data: z.array(z.object({
+                type: z.enum(['retentionMessages']),
                 id: z.string()
             })).optional()
         }).optional(),
@@ -22104,6 +22858,7 @@ export const zAppsResponse = z.object({
         zInAppPurchase,
         zPrereleaseVersion,
         zPromotedPurchase,
+        zRetentionMessage,
         zReviewSubmission,
         zSubscriptionGracePeriod,
         zSubscriptionGroup
@@ -22139,6 +22894,7 @@ export const zAppResponse = z.object({
         zInAppPurchase,
         zPrereleaseVersion,
         zPromotedPurchase,
+        zRetentionMessage,
         zReviewSubmission,
         zSubscriptionGracePeriod,
         zSubscriptionGroup
@@ -22162,7 +22918,8 @@ export const zAppUpdateRequest = z.object({
             subscriptionStatusUrlForSandbox: z.url().nullish(),
             subscriptionStatusUrlVersionForSandbox: zSubscriptionStatusUrlVersion.optional(),
             contentRightsDeclaration: z.enum(['DOES_NOT_USE_THIRD_PARTY_CONTENT', 'USES_THIRD_PARTY_CONTENT']).optional(),
-            streamlinedPurchasingEnabled: z.boolean().nullish()
+            streamlinedPurchasingEnabled: z.boolean().nullish(),
+            groupPurchaseInvitationMode: z.enum(['APPLE_HOSTED', 'DEVELOPER_HOSTED']).optional()
         }).optional()
     })
 });
@@ -23137,7 +23894,8 @@ export const zAppAssetLibraryPlacementsResponse = z.object({
         zAppCustomProductPageLocalization,
         zAppEventLocalization,
         zAppStoreVersionExperimentTreatmentLocalization,
-        zAppStoreVersionLocalization
+        zAppStoreVersionLocalization,
+        zRetentionMessageVersion
     ])).optional(),
     links: zPagedDocumentLinks,
     meta: zPagingInformation.optional()
@@ -23154,7 +23912,8 @@ export const zAppAssetLibraryPlacementResponse = z.object({
         zAppCustomProductPageLocalization,
         zAppEventLocalization,
         zAppStoreVersionExperimentTreatmentLocalization,
-        zAppStoreVersionLocalization
+        zAppStoreVersionLocalization,
+        zRetentionMessageVersion
     ])).optional(),
     links: zDocumentLinks
 });
@@ -24353,6 +25112,7 @@ export const zReviewSubmissionItemsResponse = z.object({
         zGameCenterLeaderboardSetVersionV2,
         zGameCenterLeaderboardVersionV2,
         zInAppPurchaseVersion,
+        zRetentionMessageVersion,
         zSubscriptionGroupVersion,
         zSubscriptionVersion
     ])).optional(),
@@ -24379,6 +25139,7 @@ export const zReviewSubmissionItemResponse = z.object({
         zGameCenterLeaderboardSetVersionV2,
         zGameCenterLeaderboardVersionV2,
         zInAppPurchaseVersion,
+        zRetentionMessageVersion,
         zSubscriptionGroupVersion,
         zSubscriptionVersion
     ])).optional(),
@@ -24618,6 +25379,8 @@ export const zSubscriptionsResponse = z.object({
     data: z.array(zSubscription),
     included: z.array(z.union([
         zPromotedPurchase,
+        zRetentionMessage,
+        zRetentionOffer,
         zSubscriptionAppStoreReviewScreenshot,
         zSubscriptionAvailability,
         zSubscriptionGroup,
@@ -24626,6 +25389,7 @@ export const zSubscriptionsResponse = z.object({
         zSubscriptionLocalization,
         zSubscriptionOfferCode,
         zSubscriptionPlanAvailability,
+        zSubscriptionPriceTier,
         zSubscriptionPrice,
         zSubscriptionPromotionalOffer,
         zSubscriptionVersion,
@@ -24642,6 +25406,8 @@ export const zSubscriptionResponse = z.object({
     data: zSubscription,
     included: z.array(z.union([
         zPromotedPurchase,
+        zRetentionMessage,
+        zRetentionOffer,
         zSubscriptionAppStoreReviewScreenshot,
         zSubscriptionAvailability,
         zSubscriptionGroup,
@@ -24650,6 +25416,7 @@ export const zSubscriptionResponse = z.object({
         zSubscriptionLocalization,
         zSubscriptionOfferCode,
         zSubscriptionPlanAvailability,
+        zSubscriptionPriceTier,
         zSubscriptionPrice,
         zSubscriptionPromotionalOffer,
         zSubscriptionVersion,
@@ -25604,7 +26371,8 @@ export const zAppAssetLibraryImagesGetInstanceQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     include: z.array(z.enum(['placements'])).optional(),
     'limit[placements]': z.int().lte(50).optional()
@@ -25648,7 +26416,8 @@ export const zAppAssetLibraryPlacementOrderingRequestsCreateInstanceQuery = z.ob
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     include: z.array(z.enum(['orderedPlacements'])).optional(),
     'limit[orderedPlacements]': z.int().lte(50).optional(),
@@ -25697,7 +26466,8 @@ export const zAppAssetLibraryPlacementsGetInstanceQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appAssetLibraryImages]': z.array(z.enum([
         'category',
@@ -25769,13 +26539,20 @@ export const zAppAssetLibraryPlacementsGetInstanceQuery = z.object({
         'appPreviewSets',
         'placements'
     ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
     include: z.array(z.enum([
         'image',
         'video',
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional()
 });
 
@@ -25877,7 +26654,8 @@ export const zAppAssetLibraryVideosGetInstanceQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     include: z.array(z.enum(['placements'])).optional(),
     'limit[placements]': z.int().lte(50).optional()
@@ -26392,6 +27170,7 @@ export const zAppClipsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -26413,6 +27192,7 @@ export const zAppClipsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -26521,7 +27301,8 @@ export const zAppCustomProductPageLocalizationsGetInstanceQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     include: z.array(z.enum([
         'appCustomProductPageVersion',
@@ -26660,6 +27441,7 @@ export const zAppCustomProductPagesGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -26681,6 +27463,7 @@ export const zAppCustomProductPagesGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -26822,6 +27605,7 @@ export const zAppEncryptionDeclarationsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -26843,6 +27627,7 @@ export const zAppEncryptionDeclarationsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -26966,6 +27751,7 @@ export const zAppEncryptionDeclarationsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -26987,6 +27773,7 @@ export const zAppEncryptionDeclarationsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -27145,7 +27932,8 @@ export const zAppEventLocalizationsGetInstanceQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     include: z.array(z.enum([
         'appEvent',
@@ -27495,6 +28283,7 @@ export const zAppInfosGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -27516,6 +28305,7 @@ export const zAppInfosGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -27545,6 +28335,7 @@ export const zAppInfosGetInstanceQuery = z.object({
         'advertising',
         'alcoholTobaccoOrDrugUseOrReferences',
         'contests',
+        'datingAndRelationships',
         'gambling',
         'gamblingSimulated',
         'gunsOrOtherWeapons',
@@ -27558,6 +28349,7 @@ export const zAppInfosGetInstanceQuery = z.object({
         'ageAssurance',
         'sexualContentGraphicAndNudity',
         'sexualContentOrNudity',
+        'sharedLocation',
         'socialMedia',
         'socialMediaAgeRestricted',
         'horrorOrFearThemes',
@@ -27801,6 +28593,7 @@ export const zAppPricePointsV3GetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -27822,6 +28615,7 @@ export const zAppPricePointsV3GetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -27890,6 +28684,7 @@ export const zAppPriceSchedulesGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -27911,6 +28706,7 @@ export const zAppPriceSchedulesGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -28326,7 +29122,8 @@ export const zAppStoreVersionExperimentTreatmentLocalizationsGetInstanceQuery = 
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     include: z.array(z.enum([
         'appStoreVersionExperimentTreatment',
@@ -28475,6 +29272,7 @@ export const zAppStoreVersionExperimentsV2GetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -28496,6 +29294,7 @@ export const zAppStoreVersionExperimentsV2GetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -28768,7 +29567,8 @@ export const zAppStoreVersionLocalizationsGetInstanceQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     include: z.array(z.enum([
         'appStoreVersion',
@@ -28927,6 +29727,7 @@ export const zAppStoreVersionsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -28948,6 +29749,7 @@ export const zAppStoreVersionsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -29209,6 +30011,7 @@ export const zAppsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -29230,6 +30033,7 @@ export const zAppsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -29448,6 +30252,11 @@ export const zAppsGetCollectionQuery = z.object({
         'subscriptions',
         'subscriptionGroupLocalizations',
         'versions'
+    ])).optional(),
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
     ])).optional(),
     'fields[gameCenterEnabledVersions]': z.array(z.enum([
         'platform',
@@ -29556,6 +30365,7 @@ export const zAppsGetCollectionQuery = z.object({
         'endUserLicenseAgreement',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'appCustomProductPages',
         'inAppPurchasesV2',
@@ -29583,6 +30393,7 @@ export const zAppsGetCollectionQuery = z.object({
     'limit[inAppPurchasesV2]': z.int().lte(50).optional(),
     'limit[preReleaseVersions]': z.int().lte(50).optional(),
     'limit[promotedPurchases]': z.int().lte(50).optional(),
+    'limit[retentionMessages]': z.int().lte(50).optional(),
     'limit[reviewSubmissions]': z.int().lte(50).optional(),
     'limit[subscriptionGroups]': z.int().lte(50).optional()
 });
@@ -29610,6 +30421,7 @@ export const zAppsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -29631,6 +30443,7 @@ export const zAppsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -29850,6 +30663,11 @@ export const zAppsGetInstanceQuery = z.object({
         'subscriptionGroupLocalizations',
         'versions'
     ])).optional(),
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
     'fields[gameCenterEnabledVersions]': z.array(z.enum([
         'platform',
         'versionString',
@@ -29956,6 +30774,7 @@ export const zAppsGetInstanceQuery = z.object({
         'endUserLicenseAgreement',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'appCustomProductPages',
         'inAppPurchasesV2',
@@ -29983,6 +30802,7 @@ export const zAppsGetInstanceQuery = z.object({
     'limit[inAppPurchasesV2]': z.int().lte(50).optional(),
     'limit[preReleaseVersions]': z.int().lte(50).optional(),
     'limit[promotedPurchases]': z.int().lte(50).optional(),
+    'limit[retentionMessages]': z.int().lte(50).optional(),
     'limit[reviewSubmissions]': z.int().lte(50).optional(),
     'limit[subscriptionGroups]': z.int().lte(50).optional()
 });
@@ -30247,6 +31067,7 @@ export const zBackgroundAssetsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -30268,6 +31089,7 @@ export const zBackgroundAssetsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -30442,6 +31264,7 @@ export const zBetaAppLocalizationsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -30463,6 +31286,7 @@ export const zBetaAppLocalizationsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -30543,6 +31367,7 @@ export const zBetaAppLocalizationsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -30564,6 +31389,7 @@ export const zBetaAppLocalizationsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -30637,6 +31463,7 @@ export const zBetaAppReviewDetailsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -30658,6 +31485,7 @@ export const zBetaAppReviewDetailsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -30721,6 +31549,7 @@ export const zBetaAppReviewDetailsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -30742,6 +31571,7 @@ export const zBetaAppReviewDetailsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -31255,6 +32085,7 @@ export const zBetaGroupsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -31276,6 +32107,7 @@ export const zBetaGroupsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -31413,6 +32245,7 @@ export const zBetaGroupsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -31434,6 +32267,7 @@ export const zBetaGroupsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -31544,6 +32378,7 @@ export const zBetaLicenseAgreementsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -31565,6 +32400,7 @@ export const zBetaLicenseAgreementsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -31618,6 +32454,7 @@ export const zBetaLicenseAgreementsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -31639,6 +32476,7 @@ export const zBetaLicenseAgreementsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -31784,6 +32622,7 @@ export const zBetaTestersGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -31805,6 +32644,7 @@ export const zBetaTestersGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -31941,6 +32781,7 @@ export const zBetaTestersGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -31962,6 +32803,7 @@ export const zBetaTestersGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -32444,6 +33286,7 @@ export const zBuildsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -32465,6 +33308,7 @@ export const zBuildsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -32705,6 +33549,7 @@ export const zBuildsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -32726,6 +33571,7 @@ export const zBuildsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -32959,6 +33805,7 @@ export const zBundleIdsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -32980,6 +33827,7 @@ export const zBundleIdsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -33080,6 +33928,7 @@ export const zBundleIdsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -33101,6 +33950,7 @@ export const zBundleIdsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -33567,6 +34417,7 @@ export const zCiProductsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -33588,6 +34439,7 @@ export const zCiProductsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -33685,6 +34537,7 @@ export const zCiProductsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -33706,6 +34559,7 @@ export const zCiProductsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -34151,6 +35005,7 @@ export const zEndUserLicenseAgreementsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -34172,6 +35027,7 @@ export const zEndUserLicenseAgreementsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -35806,6 +36662,7 @@ export const zGameCenterDetailsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -35827,6 +36684,7 @@ export const zGameCenterDetailsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -38921,6 +39779,7 @@ export const zInAppPurchasesGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -38942,6 +39801,7 @@ export const zInAppPurchasesGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -39365,6 +40225,7 @@ export const zNominationsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -39386,6 +40247,7 @@ export const zNominationsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -39512,6 +40374,7 @@ export const zNominationsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -39533,6 +40396,7 @@ export const zNominationsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -39779,6 +40643,7 @@ export const zPreReleaseVersionsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -39800,6 +40665,7 @@ export const zPreReleaseVersionsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -39887,6 +40753,7 @@ export const zPreReleaseVersionsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -39908,6 +40775,7 @@ export const zPreReleaseVersionsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -40182,7 +41050,10 @@ export const zPromotedPurchasesGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     include: z.array(z.enum(['inAppPurchaseV2', 'subscription'])).optional()
 });
@@ -40205,6 +41076,286 @@ export const zPromotedPurchasesUpdateInstancePath = z.object({
  * Single PromotedPurchase
  */
 export const zPromotedPurchasesUpdateInstanceResponse = zPromotedPurchaseResponse;
+
+/**
+ * RetentionMessageLocalization representation
+ */
+export const zRetentionMessageLocalizationsCreateInstanceBody = zRetentionMessageLocalizationCreateRequest;
+
+/**
+ * Single RetentionMessageLocalization
+ */
+export const zRetentionMessageLocalizationsCreateInstanceResponse = zRetentionMessageLocalizationResponse;
+
+export const zRetentionMessageLocalizationsDeleteInstancePath = z.object({
+    id: z.string()
+});
+
+/**
+ * Success (no content)
+ */
+export const zRetentionMessageLocalizationsDeleteInstanceResponse = z.void();
+
+export const zRetentionMessageLocalizationsGetInstancePath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessageLocalizationsGetInstanceQuery = z.object({
+    'fields[retentionMessageLocalizations]': z.array(z.enum([
+        'locale',
+        'header',
+        'body',
+        'retentionMessageVersion'
+    ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    include: z.array(z.enum(['retentionMessageVersion'])).optional()
+});
+
+/**
+ * Single RetentionMessageLocalization
+ */
+export const zRetentionMessageLocalizationsGetInstanceResponse = zRetentionMessageLocalizationResponse;
+
+/**
+ * RetentionMessageLocalization representation
+ */
+export const zRetentionMessageLocalizationsUpdateInstanceBody = zRetentionMessageLocalizationUpdateRequest;
+
+export const zRetentionMessageLocalizationsUpdateInstancePath = z.object({
+    id: z.string()
+});
+
+/**
+ * Single RetentionMessageLocalization
+ */
+export const zRetentionMessageLocalizationsUpdateInstanceResponse = zRetentionMessageLocalizationResponse;
+
+/**
+ * RetentionMessageVersion representation
+ */
+export const zRetentionMessageVersionsCreateInstanceBody = zRetentionMessageVersionCreateRequest;
+
+/**
+ * Single RetentionMessageVersion
+ */
+export const zRetentionMessageVersionsCreateInstanceResponse = zRetentionMessageVersionResponse;
+
+export const zRetentionMessageVersionsGetInstancePath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessageVersionsGetInstanceQuery = z.object({
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
+    'fields[retentionMessageLocalizations]': z.array(z.enum([
+        'locale',
+        'header',
+        'body',
+        'retentionMessageVersion'
+    ])).optional(),
+    'fields[appAssetLibraryPlacements]': z.array(z.enum([
+        'mediaType',
+        'placementType',
+        'placementGroup',
+        'createdDate',
+        'lastModifiedDate',
+        'state',
+        'stateDetails',
+        'image',
+        'video',
+        'appEventLocalization',
+        'appStoreVersionLocalization',
+        'appCustomProductPageLocalization',
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
+    ])).optional(),
+    include: z.array(z.enum([
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    'limit[localizations]': z.int().lte(50).optional()
+});
+
+/**
+ * Single RetentionMessageVersion
+ */
+export const zRetentionMessageVersionsGetInstanceResponse = zRetentionMessageVersionResponse;
+
+/**
+ * RetentionMessage representation
+ */
+export const zRetentionMessagesCreateInstanceBody = zRetentionMessageCreateRequest;
+
+/**
+ * Single RetentionMessage
+ */
+export const zRetentionMessagesCreateInstanceResponse = zRetentionMessageResponse;
+
+export const zRetentionMessagesDeleteInstancePath = z.object({
+    id: z.string()
+});
+
+/**
+ * Success (no content)
+ */
+export const zRetentionMessagesDeleteInstanceResponse = z.void();
+
+export const zRetentionMessagesGetInstancePath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessagesGetInstanceQuery = z.object({
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    'fields[subscriptions]': z.array(z.enum([
+        'name',
+        'productId',
+        'familySharable',
+        'state',
+        'subscriptionPeriod',
+        'reviewNote',
+        'groupLevel',
+        'multiSeatStatus',
+        'marketSettings',
+        'subscriptionLocalizations',
+        'appStoreReviewScreenshot',
+        'group',
+        'introductoryOffers',
+        'promotionalOffers',
+        'offerCodes',
+        'prices',
+        'pricePoints',
+        'promotedPurchase',
+        'subscriptionAvailability',
+        'winBackOffers',
+        'images',
+        'planAvailabilities',
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
+    ])).optional(),
+    include: z.array(z.enum(['versions', 'subscriptions'])).optional(),
+    'limit[subscriptions]': z.int().lte(50).optional(),
+    'limit[versions]': z.int().lte(50).optional()
+});
+
+/**
+ * Single RetentionMessage
+ */
+export const zRetentionMessagesGetInstanceResponse = zRetentionMessageResponse;
+
+/**
+ * RetentionOffer representation
+ */
+export const zRetentionOffersCreateInstanceBody = zRetentionOfferCreateRequest;
+
+/**
+ * Single RetentionOffer
+ */
+export const zRetentionOffersCreateInstanceResponse = zRetentionOfferResponse;
+
+export const zRetentionOffersDeleteInstancePath = z.object({
+    id: z.string()
+});
+
+/**
+ * Success (no content)
+ */
+export const zRetentionOffersDeleteInstanceResponse = z.void();
+
+export const zRetentionOffersGetInstancePath = z.object({
+    id: z.string()
+});
+
+export const zRetentionOffersGetInstanceQuery = z.object({
+    'fields[retentionOffers]': z.array(z.enum([
+        'referenceName',
+        'offerId',
+        'duration',
+        'offerMode',
+        'periodCount',
+        'customerEligibilityPaidSubscriptionDurationInMonths',
+        'customerEligibilityWaitBetweenOffersInMonths',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'prices'
+    ])).optional(),
+    'fields[subscriptions]': z.array(z.enum([
+        'name',
+        'productId',
+        'familySharable',
+        'state',
+        'subscriptionPeriod',
+        'reviewNote',
+        'groupLevel',
+        'multiSeatStatus',
+        'marketSettings',
+        'subscriptionLocalizations',
+        'appStoreReviewScreenshot',
+        'group',
+        'introductoryOffers',
+        'promotionalOffers',
+        'offerCodes',
+        'prices',
+        'pricePoints',
+        'promotedPurchase',
+        'subscriptionAvailability',
+        'winBackOffers',
+        'images',
+        'planAvailabilities',
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
+    ])).optional(),
+    'fields[retentionOfferPrices]': z.array(z.enum(['territory', 'subscriptionPricePoint'])).optional(),
+    include: z.array(z.enum(['subscription', 'prices'])).optional(),
+    'limit[prices]': z.int().lte(50).optional()
+});
+
+/**
+ * Single RetentionOffer
+ */
+export const zRetentionOffersGetInstanceResponse = zRetentionOfferResponse;
+
+/**
+ * RetentionOffer representation
+ */
+export const zRetentionOffersUpdateInstanceBody = zRetentionOfferUpdateRequest;
+
+export const zRetentionOffersUpdateInstancePath = z.object({
+    id: z.string()
+});
+
+/**
+ * Single RetentionOffer
+ */
+export const zRetentionOffersUpdateInstanceResponse = zRetentionOfferResponse;
 
 /**
  * ReviewSubmissionItem representation
@@ -40279,6 +41430,7 @@ export const zReviewSubmissionsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -40300,6 +41452,7 @@ export const zReviewSubmissionsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -40342,7 +41495,8 @@ export const zReviewSubmissionsGetCollectionQuery = z.object({
         'gameCenterLeaderboardVersion',
         'inAppPurchaseVersion',
         'subscriptionVersion',
-        'subscriptionGroupVersion'
+        'subscriptionGroupVersion',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appStoreVersions]': z.array(z.enum([
         'platform',
@@ -40431,6 +41585,7 @@ export const zReviewSubmissionsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -40452,6 +41607,7 @@ export const zReviewSubmissionsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -40494,7 +41650,8 @@ export const zReviewSubmissionsGetInstanceQuery = z.object({
         'gameCenterLeaderboardVersion',
         'inAppPurchaseVersion',
         'subscriptionVersion',
-        'subscriptionGroupVersion'
+        'subscriptionGroupVersion',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appStoreVersions]': z.array(z.enum([
         'platform',
@@ -40944,7 +42101,10 @@ export const zSubscriptionAppStoreReviewScreenshotsGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     include: z.array(z.enum(['subscription'])).optional()
 });
@@ -41248,7 +42408,10 @@ export const zSubscriptionGroupsGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionGroupLocalizations]': z.array(z.enum([
         'name',
@@ -41349,7 +42512,10 @@ export const zSubscriptionImagesGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     include: z.array(z.enum(['subscription'])).optional()
 });
@@ -41573,7 +42739,10 @@ export const zSubscriptionLocalizationsGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     include: z.array(z.enum(['subscription'])).optional()
 });
@@ -41780,7 +42949,10 @@ export const zSubscriptionOfferCodesGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionOfferCodeOneTimeUseCodes]': z.array(z.enum([
         'numberOfCodes',
@@ -41874,6 +43046,16 @@ export const zSubscriptionPlanAvailabilitiesUpdateInstancePath = z.object({
  */
 export const zSubscriptionPlanAvailabilitiesUpdateInstanceResponse = zSubscriptionPlanAvailabilityResponse;
 
+/**
+ * SubscriptionPriceChangePreview representation
+ */
+export const zSubscriptionPriceChangePreviewsCreateInstanceBody = zSubscriptionPriceChangePreviewCreateRequest;
+
+/**
+ * Single SubscriptionPriceChangePreview
+ */
+export const zSubscriptionPriceChangePreviewsCreateInstanceResponse = zSubscriptionPriceChangePreviewResponse;
+
 export const zSubscriptionPricePointsGetInstancePath = z.object({
     id: z.string()
 });
@@ -41895,6 +43077,51 @@ export const zSubscriptionPricePointsGetInstanceQuery = z.object({
  * Single SubscriptionPricePoint
  */
 export const zSubscriptionPricePointsGetInstanceResponse = zSubscriptionPricePointResponse;
+
+/**
+ * SubscriptionPriceTierEqualization representation
+ */
+export const zSubscriptionPriceTierEqualizationsCreateInstanceBody = zSubscriptionPriceTierEqualizationCreateRequest;
+
+export const zSubscriptionPriceTierEqualizationsCreateInstanceQuery = z.object({
+    'fields[subscriptionPricePoints]': z.array(z.enum([
+        'customerPrice',
+        'proceeds',
+        'proceedsYear2',
+        'territory',
+        'equalizations',
+        'adjustedEqualizations'
+    ])).optional(),
+    include: z.array(z.enum(['priceTierPricePoints'])).optional(),
+    'limit[priceTierPricePoints]': z.int().lte(50).optional(),
+    'fields[subscriptionPriceTierEqualizations]': z.array(z.enum(['equalizedPrices', 'priceTierPricePoints'])).optional()
+});
+
+/**
+ * Single SubscriptionPriceTierEqualization
+ */
+export const zSubscriptionPriceTierEqualizationsCreateInstanceResponse = zSubscriptionPriceTierEqualizationResponse;
+
+export const zSubscriptionPriceTiersGetCollectionQuery = z.object({
+    'filter[subscription]': z.array(z.string()),
+    'filter[territory]': z.array(z.string()).optional(),
+    'fields[subscriptionPriceTiers]': z.array(z.enum(['minQuantity', 'subscriptionPricePoint'])).optional(),
+    'fields[subscriptionPricePoints]': z.array(z.enum([
+        'customerPrice',
+        'proceeds',
+        'proceedsYear2',
+        'territory',
+        'equalizations',
+        'adjustedEqualizations'
+    ])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum(['subscriptionPricePoint'])).optional()
+});
+
+/**
+ * List of SubscriptionPriceTiers
+ */
+export const zSubscriptionPriceTiersGetCollectionResponse = zSubscriptionPriceTiersResponse;
 
 /**
  * SubscriptionPrice representation
@@ -41972,7 +43199,10 @@ export const zSubscriptionPromotionalOffersGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionPromotionalOfferPrices]': z.array(z.enum(['territory', 'subscriptionPricePoint'])).optional(),
     include: z.array(z.enum(['subscription', 'prices'])).optional(),
@@ -42054,7 +43284,10 @@ export const zSubscriptionVersionsGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionImages]': z.array(z.enum([
         'fileSize',
@@ -42132,7 +43365,10 @@ export const zSubscriptionsGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionLocalizations]': z.array(z.enum([
         'name',
@@ -42202,7 +43438,8 @@ export const zSubscriptionsGetInstanceQuery = z.object({
         'preserved',
         'planType',
         'territory',
-        'subscriptionPricePoint'
+        'subscriptionPricePoint',
+        'additionalPriceTiers'
     ])).optional(),
     'fields[promotedPurchases]': z.array(z.enum([
         'visibleForAllUsers',
@@ -42251,6 +43488,23 @@ export const zSubscriptionsGetInstanceQuery = z.object({
         'images',
         'localizations'
     ])).optional(),
+    'fields[retentionOffers]': z.array(z.enum([
+        'referenceName',
+        'offerId',
+        'duration',
+        'offerMode',
+        'periodCount',
+        'customerEligibilityPaidSubscriptionDurationInMonths',
+        'customerEligibilityWaitBetweenOffersInMonths',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'prices'
+    ])).optional(),
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
     include: z.array(z.enum([
         'subscriptionLocalizations',
         'appStoreReviewScreenshot',
@@ -42264,7 +43518,10 @@ export const zSubscriptionsGetInstanceQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'limit[images]': z.int().lte(50).optional(),
     'limit[introductoryOffers]': z.int().lte(50).optional(),
@@ -42272,6 +43529,8 @@ export const zSubscriptionsGetInstanceQuery = z.object({
     'limit[planAvailabilities]': z.int().lte(50).optional(),
     'limit[prices]': z.int().lte(50).optional(),
     'limit[promotionalOffers]': z.int().lte(50).optional(),
+    'limit[retentionMessageOffers]': z.int().lte(50).optional(),
+    'limit[retentionOffers]': z.int().lte(50).optional(),
     'limit[subscriptionLocalizations]': z.int().lte(50).optional(),
     'limit[versions]': z.int().lte(50).optional(),
     'limit[winBackOffers]': z.int().lte(50).optional()
@@ -42367,6 +43626,7 @@ export const zUserInvitationsGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -42388,6 +43648,7 @@ export const zUserInvitationsGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -42470,6 +43731,7 @@ export const zUserInvitationsGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -42491,6 +43753,7 @@ export const zUserInvitationsGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -42571,6 +43834,7 @@ export const zUsersGetCollectionQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -42592,6 +43856,7 @@ export const zUsersGetCollectionQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -42663,6 +43928,7 @@ export const zUsersGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -42684,6 +43950,7 @@ export const zUsersGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -42797,6 +44064,7 @@ export const zWebhooksGetInstanceQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -42818,6 +44086,7 @@ export const zWebhooksGetInstanceQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -43228,7 +44497,8 @@ export const zAppAssetLibrariesImagesGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum(['placements'])).optional(),
@@ -43313,7 +44583,8 @@ export const zAppAssetLibrariesVideosGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum(['placements'])).optional(),
@@ -43392,7 +44663,8 @@ export const zAppAssetLibraryImagesPlacementsGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appAssetLibraryImages]': z.array(z.enum([
         'category',
@@ -43464,6 +44736,12 @@ export const zAppAssetLibraryImagesPlacementsGetToManyRelatedQuery = z.object({
         'appPreviewSets',
         'placements'
     ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
         'image',
@@ -43471,7 +44749,8 @@ export const zAppAssetLibraryImagesPlacementsGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional()
 });
 
@@ -43547,7 +44826,8 @@ export const zAppAssetLibraryVideosPlacementsGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appAssetLibraryImages]': z.array(z.enum([
         'category',
@@ -43619,6 +44899,12 @@ export const zAppAssetLibraryVideosPlacementsGetToManyRelatedQuery = z.object({
         'appPreviewSets',
         'placements'
     ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
         'image',
@@ -43626,7 +44912,8 @@ export const zAppAssetLibraryVideosPlacementsGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional()
 });
 
@@ -43912,6 +45199,7 @@ export const zAppClipDefaultExperiencesReleaseWithAppStoreVersionGetToOneRelated
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -43933,6 +45221,7 @@ export const zAppClipDefaultExperiencesReleaseWithAppStoreVersionGetToOneRelated
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -44527,7 +45816,8 @@ export const zAppCustomProductPageLocalizationsPlacementsGetToManyRelatedQuery =
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appAssetLibraryImages]': z.array(z.enum([
         'category',
@@ -44599,6 +45889,12 @@ export const zAppCustomProductPageLocalizationsPlacementsGetToManyRelatedQuery =
         'appPreviewSets',
         'placements'
     ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
         'image',
@@ -44606,7 +45902,8 @@ export const zAppCustomProductPageLocalizationsPlacementsGetToManyRelatedQuery =
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional()
 });
 
@@ -44735,7 +46032,8 @@ export const zAppCustomProductPageVersionsAppCustomProductPageLocalizationsGetTo
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
@@ -44844,6 +46142,7 @@ export const zAppEncryptionDeclarationsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -44865,6 +46164,7 @@ export const zAppEncryptionDeclarationsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -45105,7 +46405,8 @@ export const zAppEventLocalizationsPlacementsGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appAssetLibraryImages]': z.array(z.enum([
         'category',
@@ -45177,6 +46478,12 @@ export const zAppEventLocalizationsPlacementsGetToManyRelatedQuery = z.object({
         'appPreviewSets',
         'placements'
     ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
         'image',
@@ -45184,7 +46491,8 @@ export const zAppEventLocalizationsPlacementsGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional()
 });
 
@@ -45270,7 +46578,8 @@ export const zAppEventsLocalizationsGetToManyRelatedQuery = z.object({
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
@@ -45307,6 +46616,7 @@ export const zAppInfosAgeRatingDeclarationGetToOneRelatedQuery = z.object({
         'advertising',
         'alcoholTobaccoOrDrugUseOrReferences',
         'contests',
+        'datingAndRelationships',
         'gambling',
         'gamblingSimulated',
         'gunsOrOtherWeapons',
@@ -45320,6 +46630,7 @@ export const zAppInfosAgeRatingDeclarationGetToOneRelatedQuery = z.object({
         'ageAssurance',
         'sexualContentGraphicAndNudity',
         'sexualContentOrNudity',
+        'sharedLocation',
         'socialMedia',
         'socialMediaAgeRestricted',
         'horrorOrFearThemes',
@@ -45697,6 +47008,7 @@ export const zAppPricePointsV3EqualizationsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -45718,6 +47030,7 @@ export const zAppPricePointsV3EqualizationsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -46260,7 +47573,8 @@ export const zAppStoreVersionExperimentTreatmentLocalizationsPlacementsGetToMany
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appAssetLibraryImages]': z.array(z.enum([
         'category',
@@ -46332,6 +47646,12 @@ export const zAppStoreVersionExperimentTreatmentLocalizationsPlacementsGetToMany
         'appPreviewSets',
         'placements'
     ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
         'image',
@@ -46339,7 +47659,8 @@ export const zAppStoreVersionExperimentTreatmentLocalizationsPlacementsGetToMany
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional()
 });
 
@@ -46410,7 +47731,8 @@ export const zAppStoreVersionExperimentTreatmentsAppStoreVersionExperimentTreatm
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
@@ -46842,7 +48164,8 @@ export const zAppStoreVersionLocalizationsPlacementsGetToManyRelatedQuery = z.ob
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appAssetLibraryImages]': z.array(z.enum([
         'category',
@@ -46914,6 +48237,12 @@ export const zAppStoreVersionLocalizationsPlacementsGetToManyRelatedQuery = z.ob
         'appPreviewSets',
         'placements'
     ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
         'image',
@@ -46921,7 +48250,8 @@ export const zAppStoreVersionLocalizationsPlacementsGetToManyRelatedQuery = z.ob
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional()
 });
 
@@ -47317,6 +48647,7 @@ export const zAppStoreVersionsAppStoreVersionExperimentsV2GetToManyRelatedQuery 
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -47338,6 +48669,7 @@ export const zAppStoreVersionsAppStoreVersionExperimentsV2GetToManyRelatedQuery 
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -47501,7 +48833,8 @@ export const zAppStoreVersionsAppStoreVersionLocalizationsGetToManyRelatedQuery 
         'appEventLocalization',
         'appStoreVersionLocalization',
         'appCustomProductPageLocalization',
-        'appStoreVersionExperimentTreatmentLocalization'
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
@@ -48296,6 +49629,7 @@ export const zAppsAppClipsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -48317,6 +49651,7 @@ export const zAppsAppClipsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -48398,6 +49733,7 @@ export const zAppsAppCustomProductPagesGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -48419,6 +49755,7 @@ export const zAppsAppCustomProductPagesGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -48518,6 +49855,7 @@ export const zAppsAppEncryptionDeclarationsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -48539,6 +49877,7 @@ export const zAppsAppEncryptionDeclarationsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -48730,6 +50069,7 @@ export const zAppsAppInfosGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -48751,6 +50091,7 @@ export const zAppsAppInfosGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -48780,6 +50121,7 @@ export const zAppsAppInfosGetToManyRelatedQuery = z.object({
         'advertising',
         'alcoholTobaccoOrDrugUseOrReferences',
         'contests',
+        'datingAndRelationships',
         'gambling',
         'gamblingSimulated',
         'gunsOrOtherWeapons',
@@ -48793,6 +50135,7 @@ export const zAppsAppInfosGetToManyRelatedQuery = z.object({
         'ageAssurance',
         'sexualContentGraphicAndNudity',
         'sexualContentOrNudity',
+        'sharedLocation',
         'socialMedia',
         'socialMediaAgeRestricted',
         'horrorOrFearThemes',
@@ -48881,6 +50224,7 @@ export const zAppsAppPricePointsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -48902,6 +50246,7 @@ export const zAppsAppPricePointsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -48970,6 +50315,7 @@ export const zAppsAppPriceScheduleGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -48991,6 +50337,7 @@ export const zAppsAppPriceScheduleGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -49094,6 +50441,7 @@ export const zAppsAppStoreVersionExperimentsV2GetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -49115,6 +50463,7 @@ export const zAppsAppStoreVersionExperimentsV2GetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -49295,6 +50644,7 @@ export const zAppsAppStoreVersionsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -49316,6 +50666,7 @@ export const zAppsAppStoreVersionsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -49577,6 +50928,7 @@ export const zAppsBackgroundAssetsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -49598,6 +50950,7 @@ export const zAppsBackgroundAssetsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -50208,6 +51561,7 @@ export const zAppsCiProductGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -50229,6 +51583,7 @@ export const zAppsCiProductGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -50683,6 +52038,7 @@ export const zAppsGameCenterDetailGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -50704,6 +52060,7 @@ export const zAppsGameCenterDetailGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -50962,6 +52319,7 @@ export const zAppsGameCenterEnabledVersionsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -50983,6 +52341,7 @@ export const zAppsGameCenterEnabledVersionsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -51072,6 +52431,7 @@ export const zAppsInAppPurchasesGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -51093,6 +52453,7 @@ export const zAppsInAppPurchasesGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -51453,7 +52814,10 @@ export const zAppsPromotedPurchasesGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum(['inAppPurchaseV2', 'subscription'])).optional()
@@ -51463,6 +52827,74 @@ export const zAppsPromotedPurchasesGetToManyRelatedQuery = z.object({
  * List of PromotedPurchases
  */
 export const zAppsPromotedPurchasesGetToManyRelatedResponse = zPromotedPurchasesResponse;
+
+export const zAppsRetentionMessagesGetToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+export const zAppsRetentionMessagesGetToManyRelationshipQuery = z.object({
+    limit: z.int().lte(200).optional()
+});
+
+/**
+ * List of related linkages
+ */
+export const zAppsRetentionMessagesGetToManyRelationshipResponse = zAppRetentionMessagesLinkagesResponse;
+
+export const zAppsRetentionMessagesGetToManyRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zAppsRetentionMessagesGetToManyRelatedQuery = z.object({
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    'fields[subscriptions]': z.array(z.enum([
+        'name',
+        'productId',
+        'familySharable',
+        'state',
+        'subscriptionPeriod',
+        'reviewNote',
+        'groupLevel',
+        'multiSeatStatus',
+        'marketSettings',
+        'subscriptionLocalizations',
+        'appStoreReviewScreenshot',
+        'group',
+        'introductoryOffers',
+        'promotionalOffers',
+        'offerCodes',
+        'prices',
+        'pricePoints',
+        'promotedPurchase',
+        'subscriptionAvailability',
+        'winBackOffers',
+        'images',
+        'planAvailabilities',
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
+    ])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum(['versions', 'subscriptions'])).optional(),
+    'limit[versions]': z.int().lte(50).optional(),
+    'limit[subscriptions]': z.int().lte(50).optional()
+});
+
+/**
+ * List of RetentionMessages
+ */
+export const zAppsRetentionMessagesGetToManyRelatedResponse = zRetentionMessagesResponse;
 
 export const zAppsReviewSubmissionsGetToManyRelationshipPath = z.object({
     id: z.string()
@@ -51520,6 +52952,7 @@ export const zAppsReviewSubmissionsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -51541,6 +52974,7 @@ export const zAppsReviewSubmissionsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -51583,7 +53017,8 @@ export const zAppsReviewSubmissionsGetToManyRelatedQuery = z.object({
         'gameCenterLeaderboardVersion',
         'inAppPurchaseVersion',
         'subscriptionVersion',
-        'subscriptionGroupVersion'
+        'subscriptionGroupVersion',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appStoreVersions]': z.array(z.enum([
         'platform',
@@ -51751,7 +53186,10 @@ export const zAppsSubscriptionGroupsGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionGroupLocalizations]': z.array(z.enum([
         'name',
@@ -51821,6 +53259,7 @@ export const zAppsWebhooksGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -51842,6 +53281,7 @@ export const zAppsWebhooksGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -52048,6 +53488,7 @@ export const zBetaAppLocalizationsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -52069,6 +53510,7 @@ export const zBetaAppLocalizationsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -52128,6 +53570,7 @@ export const zBetaAppReviewDetailsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -52149,6 +53592,7 @@ export const zBetaAppReviewDetailsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -52328,6 +53772,7 @@ export const zBetaGroupsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -52349,6 +53794,7 @@ export const zBetaGroupsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -52599,6 +54045,7 @@ export const zBetaLicenseAgreementsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -52620,6 +54067,7 @@ export const zBetaLicenseAgreementsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -52697,6 +54145,7 @@ export const zBetaTestersAppsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -52718,6 +54167,7 @@ export const zBetaTestersAppsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -53026,6 +54476,7 @@ export const zBuildBetaDetailsBuildGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -53047,6 +54498,7 @@ export const zBuildBetaDetailsBuildGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -53344,6 +54796,7 @@ export const zBuildsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -53365,6 +54818,7 @@ export const zBuildsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -53504,6 +54958,7 @@ export const zBuildsAppStoreVersionGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -53525,6 +54980,7 @@ export const zBuildsAppStoreVersionGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -54024,6 +55480,7 @@ export const zBundleIdsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -54045,6 +55502,7 @@ export const zBundleIdsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -54636,6 +56094,7 @@ export const zCiBuildRunsBuildsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -54657,6 +56116,7 @@ export const zCiBuildRunsBuildsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -54903,6 +56363,7 @@ export const zCiProductsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -54924,6 +56385,7 @@ export const zCiProductsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -55143,6 +56605,11 @@ export const zCiProductsAppGetToOneRelatedQuery = z.object({
         'subscriptionGroupLocalizations',
         'versions'
     ])).optional(),
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
     'fields[gameCenterEnabledVersions]': z.array(z.enum([
         'platform',
         'versionString',
@@ -55249,6 +56716,7 @@ export const zCiProductsAppGetToOneRelatedQuery = z.object({
         'endUserLicenseAgreement',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'appCustomProductPages',
         'inAppPurchasesV2',
@@ -55270,6 +56738,7 @@ export const zCiProductsAppGetToOneRelatedQuery = z.object({
     'limit[appClips]': z.int().lte(50).optional(),
     'limit[inAppPurchases]': z.int().lte(50).optional(),
     'limit[subscriptionGroups]': z.int().lte(50).optional(),
+    'limit[retentionMessages]': z.int().lte(50).optional(),
     'limit[gameCenterEnabledVersions]': z.int().lte(50).optional(),
     'limit[appCustomProductPages]': z.int().lte(50).optional(),
     'limit[inAppPurchasesV2]': z.int().lte(50).optional(),
@@ -56794,6 +58263,7 @@ export const zGameCenterAppVersionsAppStoreVersionGetToOneRelatedQuery = z.objec
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -56815,6 +58285,7 @@ export const zGameCenterAppVersionsAppStoreVersionGetToOneRelatedQuery = z.objec
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -59017,6 +60488,7 @@ export const zGameCenterEnabledVersionsCompatibleVersionsGetToManyRelatedQuery =
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -59038,6 +60510,7 @@ export const zGameCenterEnabledVersionsCompatibleVersionsGetToManyRelatedQuery =
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -59656,6 +61129,7 @@ export const zGameCenterGroupsGameCenterDetailsGetToManyRelatedQuery = z.object(
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -59677,6 +61151,7 @@ export const zGameCenterGroupsGameCenterDetailsGetToManyRelatedQuery = z.object(
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -63096,7 +64571,10 @@ export const zInAppPurchasesV2PromotedPurchaseGetToOneRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     include: z.array(z.enum(['inAppPurchaseV2', 'subscription'])).optional()
 });
@@ -63371,6 +64849,7 @@ export const zPreReleaseVersionsAppGetToOneRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -63392,6 +64871,7 @@ export const zPreReleaseVersionsAppGetToOneRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -63580,6 +65060,503 @@ export const zProfilesDevicesGetToManyRelatedQuery = z.object({
  */
 export const zProfilesDevicesGetToManyRelatedResponse = zDevicesWithoutIncludesResponse;
 
+export const zRetentionMessageVersionsLocalizationsGetToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessageVersionsLocalizationsGetToManyRelationshipQuery = z.object({
+    limit: z.int().lte(200).optional()
+});
+
+/**
+ * List of related linkages
+ */
+export const zRetentionMessageVersionsLocalizationsGetToManyRelationshipResponse = zRetentionMessageVersionLocalizationsLinkagesResponse;
+
+export const zRetentionMessageVersionsLocalizationsGetToManyRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessageVersionsLocalizationsGetToManyRelatedQuery = z.object({
+    'fields[retentionMessageLocalizations]': z.array(z.enum([
+        'locale',
+        'header',
+        'body',
+        'retentionMessageVersion'
+    ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum(['retentionMessageVersion'])).optional()
+});
+
+/**
+ * List of RetentionMessageLocalizations
+ */
+export const zRetentionMessageVersionsLocalizationsGetToManyRelatedResponse = zRetentionMessageLocalizationsResponse;
+
+export const zRetentionMessageVersionsPlacementGetToOneRelationshipPath = z.object({
+    id: z.string()
+});
+
+/**
+ * Related linkage
+ */
+export const zRetentionMessageVersionsPlacementGetToOneRelationshipResponse = zRetentionMessageVersionPlacementLinkageResponse;
+
+export const zRetentionMessageVersionsPlacementGetToOneRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessageVersionsPlacementGetToOneRelatedQuery = z.object({
+    'fields[appAssetLibraryPlacements]': z.array(z.enum([
+        'mediaType',
+        'placementType',
+        'placementGroup',
+        'createdDate',
+        'lastModifiedDate',
+        'state',
+        'stateDetails',
+        'image',
+        'video',
+        'appEventLocalization',
+        'appStoreVersionLocalization',
+        'appCustomProductPageLocalization',
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
+    ])).optional(),
+    'fields[appAssetLibraryImages]': z.array(z.enum([
+        'category',
+        'createdDate',
+        'lastModifiedDate',
+        'fileName',
+        'fileSize',
+        'imageAsset',
+        'referenceName',
+        'specId',
+        'state',
+        'stateDetails',
+        'uploadOperations',
+        'placements'
+    ])).optional(),
+    'fields[appAssetLibraryVideos]': z.array(z.enum([
+        'category',
+        'createdDate',
+        'lastModifiedDate',
+        'fileName',
+        'fileSize',
+        'previewFrameImage',
+        'previewFrameTimeCode',
+        'referenceName',
+        'specId',
+        'state',
+        'stateDetails',
+        'uploadOperations',
+        'videoAsset',
+        'placements'
+    ])).optional(),
+    'fields[appEventLocalizations]': z.array(z.enum([
+        'locale',
+        'name',
+        'shortDescription',
+        'longDescription',
+        'appEvent',
+        'appEventScreenshots',
+        'appEventVideoClips',
+        'placements'
+    ])).optional(),
+    'fields[appStoreVersionLocalizations]': z.array(z.enum([
+        'description',
+        'locale',
+        'keywords',
+        'marketingUrl',
+        'promotionalText',
+        'supportUrl',
+        'whatsNew',
+        'appStoreVersion',
+        'appScreenshotSets',
+        'appPreviewSets',
+        'searchKeywords',
+        'placements'
+    ])).optional(),
+    'fields[appCustomProductPageLocalizations]': z.array(z.enum([
+        'locale',
+        'promotionalText',
+        'appCustomProductPageVersion',
+        'appScreenshotSets',
+        'appPreviewSets',
+        'searchKeywords',
+        'placements'
+    ])).optional(),
+    'fields[appStoreVersionExperimentTreatmentLocalizations]': z.array(z.enum([
+        'locale',
+        'appStoreVersionExperimentTreatment',
+        'appScreenshotSets',
+        'appPreviewSets',
+        'placements'
+    ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    include: z.array(z.enum([
+        'image',
+        'video',
+        'appEventLocalization',
+        'appStoreVersionLocalization',
+        'appCustomProductPageLocalization',
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
+    ])).optional()
+});
+
+/**
+ * Single AppAssetLibraryPlacement
+ */
+export const zRetentionMessageVersionsPlacementGetToOneRelatedResponse = zAppAssetLibraryPlacementResponse;
+
+export const zRetentionMessagesSubscriptionsGetToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessagesSubscriptionsGetToManyRelationshipQuery = z.object({
+    limit: z.int().lte(200).optional()
+});
+
+/**
+ * List of related linkages
+ */
+export const zRetentionMessagesSubscriptionsGetToManyRelationshipResponse = zRetentionMessageSubscriptionsLinkagesResponse;
+
+export const zRetentionMessagesSubscriptionsGetToManyRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessagesSubscriptionsGetToManyRelatedQuery = z.object({
+    'filter[productId]': z.array(z.string()).optional(),
+    'filter[name]': z.array(z.string()).optional(),
+    'filter[state]': z.array(z.enum([
+        'MISSING_METADATA',
+        'READY_TO_SUBMIT',
+        'WAITING_FOR_REVIEW',
+        'IN_REVIEW',
+        'DEVELOPER_ACTION_NEEDED',
+        'PENDING_BINARY_APPROVAL',
+        'APPROVED',
+        'DEVELOPER_REMOVED_FROM_SALE',
+        'REMOVED_FROM_SALE',
+        'REJECTED'
+    ])).optional(),
+    sort: z.array(z.enum(['name', '-name'])).optional(),
+    'fields[subscriptions]': z.array(z.enum([
+        'name',
+        'productId',
+        'familySharable',
+        'state',
+        'subscriptionPeriod',
+        'reviewNote',
+        'groupLevel',
+        'multiSeatStatus',
+        'marketSettings',
+        'subscriptionLocalizations',
+        'appStoreReviewScreenshot',
+        'group',
+        'introductoryOffers',
+        'promotionalOffers',
+        'offerCodes',
+        'prices',
+        'pricePoints',
+        'promotedPurchase',
+        'subscriptionAvailability',
+        'winBackOffers',
+        'images',
+        'planAvailabilities',
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
+    ])).optional(),
+    'fields[subscriptionLocalizations]': z.array(z.enum([
+        'name',
+        'locale',
+        'description',
+        'state',
+        'subscription'
+    ])).optional(),
+    'fields[subscriptionAppStoreReviewScreenshots]': z.array(z.enum([
+        'fileSize',
+        'fileName',
+        'sourceFileChecksum',
+        'imageAsset',
+        'assetToken',
+        'assetType',
+        'uploadOperations',
+        'assetDeliveryState',
+        'subscription'
+    ])).optional(),
+    'fields[subscriptionGroups]': z.array(z.enum([
+        'referenceName',
+        'subscriptions',
+        'subscriptionGroupLocalizations',
+        'versions'
+    ])).optional(),
+    'fields[subscriptionIntroductoryOffers]': z.array(z.enum([
+        'startDate',
+        'endDate',
+        'duration',
+        'offerMode',
+        'numberOfPeriods',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'territory',
+        'subscriptionPricePoint'
+    ])).optional(),
+    'fields[subscriptionPromotionalOffers]': z.array(z.enum([
+        'duration',
+        'name',
+        'numberOfPeriods',
+        'offerCode',
+        'offerMode',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'prices'
+    ])).optional(),
+    'fields[subscriptionOfferCodes]': z.array(z.enum([
+        'name',
+        'customerEligibilities',
+        'offerEligibility',
+        'duration',
+        'offerMode',
+        'numberOfPeriods',
+        'totalNumberOfCodes',
+        'productionCodeCount',
+        'sandboxCodeCount',
+        'active',
+        'autoRenewEnabled',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'oneTimeUseCodes',
+        'customCodes',
+        'prices'
+    ])).optional(),
+    'fields[subscriptionPrices]': z.array(z.enum([
+        'startDate',
+        'preserved',
+        'planType',
+        'territory',
+        'subscriptionPricePoint',
+        'additionalPriceTiers'
+    ])).optional(),
+    'fields[promotedPurchases]': z.array(z.enum([
+        'visibleForAllUsers',
+        'enabled',
+        'state',
+        'inAppPurchaseV2',
+        'subscription'
+    ])).optional(),
+    'fields[subscriptionAvailabilities]': z.array(z.enum(['availableInNewTerritories', 'availableTerritories'])).optional(),
+    'fields[winBackOffers]': z.array(z.enum([
+        'referenceName',
+        'offerId',
+        'duration',
+        'offerMode',
+        'periodCount',
+        'customerEligibilityPaidSubscriptionDurationInMonths',
+        'customerEligibilityTimeSinceLastSubscribedInMonths',
+        'customerEligibilityWaitBetweenOffersInMonths',
+        'startDate',
+        'endDate',
+        'priority',
+        'promotionIntent',
+        'targetSubscriptionPlanType',
+        'prices'
+    ])).optional(),
+    'fields[subscriptionImages]': z.array(z.enum([
+        'fileSize',
+        'fileName',
+        'sourceFileChecksum',
+        'assetToken',
+        'imageAsset',
+        'uploadOperations',
+        'state',
+        'subscription'
+    ])).optional(),
+    'fields[subscriptionPlanAvailabilities]': z.array(z.enum([
+        'availableInNewTerritories',
+        'planType',
+        'availableTerritories'
+    ])).optional(),
+    'fields[subscriptionVersions]': z.array(z.enum([
+        'version',
+        'state',
+        'subscription',
+        'image',
+        'images',
+        'localizations'
+    ])).optional(),
+    'fields[retentionOffers]': z.array(z.enum([
+        'referenceName',
+        'offerId',
+        'duration',
+        'offerMode',
+        'periodCount',
+        'customerEligibilityPaidSubscriptionDurationInMonths',
+        'customerEligibilityWaitBetweenOffersInMonths',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'prices'
+    ])).optional(),
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum([
+        'subscriptionLocalizations',
+        'appStoreReviewScreenshot',
+        'group',
+        'introductoryOffers',
+        'promotionalOffers',
+        'offerCodes',
+        'prices',
+        'promotedPurchase',
+        'subscriptionAvailability',
+        'winBackOffers',
+        'images',
+        'planAvailabilities',
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
+    ])).optional(),
+    'limit[subscriptionLocalizations]': z.int().lte(50).optional(),
+    'limit[introductoryOffers]': z.int().lte(50).optional(),
+    'limit[promotionalOffers]': z.int().lte(50).optional(),
+    'limit[offerCodes]': z.int().lte(50).optional(),
+    'limit[prices]': z.int().lte(50).optional(),
+    'limit[winBackOffers]': z.int().lte(50).optional(),
+    'limit[images]': z.int().lte(50).optional(),
+    'limit[planAvailabilities]': z.int().lte(50).optional(),
+    'limit[versions]': z.int().lte(50).optional(),
+    'limit[retentionOffers]': z.int().lte(50).optional(),
+    'limit[retentionMessageOffers]': z.int().lte(50).optional()
+});
+
+/**
+ * List of Subscriptions
+ */
+export const zRetentionMessagesSubscriptionsGetToManyRelatedResponse = zSubscriptionsResponse;
+
+export const zRetentionMessagesVersionsGetToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessagesVersionsGetToManyRelationshipQuery = z.object({
+    limit: z.int().lte(200).optional()
+});
+
+/**
+ * List of related linkages
+ */
+export const zRetentionMessagesVersionsGetToManyRelationshipResponse = zRetentionMessageVersionsLinkagesResponse;
+
+export const zRetentionMessagesVersionsGetToManyRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionMessagesVersionsGetToManyRelatedQuery = z.object({
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
+    'fields[retentionMessageLocalizations]': z.array(z.enum([
+        'locale',
+        'header',
+        'body',
+        'retentionMessageVersion'
+    ])).optional(),
+    'fields[appAssetLibraryPlacements]': z.array(z.enum([
+        'mediaType',
+        'placementType',
+        'placementGroup',
+        'createdDate',
+        'lastModifiedDate',
+        'state',
+        'stateDetails',
+        'image',
+        'video',
+        'appEventLocalization',
+        'appStoreVersionLocalization',
+        'appCustomProductPageLocalization',
+        'appStoreVersionExperimentTreatmentLocalization',
+        'retentionMessageVersion'
+    ])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum([
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    'limit[localizations]': z.int().lte(50).optional()
+});
+
+/**
+ * List of RetentionMessageVersions
+ */
+export const zRetentionMessagesVersionsGetToManyRelatedResponse = zRetentionMessageVersionsResponse;
+
+export const zRetentionOffersPricesGetToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionOffersPricesGetToManyRelationshipQuery = z.object({
+    limit: z.int().lte(200).optional()
+});
+
+/**
+ * List of related linkages
+ */
+export const zRetentionOffersPricesGetToManyRelationshipResponse = zRetentionOfferPricesLinkagesResponse;
+
+export const zRetentionOffersPricesGetToManyRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zRetentionOffersPricesGetToManyRelatedQuery = z.object({
+    'filter[territory]': z.array(z.string()).optional(),
+    'fields[retentionOfferPrices]': z.array(z.enum(['territory', 'subscriptionPricePoint'])).optional(),
+    'fields[territories]': z.array(z.enum(['currency'])).optional(),
+    'fields[subscriptionPricePoints]': z.array(z.enum([
+        'customerPrice',
+        'proceeds',
+        'proceedsYear2',
+        'territory',
+        'equalizations',
+        'adjustedEqualizations'
+    ])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum(['territory', 'subscriptionPricePoint'])).optional()
+});
+
+/**
+ * List of RetentionOfferPrices
+ */
+export const zRetentionOffersPricesGetToManyRelatedResponse = zRetentionOfferPricesResponse;
+
 export const zReviewSubmissionsItemsGetToManyRelationshipPath = z.object({
     id: z.string()
 });
@@ -63615,7 +65592,8 @@ export const zReviewSubmissionsItemsGetToManyRelatedQuery = z.object({
         'gameCenterLeaderboardVersion',
         'inAppPurchaseVersion',
         'subscriptionVersion',
-        'subscriptionGroupVersion'
+        'subscriptionGroupVersion',
+        'retentionMessageVersion'
     ])).optional(),
     'fields[appStoreVersions]': z.array(z.enum([
         'platform',
@@ -63779,6 +65757,12 @@ export const zReviewSubmissionsItemsGetToManyRelatedQuery = z.object({
         'subscriptionGroup',
         'localizations'
     ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
         'appStoreVersion',
@@ -63796,7 +65780,8 @@ export const zReviewSubmissionsItemsGetToManyRelatedQuery = z.object({
         'gameCenterLeaderboardVersion',
         'inAppPurchaseVersion',
         'subscriptionVersion',
-        'subscriptionGroupVersion'
+        'subscriptionGroupVersion',
+        'retentionMessageVersion'
     ])).optional()
 });
 
@@ -64115,7 +66100,10 @@ export const zSubscriptionGroupsSubscriptionsGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionLocalizations]': z.array(z.enum([
         'name',
@@ -64185,7 +66173,8 @@ export const zSubscriptionGroupsSubscriptionsGetToManyRelatedQuery = z.object({
         'preserved',
         'planType',
         'territory',
-        'subscriptionPricePoint'
+        'subscriptionPricePoint',
+        'additionalPriceTiers'
     ])).optional(),
     'fields[promotedPurchases]': z.array(z.enum([
         'visibleForAllUsers',
@@ -64234,6 +66223,23 @@ export const zSubscriptionGroupsSubscriptionsGetToManyRelatedQuery = z.object({
         'images',
         'localizations'
     ])).optional(),
+    'fields[retentionOffers]': z.array(z.enum([
+        'referenceName',
+        'offerId',
+        'duration',
+        'offerMode',
+        'periodCount',
+        'customerEligibilityPaidSubscriptionDurationInMonths',
+        'customerEligibilityWaitBetweenOffersInMonths',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'prices'
+    ])).optional(),
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum([
         'subscriptionLocalizations',
@@ -64248,7 +66254,10 @@ export const zSubscriptionGroupsSubscriptionsGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'limit[subscriptionLocalizations]': z.int().lte(50).optional(),
     'limit[introductoryOffers]': z.int().lte(50).optional(),
@@ -64258,7 +66267,9 @@ export const zSubscriptionGroupsSubscriptionsGetToManyRelatedQuery = z.object({
     'limit[winBackOffers]': z.int().lte(50).optional(),
     'limit[images]': z.int().lte(50).optional(),
     'limit[planAvailabilities]': z.int().lte(50).optional(),
-    'limit[versions]': z.int().lte(50).optional()
+    'limit[versions]': z.int().lte(50).optional(),
+    'limit[retentionOffers]': z.int().lte(50).optional(),
+    'limit[retentionMessageOffers]': z.int().lte(50).optional()
 });
 
 /**
@@ -64585,6 +66596,44 @@ export const zSubscriptionPricePointsEqualizationsGetToManyRelatedQuery = z.obje
  */
 export const zSubscriptionPricePointsEqualizationsGetToManyRelatedResponse = zSubscriptionPricePointsResponse;
 
+export const zSubscriptionPricesAdditionalPriceTiersGetToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+export const zSubscriptionPricesAdditionalPriceTiersGetToManyRelationshipQuery = z.object({
+    limit: z.int().lte(200).optional()
+});
+
+/**
+ * List of related linkages
+ */
+export const zSubscriptionPricesAdditionalPriceTiersGetToManyRelationshipResponse = zSubscriptionPriceAdditionalPriceTiersLinkagesResponse;
+
+export const zSubscriptionPricesAdditionalPriceTiersGetToManyRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zSubscriptionPricesAdditionalPriceTiersGetToManyRelatedQuery = z.object({
+    'filter[subscription]': z.array(z.string()).optional(),
+    'filter[territory]': z.array(z.string()).optional(),
+    'fields[subscriptionPriceTiers]': z.array(z.enum(['minQuantity', 'subscriptionPricePoint'])).optional(),
+    'fields[subscriptionPricePoints]': z.array(z.enum([
+        'customerPrice',
+        'proceeds',
+        'proceedsYear2',
+        'territory',
+        'equalizations',
+        'adjustedEqualizations'
+    ])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum(['subscriptionPricePoint'])).optional()
+});
+
+/**
+ * List of SubscriptionPriceTiers
+ */
+export const zSubscriptionPricesAdditionalPriceTiersGetToManyRelatedResponse = zSubscriptionPriceTiersResponse;
+
 export const zSubscriptionPromotionalOffersPricesGetToManyRelationshipPath = z.object({
     id: z.string()
 });
@@ -64775,7 +66824,10 @@ export const zSubscriptionsAppStoreReviewScreenshotGetToOneRelatedQuery = z.obje
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     include: z.array(z.enum(['subscription'])).optional()
 });
@@ -64836,7 +66888,10 @@ export const zSubscriptionsImagesGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum(['subscription'])).optional()
@@ -64914,7 +66969,10 @@ export const zSubscriptionsIntroductoryOffersGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[territories]': z.array(z.enum(['currency'])).optional(),
     'fields[subscriptionPricePoints]': z.array(z.enum([
@@ -64998,7 +67056,10 @@ export const zSubscriptionsOfferCodesGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionOfferCodeOneTimeUseCodes]': z.array(z.enum([
         'numberOfCodes',
@@ -65148,7 +67209,8 @@ export const zSubscriptionsPricesGetToManyRelatedQuery = z.object({
         'preserved',
         'planType',
         'territory',
-        'subscriptionPricePoint'
+        'subscriptionPricePoint',
+        'additionalPriceTiers'
     ])).optional(),
     'fields[territories]': z.array(z.enum(['currency'])).optional(),
     'fields[subscriptionPricePoints]': z.array(z.enum([
@@ -65159,8 +67221,14 @@ export const zSubscriptionsPricesGetToManyRelatedQuery = z.object({
         'equalizations',
         'adjustedEqualizations'
     ])).optional(),
+    'fields[subscriptionPriceTiers]': z.array(z.enum(['minQuantity', 'subscriptionPricePoint'])).optional(),
     limit: z.int().lte(200).optional(),
-    include: z.array(z.enum(['territory', 'subscriptionPricePoint'])).optional()
+    include: z.array(z.enum([
+        'territory',
+        'subscriptionPricePoint',
+        'additionalPriceTiers'
+    ])).optional(),
+    'limit[additionalPriceTiers]': z.int().lte(50).optional()
 });
 
 /**
@@ -65231,7 +67299,10 @@ export const zSubscriptionsPromotedPurchaseGetToOneRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     include: z.array(z.enum(['inAppPurchaseV2', 'subscription'])).optional()
 });
@@ -65293,7 +67364,10 @@ export const zSubscriptionsPromotionalOffersGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionPromotionalOfferPrices]': z.array(z.enum(['territory', 'subscriptionPricePoint'])).optional(),
     limit: z.int().lte(200).optional(),
@@ -65305,6 +67379,249 @@ export const zSubscriptionsPromotionalOffersGetToManyRelatedQuery = z.object({
  * List of SubscriptionPromotionalOffers
  */
 export const zSubscriptionsPromotionalOffersGetToManyRelatedResponse = zSubscriptionPromotionalOffersResponse;
+
+export const zSubscriptionsRetentionMessageGetToOneRelationshipPath = z.object({
+    id: z.string()
+});
+
+/**
+ * Related linkage
+ */
+export const zSubscriptionsRetentionMessageGetToOneRelationshipResponse = zSubscriptionRetentionMessageLinkageResponse;
+
+/**
+ * Related linkage
+ */
+export const zSubscriptionsRetentionMessageUpdateToOneRelationshipBody = zSubscriptionRetentionMessageLinkageRequest;
+
+export const zSubscriptionsRetentionMessageUpdateToOneRelationshipPath = z.object({
+    id: z.string()
+});
+
+/**
+ * Success (no content)
+ */
+export const zSubscriptionsRetentionMessageUpdateToOneRelationshipResponse = z.void();
+
+export const zSubscriptionsRetentionMessageGetToOneRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zSubscriptionsRetentionMessageGetToOneRelatedQuery = z.object({
+    'fields[retentionMessages]': z.array(z.enum([
+        'referenceName',
+        'versions',
+        'subscriptions'
+    ])).optional(),
+    'fields[retentionMessageVersions]': z.array(z.enum([
+        'state',
+        'retentionMessage',
+        'localizations',
+        'placement'
+    ])).optional(),
+    'fields[subscriptions]': z.array(z.enum([
+        'name',
+        'productId',
+        'familySharable',
+        'state',
+        'subscriptionPeriod',
+        'reviewNote',
+        'groupLevel',
+        'multiSeatStatus',
+        'marketSettings',
+        'subscriptionLocalizations',
+        'appStoreReviewScreenshot',
+        'group',
+        'introductoryOffers',
+        'promotionalOffers',
+        'offerCodes',
+        'prices',
+        'pricePoints',
+        'promotedPurchase',
+        'subscriptionAvailability',
+        'winBackOffers',
+        'images',
+        'planAvailabilities',
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
+    ])).optional(),
+    include: z.array(z.enum(['versions', 'subscriptions'])).optional(),
+    'limit[versions]': z.int().lte(50).optional(),
+    'limit[subscriptions]': z.int().lte(50).optional()
+});
+
+/**
+ * Single RetentionMessage
+ */
+export const zSubscriptionsRetentionMessageGetToOneRelatedResponse = zRetentionMessageResponse;
+
+/**
+ * List of related linkages
+ */
+export const zSubscriptionsRetentionMessageOffersDeleteToManyRelationshipBody = zSubscriptionRetentionMessageOffersLinkagesRequest;
+
+export const zSubscriptionsRetentionMessageOffersDeleteToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+/**
+ * Success (no content)
+ */
+export const zSubscriptionsRetentionMessageOffersDeleteToManyRelationshipResponse = z.void();
+
+export const zSubscriptionsRetentionMessageOffersGetToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+export const zSubscriptionsRetentionMessageOffersGetToManyRelationshipQuery = z.object({
+    limit: z.int().lte(200).optional()
+});
+
+/**
+ * List of related linkages
+ */
+export const zSubscriptionsRetentionMessageOffersGetToManyRelationshipResponse = zSubscriptionRetentionMessageOffersLinkagesResponse;
+
+/**
+ * List of related linkages
+ */
+export const zSubscriptionsRetentionMessageOffersCreateToManyRelationshipBody = zSubscriptionRetentionMessageOffersLinkagesRequest;
+
+export const zSubscriptionsRetentionMessageOffersCreateToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+/**
+ * Success (no content)
+ */
+export const zSubscriptionsRetentionMessageOffersCreateToManyRelationshipResponse = z.void();
+
+export const zSubscriptionsRetentionMessageOffersGetToManyRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zSubscriptionsRetentionMessageOffersGetToManyRelatedQuery = z.object({
+    'fields[retentionOffers]': z.array(z.enum([
+        'referenceName',
+        'offerId',
+        'duration',
+        'offerMode',
+        'periodCount',
+        'customerEligibilityPaidSubscriptionDurationInMonths',
+        'customerEligibilityWaitBetweenOffersInMonths',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'prices'
+    ])).optional(),
+    'fields[subscriptions]': z.array(z.enum([
+        'name',
+        'productId',
+        'familySharable',
+        'state',
+        'subscriptionPeriod',
+        'reviewNote',
+        'groupLevel',
+        'multiSeatStatus',
+        'marketSettings',
+        'subscriptionLocalizations',
+        'appStoreReviewScreenshot',
+        'group',
+        'introductoryOffers',
+        'promotionalOffers',
+        'offerCodes',
+        'prices',
+        'pricePoints',
+        'promotedPurchase',
+        'subscriptionAvailability',
+        'winBackOffers',
+        'images',
+        'planAvailabilities',
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
+    ])).optional(),
+    'fields[retentionOfferPrices]': z.array(z.enum(['territory', 'subscriptionPricePoint'])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum(['subscription', 'prices'])).optional(),
+    'limit[prices]': z.int().lte(50).optional()
+});
+
+/**
+ * List of RetentionOffers
+ */
+export const zSubscriptionsRetentionMessageOffersGetToManyRelatedResponse = zRetentionOffersResponse;
+
+export const zSubscriptionsRetentionOffersGetToManyRelationshipPath = z.object({
+    id: z.string()
+});
+
+export const zSubscriptionsRetentionOffersGetToManyRelationshipQuery = z.object({
+    limit: z.int().lte(200).optional()
+});
+
+/**
+ * List of related linkages
+ */
+export const zSubscriptionsRetentionOffersGetToManyRelationshipResponse = zSubscriptionRetentionOffersLinkagesResponse;
+
+export const zSubscriptionsRetentionOffersGetToManyRelatedPath = z.object({
+    id: z.string()
+});
+
+export const zSubscriptionsRetentionOffersGetToManyRelatedQuery = z.object({
+    'fields[retentionOffers]': z.array(z.enum([
+        'referenceName',
+        'offerId',
+        'duration',
+        'offerMode',
+        'periodCount',
+        'customerEligibilityPaidSubscriptionDurationInMonths',
+        'customerEligibilityWaitBetweenOffersInMonths',
+        'targetSubscriptionPlanType',
+        'subscription',
+        'prices'
+    ])).optional(),
+    'fields[subscriptions]': z.array(z.enum([
+        'name',
+        'productId',
+        'familySharable',
+        'state',
+        'subscriptionPeriod',
+        'reviewNote',
+        'groupLevel',
+        'multiSeatStatus',
+        'marketSettings',
+        'subscriptionLocalizations',
+        'appStoreReviewScreenshot',
+        'group',
+        'introductoryOffers',
+        'promotionalOffers',
+        'offerCodes',
+        'prices',
+        'pricePoints',
+        'promotedPurchase',
+        'subscriptionAvailability',
+        'winBackOffers',
+        'images',
+        'planAvailabilities',
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
+    ])).optional(),
+    'fields[retentionOfferPrices]': z.array(z.enum(['territory', 'subscriptionPricePoint'])).optional(),
+    limit: z.int().lte(200).optional(),
+    include: z.array(z.enum(['subscription', 'prices'])).optional(),
+    'limit[prices]': z.int().lte(50).optional()
+});
+
+/**
+ * List of RetentionOffers
+ */
+export const zSubscriptionsRetentionOffersGetToManyRelatedResponse = zRetentionOffersResponse;
 
 export const zSubscriptionsSubscriptionAvailabilityGetToOneRelationshipPath = z.object({
     id: z.string()
@@ -65379,7 +67696,10 @@ export const zSubscriptionsSubscriptionLocalizationsGetToManyRelatedQuery = z.ob
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     limit: z.int().lte(200).optional(),
     include: z.array(z.enum(['subscription'])).optional()
@@ -65450,7 +67770,10 @@ export const zSubscriptionsVersionsGetToManyRelatedQuery = z.object({
         'winBackOffers',
         'images',
         'planAvailabilities',
-        'versions'
+        'versions',
+        'retentionOffers',
+        'retentionMessage',
+        'retentionMessageOffers'
     ])).optional(),
     'fields[subscriptionImages]': z.array(z.enum([
         'fileSize',
@@ -65558,6 +67881,7 @@ export const zUserInvitationsVisibleAppsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -65579,6 +67903,7 @@ export const zUserInvitationsVisibleAppsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
@@ -65685,6 +68010,7 @@ export const zUsersVisibleAppsGetToManyRelatedQuery = z.object({
         'subscriptionStatusUrlVersionForSandbox',
         'contentRightsDeclaration',
         'streamlinedPurchasingEnabled',
+        'groupPurchaseInvitationMode',
         'accessibilityDeclarations',
         'appEncryptionDeclarations',
         'appStoreIcon',
@@ -65706,6 +68032,7 @@ export const zUsersVisibleAppsGetToManyRelatedQuery = z.object({
         'appAvailabilityV2',
         'inAppPurchases',
         'subscriptionGroups',
+        'retentionMessages',
         'gameCenterEnabledVersions',
         'performanceOverviews',
         'perfPowerMetrics',
