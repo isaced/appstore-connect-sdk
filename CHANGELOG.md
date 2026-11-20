@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/isaced/appstore-connect-sdk/compare/v2.4.1...v2.5.0) (2026-11-20)
+
+
+### Features
+
+* **openapi:** update OpenAPI spec to 4.6.1 and regenerate client ([#94](https://github.com/isaced/appstore-connect-sdk/issues/94)) ([30e7829](https://github.com/isaced/appstore-connect-sdk/commit/30e7829d815938ed1b888c47e23732f67d84d0fb))
+  * purely additive: +31 paths, +39 operations, +44 schemas, no removals
+  * new Retention Messages & Retention Offers APIs for subscriptions
+  * new subscription price tier APIs (price tiers, price change previews, tier equalizations)
+* build: bump jose from 6.2.13 to 6.2.17 ([#91](https://github.com/isaced/appstore-connect-sdk/issues/91), [#92](https://github.com/isaced/appstore-connect-sdk/issues/92))
+
 ### [2.4.1](https://github.com/isaced/appstore-connect-sdk/compare/v2.4.0...v2.4.1) (2026-10-16)
 
 
