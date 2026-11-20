@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 concurrency:
   group: spec-update
@@ -79,9 +80,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git switch --create "spec-update-$SPEC_VERSION"
           git add --all
-          git commit -m "chore(openapi): sync Apple spec to $SPEC_VERSION"
+          git commit -m "feat(openapi): sync Apple spec to $SPEC_VERSION"
           git push -u origin "spec-update-$SPEC_VERSION"
-          cat > pr-body.md <<'EOF'
+          cat > "$RUNNER_TEMP/pr-body.md" <<'EOF'
           Automated spec sync from Apple's OpenAPI specification zip.
 
           - Spec downloaded and installed as `app_store_connect_api_@VERSION@_openapi.json`
@@ -90,7 +91,50 @@ jobs:
 
           > Note: pushed with `GITHUB_TOKEN`, so the Test workflow does not re-run on this PR (GitHub limitation for bot pushes); validation was done inline above.
           EOF
-          sed -i "s/@VERSION@/$SPEC_VERSION/g" pr-body.md
+          sed -i "s/@VERSION@/$SPEC_VERSION/g" "$RUNNER_TEMP/pr-body.md"
           gh pr create \
-            --title "chore(openapi): sync Apple spec to $SPEC_VERSION" \
-            --body-file pr-body.md
+            --title "feat(openapi): sync Apple spec to $SPEC_VERSION" \
+            --body-file "$RUNNER_TEMP/pr-body.md"
+
+      - name: Ensure pull request for existing branch
+        if: steps.diff.outputs.changed == 'true' && steps.dedupe.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SPEC_VERSION: ${{ steps.spec.outputs.version }}
+        run: |
+          branch="spec-update-$SPEC_VERSION"
+          if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[0].number')" ]; then
+            echo "Branch $branch already has an open PR; nothing to do."
+            exit 0
+          fi
+          echo "::warning::Branch $branch exists but has no open PR (an earlier run failed after pushing). Creating the PR now."
+          cat > "$RUNNER_TEMP/pr-body.md" <<'EOF'
+          Automated spec sync from Apple's OpenAPI specification zip.
+
+          - Spec downloaded and installed as `app_store_connect_api_@VERSION@_openapi.json`
+          - Generated code refreshed via `@hey-api/openapi-ts`
+          - Build and tests verified in this workflow run before opening the PR
+
+          > Note: pushed with `GITHUB_TOKEN`, so the Test workflow does not re-run on this PR (GitHub limitation for bot pushes); validation was done inline above.
+          EOF
+          sed -i "s/@VERSION@/$SPEC_VERSION/g" "$RUNNER_TEMP/pr-body.md"
+          gh pr create \
+            --head "$branch" \
+            --title "feat(openapi): sync Apple spec to $SPEC_VERSION" \
+            --body-file "$RUNNER_TEMP/pr-body.md"
+
+      - name: Open issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open_count=$(gh issue list --state open --search "Spec Update workflow failed in:title" --json number --jq 'length')
+          if [ "$open_count" != "0" ]; then
+            echo "An open Spec Update failure issue already exists; not opening another."
+            exit 0
+          fi
+          gh issue create \
+            --title "Spec Update workflow failed (run ${{ github.run_id }})" \
+            --body "The scheduled Spec Update run failed: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          If the run failed after pushing a spec-update-* branch but before opening its PR, the next scheduled run will retry opening that PR."
